@@ -10,58 +10,49 @@
 namespace Toolkit\Stdlib\Str;
 
 use Exception;
-use function is_array;
-use function stripos;
-use function mb_strpos;
-use function mb_strrpos;
-use function strrpos;
-use function html_entity_decode;
-use function base64_encode;
-use function hex2bin;
-use function random_token;
-use function is_int;
-use function hash;
-use function uniqid;
-use function mb_strtolower;
-use function mb_strtoupper;
-use function mb_convert_case;
-use function ucwords;
-use function lcfirst;
-use function preg_replace_callback;
-use function strtoupper;
-use function array_shift;
-use function ucfirst;
-use function strtolower;
-use function explode;
-use function array_values;
+use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
+use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use function array_map;
-use function mb_detect_encoding;
-use function str_split;
-use function mb_convert_encoding;
-use function preg_split;
-use function mb_strwidth;
-use function str_pad;
-use function mb_convert_variables;
-use function mb_internal_encoding;
-use function func_num_args;
-use function func_get_arg;
-use function mb_strlen;
-use function implode;
 use function array_slice;
+use function array_values;
+use function base64_encode;
+use function count;
+use function explode;
+use function func_get_arg;
+use function func_num_args;
+use function function_exists;
+use function hash;
+use function hex2bin;
+use function html_entity_decode;
+use function implode;
+use function in_array;
+use function is_int;
+use function is_string;
+use function mb_convert_encoding;
+use function mb_convert_variables;
+use function mb_detect_encoding;
+use function mb_internal_encoding;
+use function mb_strlen;
+use function mb_strwidth;
+use function mb_substr;
+use function preg_match;
+use function preg_split;
+use function random_bytes;
+use function random_token;
+use function str_pad;
+use function str_replace;
+use function str_split;
+use function strip_tags;
+use function strlen;
+use function strpos;
+use function substr;
+use function uniqid;
 use function utf8_decode;
 use function utf8_encode;
-use function strlen;
-use function function_exists;
-use function mb_substr;
-use function strip_tags;
-use function in_array;
-use function is_string;
-use function count;
 use const ENT_COMPAT;
-use const STR_PAD_RIGHT;
-use const STR_PAD_LEFT;
-use const MB_CASE_TITLE;
 use const PREG_SPLIT_NO_EMPTY;
+use const STR_PAD_LEFT;
+use const STR_PAD_RIGHT;
 
 /**
  * Class StringHelper
@@ -69,117 +60,44 @@ use const PREG_SPLIT_NO_EMPTY;
  */
 abstract class StringHelper
 {
-    ////////////////////////////////////////////////////////////////////////
-    /// Check value
-    ////////////////////////////////////////////////////////////////////////
+    use StringCaseHelperTrait;
+    use StringCheckHelperTrait;
 
     /**
-     * @param string $string
-     * @param string $prefix
-     * @param string $suffix
+     * @param string $str
+     * @param int    $padLen
+     * @param string $padStr
+     * @param int    $padType
+     *
      * @return string
      */
-    public static function optional(string $string, string $prefix = ' ', string $suffix = ''): string
+    public static function pad($str, int $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
     {
-        if (empty($string)) {
-            return '';
-        }
-
-        return $prefix . $string . $suffix;
-    }
-
-    /**
-     * @param string       $string
-     * @param string|array $needle
-     * @return bool
-     */
-    public static function contains(string $string, $needle): bool
-    {
-        return self::has($string, $needle);
-    }
-
-    /**
-     * @param string       $string
-     * @param string|array $needle
-     * @return bool
-     */
-    public static function has(string $string, $needle): bool
-    {
-        if (is_string($needle)) {
-            return stripos($string, $needle) !== false;
-        }
-
-        if (is_array($needle)) {
-            foreach ((array)$needle as $item) {
-                if (stripos($string, $item) !== false) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param        $str
-     * @param        $find
-     * @param int    $offset
-     * @param string $encoding
-     * @return bool|int
-     */
-    public static function strpos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8')
-    {
-        return function_exists('mb_strpos') ?
-            mb_strpos($str, $find, $offset, $encoding) :
-            \strpos($str, $find, $offset);
+        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr, $padType) : $str;
     }
 
     /**
      * @param string $str
-     * @param string $find
-     * @param int    $offset
-     * @param string $encoding
-     * @return bool|int
+     * @param int    $padLen
+     * @param string $padStr
+     *
+     * @return string
      */
-    public static function strrpos(string $str, string $find, int $offset = 0, string $encoding = 'utf-8')
+    public static function padLeft($str, int $padLen, string $padStr = ' '): string
     {
-        return function_exists('mb_strrpos') ?
-            mb_strrpos($str, $find, $offset, $encoding) :
-            strrpos($str, $find, $offset);
+        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr, STR_PAD_LEFT) : $str;
     }
 
     /**
-     * 使用正则验证数据
-     * @access public
-     * @param string $value 要验证的数据
-     * @param string $rule 验证规则 require email url currency number integer english
-     * @return boolean
+     * @param string $str
+     * @param int    $padLen
+     * @param string $padStr
+     *
+     * @return string
      */
-    public static function regexMatch(string $value, string $rule): bool
+    public static function padRight($str, int $padLen, string $padStr = ' '): string
     {
-        $validate = [
-            'require'  => '/\S+/',
-            'email'    => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
-            // 'url'       =>  '/^http(s?):\/\/(?:[A-za-z0-9-]+\.)+[A-za-z]{2,4}(?:[\/\?#][\/=\?%\-&~`@[\]\':+!\.#\w]*)?$/',
-            'url'      => '/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i',
-            'currency' => '/^\d+(\.\d+)?$/',
-            # 货币
-            'number'   => '/^\d+$/',
-            'zip'      => '/^\d{6}$/',
-            'integer'  => '/^[-\+]?\d+$/',
-            'double'   => '/^[-\+]?\d+(\.\d+)?$/',
-            'english'  => '/^[A-Za-z]+$/',
-        ];
-
-        $value = \trim($value);
-        $name  = strtolower($rule);
-
-        // 检查是否有内置的正则表达式
-        if (isset($validate[$name])) {
-            $rule = $validate[$name];
-        }
-
-        return \preg_match($rule, $value) === 1;
+        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr) : $str;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -188,6 +106,7 @@ abstract class StringHelper
 
     /**
      * from Symfony
+     *
      * @param string $string
      * @return int
      */
@@ -200,6 +119,12 @@ abstract class StringHelper
         return mb_strwidth($string, $encoding);
     }
 
+    /**
+     * @param string $str
+     * @param string $encoding
+     *
+     * @return int
+     */
     public static function strlen(string $str, string $encoding = 'UTF-8'): int
     {
         $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
@@ -217,6 +142,18 @@ abstract class StringHelper
         // mb_strlen: one chinese is 1 char.
         // mb_strwidth: one chinese is 2 char.
         return mb_strlen($string, 'utf-8');
+    }
+
+    /**
+     * @param string $string
+     * @return int
+     */
+    public static function utf8width($string): int
+    {
+        // strlen: one chinese is 3 char.
+        // mb_strlen: one chinese is 1 char.
+        // mb_strwidth: one chinese is 2 char.
+        return mb_strwidth((string)$string, 'utf-8');
     }
 
     /**
@@ -298,12 +235,14 @@ abstract class StringHelper
 
     /**
      * @param int $length
+     *
      * @return string
+     * @throws Exception
      */
     public static function genSalt(int $length = 32): string
     {
-        return \substr(
-            \str_replace('+', '.', base64_encode(hex2bin(random_token($length)))),
+        return substr(
+            str_replace('+', '.', base64_encode(hex2bin(random_bytes($length)))),
             0,
             44
         );
@@ -319,29 +258,7 @@ abstract class StringHelper
             $length = 7;
         }
 
-        return \substr(hash('md5', uniqid('', true)), 0, $length);
-    }
-
-    /**
-     * @param string $string
-     * @param int    $padLen
-     * @param string $padStr
-     * @param int    $padType
-     * @return string
-     */
-    public static function pad(string $string, int $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
-    {
-        return $padLen > 0 ? str_pad($string, $padLen, $padStr, $padType) : $string;
-    }
-
-    public static function padLeft(string $string, int $padLen, string $padStr = ' '): string
-    {
-        return $padLen > 0 ? str_pad($string, $padLen, $padStr, STR_PAD_LEFT) : $string;
-    }
-
-    public static function padRight(string $string, int $padLen, string $padStr = ' '): string
-    {
-        return $padLen > 0 ? str_pad($string, $padLen, $padStr) : $string;
+        return substr(hash('md5', uniqid('', true)), 0, $length);
     }
 
     /**
@@ -350,191 +267,11 @@ abstract class StringHelper
      * @param null $node
      * @param null $ns
      * @return UUID
-     * @throws \Inhere\Exceptions\InvalidArgumentException
      */
     // public static function genUUID($version = 1, $node = null, $ns = null)
     // {
     //     return UUID::generate($version, $node, $ns);
     // }
-
-    ////////////////////////////////////////////////////////////////////////
-    /// Case Convert
-    ////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Convert \n and \r\n and \r to <br />
-     * @param string $str String to transform
-     * @return string New string
-     */
-    public static function nl2br(string $str): string
-    {
-        return \str_replace(["\r\n", "\r", "\n"], '<br />', $str);
-    }
-
-    public static function lower(string $str): string
-    {
-        return static::strtolower($str);
-    }
-
-    /**
-     * @param string $str
-     * @return bool|string
-     */
-    public static function strtolower(string $str): string
-    {
-        return function_exists('mb_strtolower') ? mb_strtolower($str, 'utf-8') : strtolower($str);
-    }
-
-    public static function upper(string $str): string
-    {
-        return static::strtoupper($str);
-    }
-
-    /**
-     * @param $str
-     * @return bool|string
-     */
-    public static function strtoupper(string $str)
-    {
-        if (!is_string($str)) {
-            return $str;
-        }
-
-        return function_exists('mb_strtoupper') ? mb_strtoupper($str, 'utf-8') : strtoupper($str);
-    }
-
-    /**
-     * @param $str
-     * @return string
-     */
-    public static function ucfirst(string $str): string
-    {
-        return self::strtoupper(self::substr($str, 0, 1)) . self::substr($str, 1);
-    }
-
-    /**
-     * @param $str
-     * @return string
-     */
-    public static function ucwords(string $str): string
-    {
-        return function_exists('mb_convert_case') ?
-            mb_convert_case($str, MB_CASE_TITLE) :
-            ucwords(self::strtolower($str));
-    }
-
-    /**
-     * @param string $str
-     * @param bool   $upperFirstChar
-     * @return mixed
-     */
-    public static function camel(string $str, bool $upperFirstChar = false): string
-    {
-        return self::toCamelCase($str, $upperFirstChar);
-    }
-
-    /**
-     * @param string $str
-     * @param bool   $upperFirstChar
-     * @return mixed
-     */
-    public static function toCamel(string $str, bool $upperFirstChar = false): string
-    {
-        return self::toCamelCase($str, $upperFirstChar);
-    }
-
-    /**
-     * to camel
-     * @param string $name
-     * @param bool   $upperFirst
-     * @return string
-     */
-    public static function camelCase(string $name, bool $upperFirst = false): string
-    {
-        $name = \trim($name, '-_');
-
-        // convert 'first-second' to 'firstSecond'
-        if (\strpos($name, '-')) {
-            $name = ucwords(\str_replace('-', ' ', $name));
-            $name = \str_replace(' ', '', lcfirst($name));
-        }
-
-        return $upperFirst ? ucfirst($name) : $name;
-    }
-
-    /**
-     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
-     * @param  string $str
-     * @param bool    $upperFirst
-     * @return mixed
-     */
-    public static function toCamelCase(string $str, bool $upperFirst = false): string
-    {
-        $str = (string)self::strtolower($str);
-
-        if ($upperFirst) {
-            $str = self::ucfirst($str);
-        }
-
-        return preg_replace_callback('/_+([a-z])/', function ($c) {
-            return strtoupper($c[1]);
-        }, $str);
-    }
-
-    public static function snake(string $str, string $sep = '_'): string
-    {
-        return self::toSnakeCase($str, $sep);
-    }
-
-    public static function toSnake(string $str, string $sep = '_'): string
-    {
-        return self::toSnakeCase($str, $sep);
-    }
-
-    /**
-     * Transform a CamelCase string to underscore_case string
-     * @param string $str
-     * @param string $sep
-     * @return string
-     */
-    public static function toSnakeCase(string $str, string $sep = '_'): string
-    {
-        // 'CMSCategories' => 'cms_categories'
-        // 'RangePrice' => 'range_price'
-        return self::lower(\trim(\preg_replace('/([A-Z][a-z])/', $sep . '$1', $str), $sep));
-    }
-
-    /**
-     * 驼峰式 <=> 下划线式
-     * @param  string $str [description]
-     * @param  bool   $toCamelCase
-     * true : 驼峰式 => 下划线式
-     * false : 驼峰式 <= 下划线式
-     * @return string
-     */
-    public static function nameChange(string $str, bool $toCamelCase = true): string
-    {
-        $str = \trim($str);
-
-        // 默认 ：下划线式 =>驼峰式
-        if ($toCamelCase) {
-            if (\strpos($str, '_') === false) {
-                return $str;
-            }
-
-            $arr_char  = explode('_', strtolower($str));
-            $newString = array_shift($arr_char);
-
-            foreach ($arr_char as $val) {
-                $newString .= ucfirst($val);
-            }
-
-            return $newString;
-        }
-
-        // 驼峰式 => 下划线式
-        return strtolower(\preg_replace('/((?<=[a-z])(?=[A-Z]))/', '_', $str));
-    }
 
     ////////////////////////////////////////////////////////////////////////
     /// Convert to array
@@ -591,7 +328,7 @@ abstract class StringHelper
     {
         $string = \trim($string, "$delimiter ");
 
-        if (!\strpos($string, $delimiter)) {
+        if (!strpos($string, $delimiter)) {
             return [$string];
         }
 
@@ -660,7 +397,7 @@ abstract class StringHelper
             return mb_substr($str, $start, ($length === null ? self::strlen($str) : (int)$length), $encoding);
         }
 
-        return \substr($str, $start, ($length === null ? self::strlen($str) : (int)$length));
+        return substr($str, $start, ($length === null ? self::strlen($str) : (int)$length));
     }
 
     /**
@@ -752,7 +489,7 @@ abstract class StringHelper
 
         $str = utf8_decode($str);
 
-        return utf8_encode(\substr($str, 0, $maxLength - self::strlen($suffix)) . $suffix);
+        return utf8_encode(substr($str, 0, $maxLength - self::strlen($suffix)) . $suffix);
     }
 
     /**
@@ -776,7 +513,7 @@ abstract class StringHelper
         if (function_exists('mb_substr')) {
             $str = mb_substr(strip_tags($str), $start, $length, 'utf-8');
         } else {
-            $str = \substr($str, $start, $length) . '...';
+            $str = substr($str, $start, $length) . '...';
         }
 
         return $str;
