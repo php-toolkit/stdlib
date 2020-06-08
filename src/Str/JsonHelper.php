@@ -12,6 +12,18 @@ namespace Toolkit\Stdlib\Str;
 use RuntimeException;
 use InvalidArgumentException;
 use stdClass;
+use function json_encode;
+use function json_decode;
+use function is_string;
+use function file_get_contents;
+use function dirname;
+use function file_exists;
+use function basename;
+use function preg_replace;
+use function file_put_contents;
+use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Class JsonHelper
@@ -26,9 +38,9 @@ class JsonHelper
      */
     public static function prettyJSON(
         $data,
-        int $flags = \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES
+        int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
     ) {
-        return \json_encode($data, $flags);
+        return json_encode($data, $flags);
     }
 
     /**
@@ -38,7 +50,7 @@ class JsonHelper
      */
     public static function encode($data): string
     {
-        return \json_encode($data, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -68,7 +80,7 @@ class JsonHelper
             throw new InvalidArgumentException("File not found or does not exist resources: {$file}");
         }
 
-        $string = \file_get_contents($file);
+        $string = file_get_contents($file);
 
         return self::parseString($string, $toArray);
     }
@@ -84,7 +96,7 @@ class JsonHelper
             return $toArray ? [] : new stdClass();
         }
 
-        $string = (string)\preg_replace([
+        $string = (string)preg_replace([
             // 去掉所有多行注释/* .... */
             '/\/\*.*?\*\/\s*/is',
             // 去掉所有单行注释//....
@@ -94,7 +106,7 @@ class JsonHelper
         ], ['', '', ' '], trim($string));
 
         // json_last_error() === JSON_ERROR_NONE
-        return \json_decode($string, $toArray);
+        return json_decode($string, $toArray);
     }
 
     /**
@@ -109,21 +121,21 @@ class JsonHelper
      */
     public static function format($input, $output = false, array $options = [])
     {
-        if (!\is_string($input)) {
+        if (!is_string($input)) {
             return false;
         }
 
         $data = \trim($input);
 
-        if (\file_exists($input)) {
-            $data = \file_get_contents($input);
+        if (file_exists($input)) {
+            $data = file_get_contents($input);
         }
 
         if (!$data) {
             return false;
         }
 
-        $data = \preg_replace([
+        $data = preg_replace([
             // 去掉所有多行注释/* .... */
             '/\/\*.*?\*\/\s*/is',
             // 去掉所有单行注释//....
@@ -139,9 +151,9 @@ class JsonHelper
         $default = ['type' => 'min'];
         $options = \array_merge($default, $options);
 
-        if (\file_exists($input) && (empty($options['file']) || !\is_file($options['file']))) {
-            $dir  = \dirname($input);
-            $name = \basename($input, '.json');
+        if (file_exists($input) && (empty($options['file']) || !\is_file($options['file']))) {
+            $dir  = dirname($input);
+            $name = basename($input, '.json');
             $file = $dir . '/' . $name . '.' . $options['type'] . '.json';
             // save to options
             $options['file'] = $file;
@@ -161,20 +173,20 @@ class JsonHelper
     {
         $default = ['type' => 'min', 'file' => ''];
         $options = array_merge($default, $options);
-        $saveDir = \dirname($output);
+        $saveDir = dirname($output);
 
-        if (!\file_exists($saveDir)) {
+        if (!file_exists($saveDir)) {
             throw new RuntimeException('设置的json文件输出' . $saveDir . '目录不存在！');
         }
 
-        $name = \basename($output, '.json');
+        $name = basename($output, '.json');
         $file = $saveDir . '/' . $name . '.' . $options['type'] . '.json';
 
         // 去掉空白
         if ($options['type '] === 'min') {
-            $data = \preg_replace('/(?!\w)\s*?(?!\w)/i', '', $data);
+            $data = preg_replace('/(?!\w)\s*?(?!\w)/i', '', $data);
         }
 
-        return \file_put_contents($file, $data);
+        return file_put_contents($file, $data);
     }
 }

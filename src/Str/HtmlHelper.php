@@ -9,6 +9,16 @@
 
 namespace Toolkit\Stdlib\Str;
 
+use function is_string;
+use function htmlspecialchars;
+use function htmlentities;
+use function strpos;
+use function is_array;
+use function htmlspecialchars_decode;
+use function html_entity_decode;
+use function preg_match_all;
+use function array_key_exists;
+
 /**
  * Class HtmlHelper
  * @package Toolkit\Stdlib\Str
@@ -24,7 +34,7 @@ class HtmlHelper
      */
     public static function encode($text, $charset = 'utf-8'): string
     {
-        return \htmlspecialchars($text, ENT_QUOTES, $charset);
+        return htmlspecialchars($text, ENT_QUOTES, $charset);
     }
 
     /**
@@ -35,7 +45,7 @@ class HtmlHelper
      */
     public static function decode($text): string
     {
-        return \htmlspecialchars_decode($text, ENT_QUOTES);
+        return htmlspecialchars_decode($text, ENT_QUOTES);
     }
 
     /**
@@ -50,13 +60,13 @@ class HtmlHelper
         $d = [];
 
         foreach ($data as $key => $value) {
-            if (\is_string($key)) {
-                $key = \htmlspecialchars($key, ENT_QUOTES, $charset);
+            if (is_string($key)) {
+                $key = htmlspecialchars($key, ENT_QUOTES, $charset);
             }
 
-            if (\is_string($value)) {
-                $value = \htmlspecialchars($value, ENT_QUOTES, $charset);
-            } elseif (\is_array($value)) {
+            if (is_string($value)) {
+                $value = htmlspecialchars($value, ENT_QUOTES, $charset);
+            } elseif (is_array($value)) {
                 $value = static::encodeArray($value);
             }
 
@@ -81,7 +91,7 @@ class HtmlHelper
      */
     public static function escape($data, int $type = 0, $encoding = 'UTF-8')
     {
-        if (\is_array($data)) {
+        if (is_array($data)) {
             foreach ($data as $k => $v) {
                 $data[$k] = self::escape($data, $type, $encoding);
             }
@@ -91,13 +101,13 @@ class HtmlHelper
 
         // 默认使用  htmlspecialchars()
         if (!$type) {
-            $data = \htmlspecialchars($data, \ENT_QUOTES, $encoding);
+            $data = htmlspecialchars($data, \ENT_QUOTES, $encoding);
         } else {
-            $data = \htmlentities($data, \ENT_QUOTES, $encoding);
+            $data = htmlentities($data, \ENT_QUOTES, $encoding);
         }
 
         //如‘&#x5FD7;’这样的16进制的html字符，为了防止这样的字符被错误转译，使用正则进行匹配，把这样的字符又转换回来。
-        if (\strpos($data, '&#')) {
+        if (strpos($data, '&#')) {
             $data = \preg_replace('/&((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $data);
         }
 
@@ -113,14 +123,14 @@ class HtmlHelper
      */
     public static function unescap($data, $type = 0, $encoding = 'UTF-8')
     {
-        if (\is_array($data)) {
+        if (is_array($data)) {
             foreach ($data as $k => $v) {
                 $data[$k] = self::unescap($data, $type, $encoding);
             }
         } elseif (!$type) {//默认使用  htmlspecialchars_decode()
-            $data = \htmlspecialchars_decode($data, \ENT_QUOTES);
+            $data = htmlspecialchars_decode($data, \ENT_QUOTES);
         } else {
-            $data = \html_entity_decode($data, \ENT_QUOTES, $encoding);
+            $data = html_entity_decode($data, \ENT_QUOTES, $encoding);
         }
 
         return $data;
@@ -176,12 +186,12 @@ class HtmlHelper
         // $preg = '/<img.*?src=[\"|\']?(.*?)[\"|\']?\s.*>/i';
         $preg = '/<img.+src=\"(:?.+.+\.(?:jpg|gif|bmp|bnp|png)\"?).+>/i';
 
-        if (!\preg_match_all($preg, trim($html), $images)) {
+        if (!preg_match_all($preg, trim($html), $images)) {
             return [];
         }
 
         if ($onlySrc) {
-            return \array_key_exists(1, $images) ? $images[1] : [];
+            return array_key_exists(1, $images) ? $images[1] : [];
         }
 
         return $images;
