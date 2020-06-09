@@ -7,33 +7,40 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib\Str;
+namespace Toolkit\Stdlib;
 
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
 use stdClass;
-use function json_encode;
-use function json_decode;
-use function is_string;
-use function file_get_contents;
+use function array_merge;
+use function basename;
 use function dirname;
 use function file_exists;
-use function basename;
-use function preg_replace;
+use function file_get_contents;
 use function file_put_contents;
+use function is_file;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use function json_last_error;
+use function json_last_error_msg;
+use function preg_replace;
+use function trim;
 use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Class JsonHelper
- * @package Toolkit\Stdlib\Str
+ *
+ * @package Toolkit\Stdlib
  */
 class JsonHelper
 {
     /**
      * @param mixed $data
      * @param int   $flags
+     *
      * @return false|string
      */
     public static function prettyJSON(
@@ -44,18 +51,59 @@ class JsonHelper
     }
 
     /**
-     * encode data to json
-     * @param $data
+     * Encode data to json
+     *
+     * @param mixed $data
+     * @param int $options
+     * @param int $depth
+     *
      * @return string
      */
-    public static function encode($data): string
+    public static function encode($data, int $options = 0, int $depth = 512): string
     {
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return json_encode($data, $options, $depth);
+    }
+
+    /**
+     * Encode data to json with some default options
+     *
+     * @param mixed $data
+     * @param int $options
+     * @param int $depth
+     *
+     * @return string
+     */
+    public static function encodeCN($data, int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, int $depth = 512): string
+    {
+        return json_encode($data, $options, $depth);
+    }
+
+    /**
+     * Decode json
+     *
+     * @param string $json
+     * @param bool   $assoc
+     * @param int    $depth
+     * @param int    $options
+     *
+     * @return array|object
+     */
+    public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
+    {
+        $data = json_decode($json, $assoc, $depth, $options);
+
+        if ($errCode = json_last_error()) {
+            $errMsg = json_last_error_msg();
+            throw new RuntimeException("JSON decode error: $errMsg", $errCode);
+        }
+
+        return $data;
     }
 
     /**
      * @param string $data
      * @param bool   $toArray
+     *
      * @return array|mixed|null|stdClass|string
      * @throws InvalidArgumentException
      */
@@ -71,13 +119,14 @@ class JsonHelper
     /**
      * @param string    $file
      * @param bool|true $toArray
+     *
      * @return mixed|null|string
      * @throws InvalidArgumentException
      */
     public static function parseFile(string $file, $toArray = true)
     {
-        if (!\is_file($file)) {
-            throw new InvalidArgumentException("File not found or does not exist resources: {$file}");
+        if (!is_file($file)) {
+            throw new InvalidArgumentException("File not found: {$file}");
         }
 
         $string = file_get_contents($file);
@@ -88,11 +137,12 @@ class JsonHelper
     /**
      * @param string $string
      * @param bool   $toArray
+     *
      * @return array|mixed|stdClass
      */
     public static function parseString(string $string, bool $toArray = true)
     {
-        if (!$string) {
+        if (!$string = trim($string)) {
             return $toArray ? [] : new stdClass();
         }
 
@@ -103,20 +153,21 @@ class JsonHelper
             '/\/\/.*?[\r\n]/is',
             // 去掉空白, 多个空格换成一个
             //'/(?!\w)\s*?(?!\w)/is'
-        ], ['', '', ' '], trim($string));
+        ], ['', '', ' '], $string);
 
         // json_last_error() === JSON_ERROR_NONE
         return json_decode($string, $toArray);
     }
 
     /**
-     * @param string $input 文件 或 数据
-     * @param bool   $output 是否输出到文件， 默认返回格式化的数据
+     * @param string $input   文件 或 数据
+     * @param bool   $output  是否输出到文件， 默认返回格式化的数据
      * @param array  $options 当 $output=true,此选项有效
-     * $options = [
-     *      'type'      => 'min' // 输出数据类型 min 压缩过的 raw 正常的
-     *      'file'      => 'xx.json' // 输出文件路径;仅是文件名，则会取输入路径
-     * ]
+     *                        $options = [
+     *                        'type'      => 'min' // 输出数据类型 min 压缩过的 raw 正常的
+     *                        'file'      => 'xx.json' // 输出文件路径;仅是文件名，则会取输入路径
+     *                        ]
+     *
      * @return string | bool
      */
     public static function format($input, $output = false, array $options = [])
@@ -125,8 +176,7 @@ class JsonHelper
             return false;
         }
 
-        $data = \trim($input);
-
+        $data = trim($input);
         if (file_exists($input)) {
             $data = file_get_contents($input);
         }
@@ -149,9 +199,9 @@ class JsonHelper
         }
 
         $default = ['type' => 'min'];
-        $options = \array_merge($default, $options);
+        $options = array_merge($default, $options);
 
-        if (file_exists($input) && (empty($options['file']) || !\is_file($options['file']))) {
+        if (file_exists($input) && (empty($options['file']) || !is_file($options['file']))) {
             $dir  = dirname($input);
             $name = basename($input, '.json');
             $file = $dir . '/' . $name . '.' . $options['type'] . '.json';
@@ -167,6 +217,7 @@ class JsonHelper
      * @param string $data
      * @param string $output
      * @param array  $options
+     *
      * @return bool|int
      */
     public static function saveAs(string $data, string $output, array $options = [])

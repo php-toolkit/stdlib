@@ -7,11 +7,11 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib\Str;
+namespace Toolkit\Stdlib;
 
 /**
  * Class Json
- * @package Toolkit\Stdlib\Str
+ * @package Toolkit\Stdlib
  */
 final class Json extends JsonHelper
 {
