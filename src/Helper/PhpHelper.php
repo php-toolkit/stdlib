@@ -13,6 +13,7 @@ use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
 use function explode;
 use function is_array;
+use function is_callable;
 use function is_object;
 use function is_string;
 use function memory_get_peak_usage;
@@ -35,6 +36,20 @@ use function var_export;
  */
 class PhpHelper
 {
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public static function value($value)
+    {
+        if (is_callable($value)) {
+            return $value();
+        }
+
+        return $value;
+    }
+
     /**
      * get $_SERVER value
      *

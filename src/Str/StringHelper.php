@@ -410,7 +410,7 @@ abstract class StringHelper
     public static function utf8SubStr(string $str, int $start = 0, int $end = null): string
     {
         if (empty($str)) {
-            return false;
+            return '';
         }
 
         if (function_exists('mb_substr')) {

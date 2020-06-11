@@ -12,7 +12,7 @@ namespace Toolkit\Stdlib\Arr;
 use ArrayAccess;
 use ArrayObject;
 use stdClass;
-use Toolkit\Collection\CollectionInterface;
+use Toolkit\Stdlib\Php;
 use Traversable;
 use function array_change_key_case;
 use function array_diff;
@@ -39,6 +39,7 @@ use function is_resource;
 use function is_scalar;
 use function is_string;
 use function mb_strlen;
+use function method_exists;
 use function strlen;
 use function strpos;
 use function strtolower;
@@ -250,7 +251,7 @@ class ArrayHelper
             return trim($data);
         }
 
-        array_walk_recursive($data, function (&$value): void {
+        array_walk_recursive($data, static function (&$value): void {
             $value = trim($value);
         });
 
@@ -330,7 +331,7 @@ class ArrayHelper
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
             $check = trim($check, ', ');
-            $check = strpos($check, ',') !== false ? explode(',', $check) : [$check];
+            $check = strpos($check, ',') !== false ? (array)explode(',', $check) : [$check];
         }
 
         return !array_diff((array)$check, $sampleArr);
@@ -350,7 +351,7 @@ class ArrayHelper
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
             $check = trim($check, ', ');
-            $check = strpos($check, ',') !== false ? explode(',', $check) : [$check];
+            $check = strpos($check, ',') !== false ? (array)explode(',', $check) : [$check];
         }
 
         return (bool)array_intersect((array)$check, $sampleArr);
@@ -569,8 +570,8 @@ class ArrayHelper
         $results = [];
 
         foreach ($array as $values) {
-            if ($values instanceof CollectionInterface) {
-                $values = $values->all();
+            if (is_object($values) && method_exists($values, 'toArray')) {
+                $values = $values->toArray();
             } elseif (!is_array($values)) {
                 continue;
             }
@@ -591,9 +592,9 @@ class ArrayHelper
      */
     public static function crossJoin(...$arrays): array
     {
-        return array_reduce($arrays, function ($results, $array) {
-            return static::collapse(array_map(function ($parent) use ($array) {
-                return array_map(function ($item) use ($parent) {
+        return array_reduce($arrays, static function ($results, $array) {
+            return static::collapse(array_map(static function ($parent) use ($array) {
+                return array_map(static function ($item) use ($parent) {
                     return array_merge($parent, [$item]);
                 }, $array);
             }, $results));
@@ -698,7 +699,7 @@ class ArrayHelper
     public static function get($array, $key, $default = null)
     {
         if (!static::accessible($array)) {
-            return value($default);
+            return Php::value($default);
         }
 
         if (null === $key) {
@@ -713,7 +714,7 @@ class ArrayHelper
             if (static::accessible($array) && static::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
-                return value($default);
+                return Php::value($default);
             }
         }
 
@@ -763,10 +764,12 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function flatten($array, $depth = INF): array
+    public static function flatten($array, int $depth = INF): array
     {
-        return array_reduce($array, function ($result, $item) use ($depth) {
-            $item = $item instanceof CollectionInterface ? $item->all() : $item;
+        return array_reduce($array, static function ($result, $item) use ($depth) {
+            if (is_object($item) && method_exists($item, 'toArray')) {
+                $item = $item->toArray();
+            }
 
             if (!is_array($item)) {
                 return array_merge($result, [$item]);
@@ -1078,6 +1081,11 @@ class ArrayHelper
         return $string;
     }
 
+    /**
+     * @param $array
+     *
+     * @return array
+     */
     public static function toLimitOut($array): array
     {
         if (!is_array($array)) {
