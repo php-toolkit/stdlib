@@ -7,7 +7,7 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib;
+namespace Toolkit\Stdlib\Helper;
 
 use InvalidArgumentException;
 use RuntimeException;

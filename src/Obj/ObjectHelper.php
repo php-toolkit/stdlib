@@ -39,6 +39,8 @@ use function unserialize;
  */
 class ObjectHelper
 {
+    public const TO_ARRAY_METHOD = 'toArray';
+
     /**
      * 给对象设置属性值
      * - 会先尝试用 setter 方法设置属性
@@ -237,7 +239,7 @@ class ObjectHelper
      * @param string $class a className
      *
      * @return mixed
-     * @throws RuntimeException
+     * @throws ReflectionException
      */
     public static function create(string $class)
     {
@@ -265,7 +267,7 @@ class ObjectHelper
      *
      * @return mixed
      */
-    public static function smartCreate($config)
+    public static function createByArray($config)
     {
         if (is_string($config)) {
             return new $config;

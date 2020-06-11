@@ -9,8 +9,11 @@
 
 namespace Toolkit\Stdlib;
 
+use Toolkit\Stdlib\Helper\JsonHelper;
+
 /**
  * Class Json
+ *
  * @package Toolkit\Stdlib
  */
 final class Json extends JsonHelper

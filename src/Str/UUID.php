@@ -358,9 +358,10 @@ class UUID
      *
      * @param string $a
      * @param string $b
-     * @return string|string
+     *
+     * @return bool
      */
-    public static function compare(string $a, string $b): string
+    public static function compare(string $a, string $b): bool
     {
         return static::makeBin($a, 16) === static::makeBin($b, 16);
     }

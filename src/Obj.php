@@ -7,9 +7,10 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib\Obj;
+namespace Toolkit\Stdlib;
 
 use ArrayAccess;
+use Toolkit\Stdlib\Obj\ObjectHelper;
 use Toolkit\Stdlib\Obj\Traits\ObjectPoolTrait;
 
 /**
