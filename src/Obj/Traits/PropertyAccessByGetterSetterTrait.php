@@ -37,7 +37,7 @@ trait PropertyAccessByGetterSetterTrait
      *
      * @throws SetPropertyException
      */
-    public function __set($name, $value)
+    public function __set($name, $value): void
     {
         $setter = 'set' . ucfirst($name);
 
@@ -94,7 +94,7 @@ trait PropertyAccessByGetterSetterTrait
      *
      * @throws PropertyException
      */
-    public function __unset($name)
+    public function __unset($name): void
     {
         $setter = 'set' . ucfirst($name);
 

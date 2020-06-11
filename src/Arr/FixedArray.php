@@ -72,7 +72,7 @@ class FixedArray implements ArrayAccess, IteratorAggregate
      * @param string $key
      * @param mixed  $value
      */
-    public function __set(string $key, $value)
+    public function __set(string $key, $value): void
     {
         $this->offsetSet($key, $value);
     }

@@ -20,6 +20,16 @@ final class StrBuffer
      */
     private $body;
 
+    /**
+     * @param string $content
+     *
+     * @return static
+     */
+    public static function new(string $content): self
+    {
+        return new self($content);
+    }
+
     public function __construct(string $content = '')
     {
         $this->body = $content;

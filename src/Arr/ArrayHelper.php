@@ -250,7 +250,7 @@ class ArrayHelper
             return trim($data);
         }
 
-        array_walk_recursive($data, function (&$value) {
+        array_walk_recursive($data, function (&$value): void {
             $value = trim($value);
         });
 

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 /**
- * This file is part of toolkit/phpkit.
+ * This file is part of toolkit/stdlib.
  *
  * @author   https://github.com/inhere
- * @link     https://github.com/php-toolkit/phpkit
+ * @link     https://github.com/php-toolkit/stdlib
  * @license  MIT
  */
 
@@ -12,7 +12,6 @@ namespace Toolkit\Stdlib\Helper;
 use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
 use function explode;
-use function get_defined_constants;
 use function is_array;
 use function is_object;
 use function is_string;

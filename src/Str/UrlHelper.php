@@ -20,11 +20,13 @@ use function get_headers;
 use function stream_context_create;
 use function file_get_contents;
 use function parse_url;
+use function strpos;
 use function trim;
 use function urldecode;
 use function rawurlencode;
 use function mb_convert_encoding;
 use function str_replace;
+use function urlencode;
 use const CURLOPT_NOBODY;
 use const CURLOPT_CONNECTTIMEOUT;
 use const CURLOPT_TIMEOUT;
@@ -44,7 +46,7 @@ class UrlHelper
      */
     public static function isRelative(string $url): bool
     {
-        return false === \strpos($url, '//') && strpos($url, '://') === false;
+        return false === strpos($url, '//') && strpos($url, '://') === false;
     }
 
     /**
@@ -66,7 +68,7 @@ class UrlHelper
      */
     public static function isFullUrl(string $url): bool
     {
-        return 0 === \strpos($url, 'http:') || 0 === \strpos($url, 'https:') || 0 === \strpos($url, '//');
+        return 0 === strpos($url, 'http:') || 0 === strpos($url, 'https:') || 0 === strpos($url, '//');
     }
 
     /**
@@ -78,7 +80,7 @@ class UrlHelper
     public static function build($url, $data = null): string
     {
         if ($data && ($param = http_build_query($data))) {
-            $url .= (\strpos($url, '?') ? '&' : '?') . $param;
+            $url .= (strpos($url, '?') ? '&' : '?') . $param;
         }
 
         return $url;
@@ -107,7 +109,7 @@ class UrlHelper
         } elseif (function_exists('get_headers')) {
             $headers = get_headers($url, 1);
 
-            return \strpos($headers[0], 200) > 0;
+            return strpos($headers[0], 200) > 0;
         } else {
             $opts     = [
                 'http' => ['timeout' => 5,]
@@ -162,6 +164,11 @@ class UrlHelper
         ']'
     ];
 
+    /**
+     * @param string $url
+     *
+     * @return array
+     */
     public static function parseUrl(string $url): array
     {
         $result = [];
@@ -193,7 +200,7 @@ class UrlHelper
      *
      * @param $url
      *
-     * @return mixed|string [type] [description]
+     * @return mixed|string
      */
     public static function encode(string $url)
     {
@@ -204,7 +211,7 @@ class UrlHelper
         // 若已被编码的url，将被解码，再继续重新编码
         $url = urldecode($url);
 
-        $encodeUrl = \urlencode($url);
+        $encodeUrl = urlencode($url);
         $encodeUrl = str_replace(self::$entities, self::$replacements, $encodeUrl);
 
         return $encodeUrl;
@@ -218,9 +225,9 @@ class UrlHelper
      * $url2 =  urldecode($url);
      * echo $url1.PHP_EOL.$url2;
      *
-     * @param string $url [description]
+     * @param string $url
      *
-     * @return mixed|string [type]      [description]
+     * @return mixed|string
      */
     public static function encode2(string $url)
     {

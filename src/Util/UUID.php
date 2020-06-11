@@ -378,12 +378,12 @@ class UUID
         return (boolean)preg_match('~' . static::VALID_UUID_REGEX . '~', static::import($uuid)->string);
     }
 
-    public function __isset($var)
+    public function __isset($var): void
     {
         //
     }
 
-    public function __set($var, $val)
+    public function __set($var, $val): void
     {
         //
     }

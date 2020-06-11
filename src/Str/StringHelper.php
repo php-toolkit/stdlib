@@ -38,7 +38,6 @@ use function mb_substr;
 use function preg_match;
 use function preg_split;
 use function random_bytes;
-use function random_token;
 use function str_pad;
 use function str_replace;
 use function str_split;

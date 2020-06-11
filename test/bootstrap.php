@@ -10,7 +10,7 @@
 error_reporting(E_ALL | E_STRICT);
 date_default_timezone_set('Asia/Shanghai');
 
-spl_autoload_register(static function ($class) {
+spl_autoload_register(static function ($class): void {
     $file = null;
 
     if (0 === strpos($class, 'Inhere\Console\Examples\\')) {
