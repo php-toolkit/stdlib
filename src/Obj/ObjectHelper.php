@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Obj;
 
+use ArrayAccess;
 use Closure;
 use ReflectionClass;
 use ReflectionException;
@@ -154,6 +155,16 @@ class ObjectHelper
         }
 
         return $arr;
+    }
+
+    /**
+     * @param object $object
+     *
+     * @return bool
+     */
+    public static function isArrayable($object): bool
+    {
+        return $object instanceof ArrayAccess || method_exists($object, 'toArray');
     }
 
     /**

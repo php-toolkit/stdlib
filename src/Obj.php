@@ -9,8 +9,8 @@
 
 namespace Toolkit\Stdlib;
 
-use ArrayAccess;
 use Toolkit\Stdlib\Obj\ObjectHelper;
+use Toolkit\Stdlib\Obj\Traits\CreateSingletonTrait;
 use Toolkit\Stdlib\Obj\Traits\ObjectPoolTrait;
 
 /**
@@ -21,48 +21,5 @@ use Toolkit\Stdlib\Obj\Traits\ObjectPoolTrait;
  */
 class Obj extends ObjectHelper
 {
-    use ObjectPoolTrait;
-
-    /**
-     * @var array
-     */
-    private static $singletons = [];
-
-    /**
-     * @param string $class
-     *
-     * @return mixed
-     */
-    public static function singleton(string $class)
-    {
-        if (!isset(self::$singletons[$class])) {
-            self::$singletons[$class] = new $class;
-        }
-
-        return self::$singletons[$class];
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return mixed
-     */
-    public static function factory(string $class)
-    {
-        if (!isset(self::$singletons[$class])) {
-            self::$singletons[$class] = new $class;
-        }
-
-        return clone self::$singletons[$class];
-    }
-
-    /**
-     * @param $object
-     *
-     * @return bool
-     */
-    public static function isArrayable($object): bool
-    {
-        return $object instanceof ArrayAccess || method_exists($object, 'toArray');
-    }
+    use ObjectPoolTrait, CreateSingletonTrait;
 }

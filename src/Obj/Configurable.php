@@ -16,7 +16,7 @@ use Toolkit\Stdlib\Obj\Traits\PropertyAccessByGetterSetterTrait;
  *
  * @package Toolkit\Stdlib\Obj
  */
-class Configurable
+abstract class Configurable
 {
     use PropertyAccessByGetterSetterTrait;
 
@@ -28,7 +28,7 @@ class Configurable
     public function __construct(array $config = [])
     {
         if ($config) {
-            Obj::init($this, $config);
+            ObjectHelper::init($this, $config);
         }
 
         $this->init();

@@ -9,7 +9,7 @@
 
 namespace Toolkit\Stdlib\Obj\Traits;
 
-use Toolkit\Stdlib\Obj\Obj;
+use Toolkit\Stdlib\Obj;
 
 /**
  * Trait SingletonTrait
@@ -21,7 +21,7 @@ trait SingletonTrait
     /**
      * @return mixed
      */
-    public static function own()
+    public static function new()
     {
         return Obj::singleton(static::class);
     }

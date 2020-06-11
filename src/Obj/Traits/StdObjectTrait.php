@@ -10,7 +10,7 @@
 namespace Toolkit\Stdlib\Obj\Traits;
 
 use InvalidArgumentException;
-use Toolkit\Stdlib\Obj\Obj;
+use Toolkit\Stdlib\Obj;
 use function basename;
 use function call_user_func_array;
 use function dirname;
