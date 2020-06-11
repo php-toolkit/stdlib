@@ -7,7 +7,7 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib\Str;
+namespace Toolkit\Stdlib\Util;
 
 use Exception;
 use InvalidArgumentException;
