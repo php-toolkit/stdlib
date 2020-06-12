@@ -19,7 +19,6 @@ use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function is_file;
-use function is_string;
 use function json_decode;
 use function json_encode;
 use function json_last_error;
@@ -54,8 +53,8 @@ class JsonHelper
      * Encode data to json
      *
      * @param mixed $data
-     * @param int $options
-     * @param int $depth
+     * @param int   $options
+     * @param int   $depth
      *
      * @return string
      */
@@ -68,13 +67,16 @@ class JsonHelper
      * Encode data to json with some default options
      *
      * @param mixed $data
-     * @param int $options
-     * @param int $depth
+     * @param int   $options
+     * @param int   $depth
      *
      * @return string
      */
-    public static function encodeCN($data, int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE, int $depth = 512): string
-    {
+    public static function encodeCN(
+        $data,
+        int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+        int $depth = 512
+    ): string {
         return json_encode($data, $options, $depth);
     }
 
@@ -101,10 +103,31 @@ class JsonHelper
     }
 
     /**
+     * Decode json file
+     *
+     * @param string $jsonFile
+     * @param bool   $assoc
+     * @param int    $depth
+     * @param int    $options
+     *
+     * @return array|object
+     */
+    public static function decodeFile(string $jsonFile, bool $assoc = false, int $depth = 512, int $options = 0)
+    {
+        if (!is_file($jsonFile)) {
+            throw new InvalidArgumentException("json file not found: {$jsonFile}");
+        }
+
+        $json = file_get_contents($jsonFile);
+
+        return self::decode($json, $assoc, $depth, $options);
+    }
+
+    /**
      * @param string $data
      * @param bool   $toArray
      *
-     * @return array|mixed|null|stdClass|string
+     * @return array|mixed|stdClass
      * @throws InvalidArgumentException
      */
     public static function parse(string $data, bool $toArray = true)
@@ -117,50 +140,39 @@ class JsonHelper
     }
 
     /**
-     * @param string    $file
-     * @param bool|true $toArray
-     *
-     * @return mixed|null|string
-     * @throws InvalidArgumentException
-     */
-    public static function parseFile(string $file, $toArray = true)
-    {
-        if (!is_file($file)) {
-            throw new InvalidArgumentException("File not found: {$file}");
-        }
-
-        $string = file_get_contents($file);
-
-        return self::parseString($string, $toArray);
-    }
-
-    /**
-     * @param string $string
+     * @param string $jsonFile
      * @param bool   $toArray
      *
      * @return array|mixed|stdClass
      */
-    public static function parseString(string $string, bool $toArray = true)
+    public static function parseFile(string $jsonFile, bool $toArray = true)
     {
-        if (!$string = trim($string)) {
-            return $toArray ? [] : new stdClass();
+        if (!is_file($jsonFile)) {
+            throw new InvalidArgumentException("File not found: {$jsonFile}");
         }
 
-        $string = (string)preg_replace([
-            // 去掉所有多行注释/* .... */
-            '/\/\*.*?\*\/\s*/is',
-            // 去掉所有单行注释//....
-            '/\/\/.*?[\r\n]/is',
-            // 去掉空白, 多个空格换成一个
-            //'/(?!\w)\s*?(?!\w)/is'
-        ], ['', '', ' '], $string);
-
-        // json_last_error() === JSON_ERROR_NONE
-        return json_decode($string, $toArray);
+        $json = file_get_contents($jsonFile);
+        return self::parseString($json, $toArray);
     }
 
     /**
-     * @param string $input   文件 或 数据
+     * @param string $json
+     * @param bool   $toArray
+     *
+     * @return array|mixed|stdClass
+     */
+    public static function parseString(string $json, bool $toArray = true)
+    {
+        if (!$json = trim($json)) {
+            return $toArray ? [] : new stdClass();
+        }
+
+        $json = self::stripComments($json);
+        return self::decode($json, $toArray);
+    }
+
+    /**
+     * @param string $input   JSON 数据
      * @param bool   $output  是否输出到文件， 默认返回格式化的数据
      * @param array  $options 当 $output=true,此选项有效
      *                        $options = [
@@ -168,31 +180,13 @@ class JsonHelper
      *                        'file'      => 'xx.json' // 输出文件路径;仅是文件名，则会取输入路径
      *                        ]
      *
-     * @return string | bool
+     * @return string
      */
-    public static function format($input, $output = false, array $options = [])
+    public static function format(string $input, bool $output = false, array $options = []): string
     {
-        if (!is_string($input)) {
-            return false;
+        if (!$data = self::stripComments($input)) {
+            return '';
         }
-
-        $data = trim($input);
-        if (file_exists($input)) {
-            $data = file_get_contents($input);
-        }
-
-        if (!$data) {
-            return false;
-        }
-
-        $data = preg_replace([
-            // 去掉所有多行注释/* .... */
-            '/\/\*.*?\*\/\s*/is',
-            // 去掉所有单行注释//....
-            '/\/\/.*?[\r\n]/is',
-            // 去掉空白行
-            "/(\n[\r])+/is"
-        ], ['', '', "\n"], $data);
 
         if (!$output) {
             return $data;
@@ -239,5 +233,38 @@ class JsonHelper
         }
 
         return file_put_contents($file, $data);
+    }
+
+    /**
+     * @param string $json
+     *
+     * @return string
+     */
+    public static function clearComments(string $json): string
+    {
+        return self::stripComments($json);
+    }
+
+    /**
+     * @param string $json
+     *
+     * @return string
+     */
+    public static function stripComments(string $json): string
+    {
+        if (!$json = trim($json)) {
+            return '';
+        }
+
+        $pattern = [
+            // 去掉所有多行注释/* .... */
+            '/\/\*.*?\*\/\s*/is',
+            // 去掉所有单行注释//....
+            '/\/\/.*?[\r\n]/is',
+            // 去掉空白行
+            "/(\n[\r])+/is"
+        ];
+
+        return (string)preg_replace($pattern, ['', '', "\n"], $json);
     }
 }
