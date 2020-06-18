@@ -23,7 +23,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php}}
-          tools: pecl, php-cs-fixer, phpunit
+          tools: pecl, php-cs-fixer, phpunit-7.5
           extensions: mbstring, dom, fileinfo, openssl, igbinary # , swoole-4.4.19 #optional, setup extensions
           ini-values: post_max_size=56M, short_open_tag=On #optional, setup php.ini configuration
           coverage: none #optional, setup coverage driver: xdebug, none
