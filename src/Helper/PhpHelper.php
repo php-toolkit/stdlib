@@ -9,9 +9,11 @@
 
 namespace Toolkit\Stdlib\Helper;
 
+use RuntimeException;
 use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
 use function explode;
+use function fopen;
 use function is_array;
 use function is_callable;
 use function is_object;
@@ -48,6 +50,22 @@ class PhpHelper
         }
 
         return $value;
+    }
+
+    /**
+     * @param string $mode
+     *
+     * @return resource
+     */
+    public static function newMemoryStream(string $mode = 'rwb')
+    {
+        $handle = fopen('php://memory', $mode);
+
+        if (!is_resource($handle)) {
+            throw new RuntimeException('create temp memory stream fail');
+        }
+
+        return $handle;
     }
 
     /**
