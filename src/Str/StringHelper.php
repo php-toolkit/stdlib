@@ -13,6 +13,7 @@ use Exception;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use function array_map;
+use function array_merge;
 use function array_slice;
 use function array_values;
 use function base64_encode;
@@ -36,6 +37,7 @@ use function mb_strlen;
 use function mb_strwidth;
 use function mb_substr;
 use function preg_match;
+use function preg_match_all;
 use function preg_split;
 use function random_bytes;
 use function str_pad;
@@ -70,9 +72,9 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function pad($str, int $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
+    public static function pad($str, $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
     {
-        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr, $padType) : $str;
+        return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr, $padType) : (string)$str;
     }
 
     /**
@@ -82,9 +84,9 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function padLeft($str, int $padLen, string $padStr = ' '): string
+    public static function padLeft($str, $padLen, string $padStr = ' '): string
     {
-        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr, STR_PAD_LEFT) : $str;
+        return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr, STR_PAD_LEFT) : (string)$str;
     }
 
     /**
@@ -94,9 +96,9 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function padRight($str, int $padLen, string $padStr = ' '): string
+    public static function padRight($str, $padLen, string $padStr = ' '): string
     {
-        return $padLen > 0 ? str_pad((string)$str, $padLen, $padStr) : $str;
+        return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr) : (string)$str;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -109,8 +111,9 @@ abstract class StringHelper
      * @param string $string
      * @return int
      */
-    public static function len(string $string): int
+    public static function len($string): int
     {
+        $string = (string)$string;
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return strlen($string);
         }
@@ -124,9 +127,22 @@ abstract class StringHelper
      *
      * @return int
      */
-    public static function strlen(string $str, string $encoding = 'UTF-8'): int
+    public static function len2($str, string $encoding = 'UTF-8'): int
     {
-        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
+        $str = (string)$str;
+
+        return function_exists('mb_strlen') ? mb_strlen($str, $encoding) : strlen($str);
+    }
+
+    /**
+     * @param string $str
+     * @param string $encoding
+     *
+     * @return int
+     */
+    public static function strlen($str, string $encoding = 'UTF-8'): int
+    {
+        $str = html_entity_decode((string)$str, ENT_COMPAT, 'UTF-8');
 
         return function_exists('mb_strlen') ? mb_strlen($str, $encoding) : strlen($str);
     }
@@ -135,12 +151,12 @@ abstract class StringHelper
      * @param string $string
      * @return int
      */
-    public static function utf8Len(string $string): int
+    public static function utf8Len($string): int
     {
         // strlen: one chinese is 3 char.
         // mb_strlen: one chinese is 1 char.
         // mb_strwidth: one chinese is 2 char.
-        return mb_strlen($string, 'utf-8');
+        return mb_strlen((string)$string, 'utf-8');
     }
 
     /**
@@ -170,7 +186,7 @@ abstract class StringHelper
             return mb_strlen($str, 'utf-8');
         }
 
-        \preg_match_all('/./u', $str, $arr);
+        preg_match_all('/./u', $str, $arr);
 
         return count($arr[0]);
     }
@@ -196,7 +212,7 @@ abstract class StringHelper
             return mb_strlen($str, 'utf-8');
         }
 
-        \preg_match_all('/./u', $str, $ar);
+        preg_match_all('/./u', $str, $ar);
 
         return count($ar[0]);
     }
@@ -215,7 +231,7 @@ abstract class StringHelper
      */
     public static function random(int $length, array $param = []): string
     {
-        $param = \array_merge([
+        $param = array_merge([
             'prefix' => '',
             'suffix' => '',
             'chars'  => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
@@ -426,7 +442,7 @@ abstract class StringHelper
         }
 
         $null = '';
-        \preg_match_all('/./u', $str, $ar);
+        preg_match_all('/./u', $str, $ar);
 
         if (func_num_args() >= 3) {
             $end = func_get_arg(2);
@@ -460,7 +476,7 @@ abstract class StringHelper
             $re['gbk']    = "/[\x01-\x7f]|[\x81-\xfe][\x40-\xfe]/";
             $re['big5']   = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
 
-            \preg_match_all($re[$charset], $str, $match);
+            preg_match_all($re[$charset], $str, $match);
             if (count($match[0]) <= $length) {
                 return $str;
             }
