@@ -11,16 +11,16 @@ error_reporting(E_ALL | E_STRICT);
 date_default_timezone_set('Asia/Shanghai');
 
 spl_autoload_register(static function ($class): void {
-    $file = null;
+    $file = '';
 
-    if (0 === strpos($class, 'Inhere\Console\Examples\\')) {
-        $path = str_replace('\\', '/', substr($class, strlen('Inhere\Console\Examples\\')));
-        $file = dirname(__DIR__) . "/examples/{$path}.php";
-    } elseif (0 === strpos($class, 'Inhere\ConsoleTest\\')) {
-        $path = str_replace('\\', '/', substr($class, strlen('Inhere\ConsoleTest\\')));
+    if (0 === strpos($class, 'Toolkit\Stdlib\Example\\')) {
+        $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\Example\\')));
+        $file = dirname(__DIR__) . "/example/{$path}.php";
+    } elseif (0 === strpos($class, 'Toolkit\StdlibTest\\')) {
+        $path = str_replace('\\', '/', substr($class, strlen('Toolkit\StdlibTest\\')));
         $file = __DIR__ . "/{$path}.php";
-    } elseif (0 === strpos($class, 'Inhere\Console\\')) {
-        $path = str_replace('\\', '/', substr($class, strlen('Inhere\Console\\')));
+    } elseif (0 === strpos($class, 'Toolkit\Stdlib\\')) {
+        $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\\')));
         $file = dirname(__DIR__) . "/src/{$path}.php";
     }
 
