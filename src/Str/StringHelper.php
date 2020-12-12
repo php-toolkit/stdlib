@@ -12,6 +12,7 @@ namespace Toolkit\Stdlib\Str;
 use Exception;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
+use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
 use function array_map;
 use function array_merge;
@@ -62,6 +63,7 @@ abstract class StringHelper
 {
     use StringCaseHelperTrait;
     use StringCheckHelperTrait;
+    use StringLengthHelperTrait;
 
     /**
      * @param string $str
