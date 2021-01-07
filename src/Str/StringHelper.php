@@ -42,6 +42,7 @@ use function preg_match_all;
 use function preg_split;
 use function random_bytes;
 use function str_pad;
+use function str_repeat;
 use function str_replace;
 use function str_split;
 use function strip_tags;
@@ -61,6 +62,8 @@ use const STR_PAD_RIGHT;
  */
 abstract class StringHelper
 {
+    public static $defaultEncoding = 'UTF-8';
+
     use StringCaseHelperTrait;
     use StringCheckHelperTrait;
     use StringLengthHelperTrait;
@@ -100,6 +103,27 @@ abstract class StringHelper
     public static function padRight($str, $padLen, string $padStr = ' '): string
     {
         return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr) : (string)$str;
+    }
+
+    /**
+     * @param string $str
+     * @param int    $padLen
+     * @param string $padStr
+     * @param int    $padType
+     *
+     * @return string
+     */
+    public static function padByWidth($str,$padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
+    {
+        $stringWidth = mb_strwidth((string)$str, self::$defaultEncoding);
+        if ($stringWidth >= $padLen) {
+            return (string)$str;
+        }
+
+        $repeatTimes = (int)$padLen - $stringWidth;
+        $buildString = str_repeat($padStr, $repeatTimes);
+
+        return $padType === STR_PAD_RIGHT ? $str . $buildString : $buildString . $str;
     }
 
     ////////////////////////////////////////////////////////////
