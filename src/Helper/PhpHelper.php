@@ -172,6 +172,31 @@ class PhpHelper
     }
 
     /**
+     * Usage:
+     *
+     * $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+     * $position = PhpHelper::formatBacktrace($backtrace, 2);
+     *
+     * @param array $traces
+     * @param int   $index
+     *
+     * @return string
+     */
+    public static function formatBacktrace(array $traces, int $index): string
+    {
+        $position = 'UNKNOWN';
+
+        if (isset($traces[$index+1])) {
+            $tInfo = $traces[$index];
+            $prev  = $traces[$index+1];
+
+            $position = sprintf('%s.%s:%d', $prev['class'], $prev['function'] ?? 'UNKNOWN', $tInfo['line']);
+        }
+
+        return $position;
+    }
+
+    /**
      * dump vars
      *
      * @param array ...$args

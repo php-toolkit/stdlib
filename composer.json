@@ -26,7 +26,10 @@
   "autoload": {
     "psr-4": {
       "Toolkit\\Stdlib\\": "src/"
-    }
+    },
+    "files": [
+      "src/func.php"
+    ]
   },
   "suggest": {
     "inhere/php-validate": "Very lightweight data validate tool"
