@@ -6,5 +6,6 @@ composer.lock
 *.swp
 *.log
 *.pid
+*.cache
 *.patch
 .DS_Store
