@@ -12,7 +12,6 @@ namespace Toolkit\Stdlib\Arr;
 use ArrayAccess;
 use ArrayObject;
 use stdClass;
-use Toolkit\Stdlib\Php;
 use Traversable;
 use function array_change_key_case;
 use function array_diff;
@@ -32,7 +31,6 @@ use function get_class;
 use function gettype;
 use function in_array;
 use function is_array;
-use function is_int;
 use function is_numeric;
 use function is_object;
 use function is_resource;
@@ -52,6 +50,9 @@ use function trim;
  */
 class ArrayHelper
 {
+    use Traits\ArrayMergeTrait;
+    use Traits\ArrayValueGetSetTrait;
+
     /**
      * Determine whether the given value is array accessible.
      *
@@ -116,126 +117,6 @@ class ArrayHelper
         }
 
         return $object;
-    }
-
-    /**
-     * Get Multi - 获取多个, 可以设置默认值
-     *
-     * @param array      $data array data
-     * @param array      $needKeys
-     *                         $needKeys = [
-     *                         'name',
-     *                         'password',
-     *                         'status' => '1'
-     *                         ]
-     * @param bool|false $unsetKey
-     *
-     * @return array
-     */
-    public static function gets(array &$data, array $needKeys = [], $unsetKey = false): array
-    {
-        $needed = [];
-
-        foreach ($needKeys as $key => $default) {
-            if (is_int($key)) {
-                $key     = $default;
-                $default = null;
-            }
-
-            if (isset($data[$key])) {
-                $value = $data[$key];
-
-                if (is_int($default)) {
-                    $value = (int)$value;
-                } elseif (is_string($default)) {
-                    $value = trim($value);
-                } elseif (is_array($default)) {
-                    $value = (array)$value;
-                }
-
-                $needed[$key] = $value;
-
-                if ($unsetKey) {
-                    unset($data[$key]);
-                }
-            } else {
-                $needed[$key] = $default;
-            }
-        }
-
-        return $needed;
-    }
-
-    /**
-     * 递归合并两个多维数组,后面的值将会递归覆盖原来的值
-     *
-     * @param array|null $src
-     * @param array      $new
-     *
-     * @return array
-     */
-    public static function merge($src, array $new): array
-    {
-        if (!$src || !is_array($src)) {
-            return $new;
-        }
-
-        if (!$new) {
-            return $src;
-        }
-
-        foreach ($new as $key => $value) {
-            if (is_int($key)) {
-                if (isset($src[$key])) {
-                    $src[] = $value;
-                } else {
-                    $src[$key] = $value;
-                }
-            } elseif (array_key_exists($key, $src) && is_array($value)) {
-                $src[$key] = self::merge($src[$key], $new[$key]);
-            } else {
-                $src[$key] = $value;
-            }
-        }
-
-        return $src;
-    }
-
-    /**
-     * 递归合并多个多维数组,
-     *
-     * @from yii2
-     * Merges two or more arrays into one recursively.
-     *
-     * @param array $args
-     *
-     * @return array the merged array (the original arrays are not changed.)
-     */
-    public static function merge2(...$args): array
-    {
-        /** @var array[] $args */
-        $res = array_shift($args);
-
-        while (!empty($args)) {
-            /** @var array $next */
-            $next = array_shift($args);
-
-            foreach ($next as $k => $v) {
-                if (is_int($k)) {
-                    if (isset($res[$k])) {
-                        $res[] = $v;
-                    } else {
-                        $res[$k] = $v;
-                    }
-                } elseif (is_array($v) && isset($res[$k]) && is_array($res[$k])) {
-                    $res[$k] = self::merge2($res[$k], $v);
-                } else {
-                    $res[$k] = $v;
-                }
-            }
-        }
-
-        return $res;
     }
 
     /**
@@ -452,108 +333,6 @@ class ArrayHelper
         return $keyMaxWidth;
     }
 
-    /**
-     * Get data from array or object by path.
-     * Example: `DataCollector::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
-     *
-     * @param array|ArrayAccess $data      An array or object to get value.
-     * @param mixed             $path      The key path.
-     * @param mixed             $default
-     * @param string            $separator Separator of paths.
-     *
-     * @return mixed Found value, null if not exists.
-     */
-    public static function getByPath($data, string $path, $default = null, string $separator = '.')
-    {
-        if (isset($data[$path])) {
-            return $data[$path];
-        }
-
-        // Error: will clear '0'. eg 'some-key.0'
-        // if (!$nodes = array_filter(explode($separator, $path))) {
-        if (!$nodes = explode($separator, $path)) {
-            return $default;
-        }
-
-        $dataTmp = $data;
-
-        foreach ($nodes as $arg) {
-            if (is_object($dataTmp) && isset($dataTmp->$arg)) {
-                $dataTmp = $dataTmp->$arg;
-            } elseif ((is_array($dataTmp) || $dataTmp instanceof ArrayAccess) && isset($dataTmp[$arg])) {
-                $dataTmp = $dataTmp[$arg];
-            } else {
-                return $default;
-            }
-        }
-
-        return $dataTmp;
-    }
-
-    /**
-     * findValueByNodes
-     *
-     * @param array $data
-     * @param array $nodes
-     * @param mixed $default
-     *
-     * @return mixed
-     */
-    public static function getValueByNodes(array $data, array $nodes, $default = null)
-    {
-        $temp = $data;
-
-        foreach ($nodes as $name) {
-            if (isset($temp[$name])) {
-                $temp = $temp[$name];
-            } else {
-                $temp = $default;
-                break;
-            }
-        }
-
-        return $temp;
-    }
-
-    /**
-     * setByPath
-     *
-     * @param array|ArrayAccess &$data
-     * @param string             $path
-     * @param mixed              $value
-     * @param string             $separator
-     */
-    public static function setByPath(&$data, string $path, $value, string $separator = '.'): void
-    {
-        if (false === strpos($path, $separator)) {
-            $data[$path] = $value;
-            return;
-        }
-
-        if (!$nodes = array_filter(explode($separator, $path))) {
-            return;
-        }
-
-        $dataTmp = &$data;
-
-        foreach ($nodes as $node) {
-            if (is_array($dataTmp)) {
-                if (empty($dataTmp[$node])) {
-                    $dataTmp[$node] = [];
-                }
-
-                $dataTmp = &$dataTmp[$node];
-            } else {
-                // If a node is value but path is not go to the end, we replace this value as a new store.
-                // Then next node can insert new value to this store.
-                $dataTmp = [];
-            }
-        }
-
-        // Now, path go to the end, means we get latest node, set value to this node.
-        $dataTmp = $value;
-    }
-
     ////////////////////////////////////////////////////////////
     /// from laravel
     ////////////////////////////////////////////////////////////
@@ -667,93 +446,6 @@ class ArrayHelper
         }
 
         return array_key_exists($key, $array);
-    }
-
-    /**
-     * Add an element to an array using "dot" notation if it doesn't exist.
-     *
-     * @param array  $array
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return array
-     */
-    public static function add(array $array, $key, $value): array
-    {
-        if (static::has($array, $key)) {
-            static::set($array, $key, $value);
-        }
-
-        return $array;
-    }
-
-    /**
-     * Get an item from an array using "dot" notation.
-     *
-     * @param ArrayAccess|array $array
-     * @param string            $key
-     * @param mixed             $default
-     *
-     * @return mixed
-     */
-    public static function get($array, $key, $default = null)
-    {
-        if (!static::accessible($array)) {
-            return Php::value($default);
-        }
-
-        if (null === $key) {
-            return $array;
-        }
-
-        if (static::exists($array, $key)) {
-            return $array[$key];
-        }
-
-        foreach (explode('.', $key) as $segment) {
-            if (static::accessible($array) && static::exists($array, $segment)) {
-                $array = $array[$segment];
-            } else {
-                return Php::value($default);
-            }
-        }
-
-        return $array;
-    }
-
-    /**
-     * Set an array item to a given value using "dot" notation.
-     * If no key is given to the method, the entire array will be replaced.
-     *
-     * @param array  $array
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return array
-     */
-    public static function set(array &$array, $key, $value): array
-    {
-        if (null === $key) {
-            return ($array = $value);
-        }
-
-        $keys = explode('.', $key);
-
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
-            // If the key doesn't exist at this depth, we will just create an empty array
-            // to hold the next value, allowing us to create the arrays to hold final
-            // values at the correct depth. Then we'll keep digging into the array.
-            if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = [];
-            }
-
-            $array = &$array[$key];
-        }
-
-        $array[array_shift($keys)] = $value;
-
-        return $array;
     }
 
     /**
@@ -1026,14 +718,14 @@ class ArrayHelper
 
             if (is_array($value)) {
                 $string .= $keyStr . 'Array(' . self::toString(
-                    $value,
-                    $length,
-                    $cycles,
-                    $showKey,
-                    $addMark,
-                    $separator,
-                    $string
-                ) . ')' . $separator;
+                        $value,
+                        $length,
+                        $cycles,
+                        $showKey,
+                        $addMark,
+                        $separator,
+                        $string
+                    ) . ')' . $separator;
             } elseif (is_object($value)) {
                 $string .= $keyStr . 'Object(' . get_class($value) . ')' . $separator;
             } elseif (is_resource($value)) {

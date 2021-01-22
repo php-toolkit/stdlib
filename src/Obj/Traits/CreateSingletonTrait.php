@@ -41,5 +41,4 @@ trait CreateSingletonTrait
 
         return clone self::$singletons[$class];
     }
-
 }
