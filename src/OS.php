@@ -73,7 +73,7 @@ class OS
      */
     public static function isWindows(): bool
     {
-        return stripos(self::name(), 'WIN') !== false;
+        return stripos(self::name(), 'Windows') !== false;
     }
 
     /**
