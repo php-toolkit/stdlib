@@ -13,14 +13,12 @@ use Exception;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
+use Toolkit\Stdlib\Str\Traits\StringSplitHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
-use function array_map;
 use function array_merge;
 use function array_slice;
-use function array_values;
 use function base64_encode;
 use function count;
-use function explode;
 use function func_get_arg;
 use function func_num_args;
 use function function_exists;
@@ -30,34 +28,30 @@ use function implode;
 use function in_array;
 use function is_int;
 use function is_string;
-use function mb_convert_encoding;
-use function mb_convert_variables;
-use function mb_detect_encoding;
 use function mb_internal_encoding;
 use function mb_strlen;
 use function mb_strwidth;
 use function mb_substr;
 use function preg_match;
 use function preg_match_all;
-use function preg_split;
 use function random_bytes;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
-use function str_split;
 use function strip_tags;
 use function strlen;
 use function strpos;
 use function substr;
+use function trim;
 use function uniqid;
 use function utf8_decode;
 use function utf8_encode;
-use const PREG_SPLIT_NO_EMPTY;
 use const STR_PAD_LEFT;
 use const STR_PAD_RIGHT;
 
 /**
  * Class StringHelper
+ *
  * @package Toolkit\Stdlib\Str
  */
 abstract class StringHelper
@@ -67,6 +61,7 @@ abstract class StringHelper
     use StringCaseHelperTrait;
     use StringCheckHelperTrait;
     use StringLengthHelperTrait;
+    use StringSplitHelperTrait;
 
     /**
      * @param string $str
@@ -113,7 +108,7 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function padByWidth($str,$padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
+    public static function padByWidth($str, $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
     {
         $stringWidth = mb_strwidth((string)$str, self::$defaultEncoding);
         if ($stringWidth >= $padLen) {
@@ -132,11 +127,13 @@ abstract class StringHelper
 
     /**
      * ********************** 生成一定长度的随机字符串函数 **********************
-     * @param  int         $length - 随机字符串长度
-     * @param array|string $param -
-     * @internal param string $chars
+     *
+     * @param int          $length - 随机字符串长度
+     * @param array|string $param  -
+     *
      * @return string
      * @throws Exception
+     * @internal param string $chars
      */
     public static function random(int $length, array $param = []): string
     {
@@ -174,6 +171,7 @@ abstract class StringHelper
 
     /**
      * @param int $length
+     *
      * @return bool|string
      */
     public static function genUid(int $length = 7): string
@@ -187,121 +185,16 @@ abstract class StringHelper
 
     /**
      * gen UUID
+     *
      * @param int  $version
      * @param null $node
      * @param null $ns
+     *
      * @return UUID
      */
     public static function genUUID($version = 1, $node = null, $ns = null)
     {
         return UUID::generate($version, $node, $ns);
-    }
-
-    ////////////////////////////////////////////////////////////////////////
-    /// Convert to array
-    ////////////////////////////////////////////////////////////////////////
-
-    /**
-     * var_dump(str2array('34,56,678, 678, 89, '));
-     * @param string $str
-     * @param string $sep
-     * @return array
-     */
-    public static function str2array(string $str, string $sep = ','): array
-    {
-        $str = \trim($str, "$sep ");
-
-        if (!$str) {
-            return [];
-        }
-
-        return preg_split("/\s*$sep\s*/", $str, -1, PREG_SPLIT_NO_EMPTY);
-    }
-
-    public static function toArray(string $string, string $delimiter = ',', int $limit = 0): array
-    {
-        $string = \trim($string, "$delimiter ");
-        if ($string === '') {
-            return [];
-        }
-
-        $values  = [];
-        $rawList = $limit < 1 ? explode($delimiter, $string) : explode($delimiter, $string, $limit);
-
-        foreach ($rawList as $val) {
-            if (($val = \trim($val)) !== '') {
-                $values[] = $val;
-            }
-        }
-
-        return $values;
-    }
-
-    public static function explode(string $str, string $separator = '.', int $limit = 0): array
-    {
-        return static::split2Array($str, $separator, $limit);
-    }
-
-    /**
-     * @param string $string
-     * @param string $delimiter
-     * @param int    $limit
-     * @return array
-     */
-    public static function split2Array(string $string, string $delimiter = ',', int $limit = 0): array
-    {
-        $string = \trim($string, "$delimiter ");
-
-        if (!strpos($string, $delimiter)) {
-            return [$string];
-        }
-
-        if ($limit < 1) {
-            $list = explode($delimiter, $string);
-        } else {
-            $list = explode($delimiter, $string, $limit);
-        }
-
-        return array_values(array_filter(array_map('trim', $list), 'strlen'));
-    }
-
-    /**
-     * @param string $string
-     * @param int    $width
-     * @return array
-     */
-    public static function splitByWidth(string $string, int $width): array
-    {
-        // str_split is not suitable for multi-byte characters, we should use preg_split to get char array properly.
-        // additionally, array_slice() is not enough as some character has doubled width.
-        // we need a function to split string not by character count but by string width
-        if (false === $encoding = mb_detect_encoding($string, null, true)) {
-            return str_split($string, $width);
-        }
-
-        $utf8String = mb_convert_encoding($string, 'utf8', $encoding);
-        $lines      = [];
-        $line       = '';
-
-        foreach (preg_split('//u', $utf8String) as $char) {
-            // test if $char could be appended to current line
-            if (mb_strwidth($line . $char, 'utf8') <= $width) {
-                $line .= $char;
-                continue;
-            }
-
-            // if not, push current line to array and make new line
-            $lines[] = str_pad($line, $width);
-            $line    = $char;
-        }
-
-        if ('' !== $line) {
-            $lines[] = count($lines) ? str_pad($line, $width) : $line;
-        }
-
-        mb_convert_variables($encoding, 'utf8', $lines);
-
-        return $lines;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -313,6 +206,7 @@ abstract class StringHelper
      * @param int      $start
      * @param int|null $length
      * @param string   $encoding
+     *
      * @return bool|string
      */
     public static function substr(string $str, int $start, int $length = null, string $encoding = 'utf-8')
@@ -327,9 +221,11 @@ abstract class StringHelper
     /**
      * @from web
      *  utf-8编码下截取中文字符串,参数可以参照substr函数
-     * @param string $str 要进行截取的字符串
+     *
+     * @param string $str   要进行截取的字符串
      * @param int    $start 要进行截取的开始位置，负数为反向截取
-     * @param int    $end 要进行截取的长度
+     * @param int    $end   要进行截取的长度
+     *
      * @return string
      */
     public static function utf8SubStr(string $str, int $start = 0, int $end = null): string
@@ -364,11 +260,13 @@ abstract class StringHelper
     /**
      * @from web
      * 中文截取，支持gb2312,gbk,utf-8,big5   *
-     * @param string $str 要截取的字串
-     * @param int    $start 截取起始位置
-     * @param int    $length 截取长度
+     *
+     * @param string $str     要截取的字串
+     * @param int    $start   截取起始位置
+     * @param int    $length  截取长度
      * @param string $charset utf-8|gb2312|gbk|big5 编码
-     * @param bool   $suffix 是否加尾缀
+     * @param bool   $suffix  是否加尾缀
+     *
      * @return string
      */
     public static function zhSubStr($str, $start = 0, $length = 0, $charset = 'utf-8', $suffix = true): string
@@ -398,9 +296,11 @@ abstract class StringHelper
 
     /**
      * Truncate strings
+     *
      * @param string $str
      * @param int    $maxLength Max length
-     * @param string $suffix Suffix optional
+     * @param string $suffix    Suffix optional
+     *
      * @return string $str truncated
      */
     /* CAUTION : Use it only on module hookEvents.
@@ -418,9 +318,11 @@ abstract class StringHelper
 
     /**
      * 字符截断输出
+     *
      * @param string   $str
      * @param int      $start
      * @param null|int $length
+     *
      * @return string
      */
     public static function truncate2(string $str, int $start, int $length = null): string
@@ -445,9 +347,11 @@ abstract class StringHelper
 
     /**
      * Copied from CakePHP String utility file
+     *
      * @param string $text
      * @param int    $length
      * @param array  $options
+     *
      * @return bool|string
      */
     public static function truncate3(string $text, int $length = 120, array $options = [])
@@ -505,7 +409,8 @@ abstract class StringHelper
                         $tag[3],
                         $entities,
                         PREG_OFFSET_CAPTURE
-                    )) {
+                    )
+                    ) {
                         foreach ((array)$entities[0] as $entity) {
                             if ($entity[1] + 1 - $entities_length <= $left) {
                                 $left--;
@@ -589,28 +494,30 @@ abstract class StringHelper
 
     /**
      * [format description]
+     *
      * @param       $str
      * @param array $replaceParams 用于 str_replace('search','replace',$str )
+     * @param array $pregParams    用于 preg_replace('pattern','replace',$str)
+     *
+     * @return string [type]                [description]
      * @example
-     *   $replaceParams = [
+     *        $pregParams = [
+     *        'xx',  //'pattern'
+     *        'yy',  //'replace'
+     *        ]
+     *        * $pregParams = [
+     *        ['xx','xx2'],  //'pattern'
+     *        ['yy','yy2'],  //'replace'
+     *        ]
+     * @example
+     *        $replaceParams = [
      *        'xx',  //'search'
      *        'yy', //'replace'
-     *   ]
-     *   $replaceParams = [
+     *        ]
+     *        $replaceParams = [
      *        ['xx','xx2'],  //'search'
      *        ['yy','yy2'],  //'replace'
-     *   ]
-     * @param array $pregParams 用于 preg_replace('pattern','replace',$str)
-     * @example
-     * $pregParams = [
-     *     'xx',  //'pattern'
-     *     'yy',  //'replace'
-     * ]
-     * * $pregParams = [
-     *     ['xx','xx2'],  //'pattern'
-     *     ['yy','yy2'],  //'replace'
-     * ]
-     * @return string [type]                [description]
+     *        ]
      */
     public static function format($str, array $replaceParams = [], array $pregParams = []): string
     {
@@ -633,7 +540,9 @@ abstract class StringHelper
 
     /**
      * 格式化，用空格分隔各个词组
-     * @param  string $keyword 字符串
+     *
+     * @param string $keyword 字符串
+     *
      * @return string 格式化后的字符串
      */
     public static function wordFormat($keyword): string
@@ -651,8 +560,10 @@ abstract class StringHelper
 
     /**
      * 缩进格式化内容，去空白/注释
+     *
      * @param     $fileName
      * @param int $type
+     *
      * @return mixed
      */
     public static function deleteStripSpace($fileName, $type = 0)
