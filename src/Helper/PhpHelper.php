@@ -124,7 +124,7 @@ class PhpHelper
     }
 
     /**
-     * Set property values ​​for object
+     * Set property values for object
      * - 会先尝试用 setter 方法设置属性
      * - 再尝试直接设置属性
      *

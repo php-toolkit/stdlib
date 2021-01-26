@@ -36,17 +36,16 @@ use const JSON_UNESCAPED_UNICODE;
  */
 class JsonHelper
 {
+    // ----------- encode -----------
+
     /**
-     * @param mixed $data
-     * @param int   $flags
+     * @param $data
      *
-     * @return false|string
+     * @return string
      */
-    public static function prettyJSON(
-        $data,
-        int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-    ) {
-        return json_encode($data, $flags);
+    public static function enc($data): string
+    {
+        return json_encode($data);
     }
 
     /**
@@ -78,6 +77,79 @@ class JsonHelper
         int $depth = 512
     ): string {
         return json_encode($data, $options, $depth);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public static function pretty($data): string
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param mixed $data
+     * @param int   $flags
+     *
+     * @return false|string
+     */
+    public static function prettyJSON(
+        $data,
+        int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    ) {
+        return json_encode($data, $flags);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public static function unescaped($data): string
+    {
+        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public static function unescapedSlashes($data): string
+    {
+        return json_encode($data, JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return string
+     */
+    public static function unescapedUnicode($data): string
+    {
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+
+    // ----------- decode -----------
+
+    /**
+     * @param string $json
+     *
+     * @param bool   $assoc
+     *
+     * @return array|mixed
+     */
+    public static function dec(string $json, bool $assoc = true)
+    {
+        $data = json_decode($json, $assoc);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new InvalidArgumentException('json_decode error: ' . json_last_error_msg());
+        }
+
+        return $data;
     }
 
     /**
