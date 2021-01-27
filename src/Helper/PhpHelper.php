@@ -231,13 +231,16 @@ class PhpHelper
     }
 
     /**
-     * @param mixed $var
+     * @param mixed $vars
      *
      * @return string
      */
-    public static function exportVar($var): string
+    public static function exportVar(...$vars): string
     {
-        $string = var_export($var, true);
+        $string = '';
+        foreach ($vars as $var) {
+            $string .= var_export($var, true). PHP_EOL;
+        }
 
         return preg_replace('/=>\s+\n\s+array \(/', '=> array (', $string);
     }
