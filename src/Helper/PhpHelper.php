@@ -224,7 +224,7 @@ class PhpHelper
         $string = '';
 
         foreach ($args as $arg) {
-            $string .= print_r($arg, 1) . PHP_EOL;
+            $string .= print_r($arg, true) . PHP_EOL;
         }
 
         return preg_replace("/Array\n\s+\(/", 'Array (', $string);
