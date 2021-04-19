@@ -9,6 +9,10 @@
 
 namespace Toolkit\Stdlib\Helper;
 
+use Closure;
+use Generator;
+use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
@@ -38,6 +42,46 @@ use function var_export;
  */
 class PhpHelper
 {
+    /**
+     * @var ReflectionClass[]
+     */
+    private static $reflects = [];
+
+    /**
+     * @param string $class
+     *
+     * @return ReflectionClass
+     * @throws ReflectionException
+     */
+    public static function reflectClass(string $class): ReflectionClass
+    {
+        if (!isset(self::$reflects[$class])) {
+            self::$reflects[$class] = new ReflectionClass($class);
+        }
+
+        return self::$reflects[$class];
+    }
+
+    /**
+     * @param ReflectionClass $reflectClass
+     * @param int             $flags eg: \ReflectionMethod::IS_PUBLIC
+     * @param Closure|null   $nameFilter
+     *
+     * @return Generator
+     */
+    public static function reflectMethods(ReflectionClass $reflectClass, int $flags = 0, Closure $nameFilter = null): ?Generator
+    {
+        foreach ($reflectClass->getMethods($flags) as $m) {
+            $mName = $m->getName();
+
+            if ($nameFilter && false === $nameFilter($mName)) {
+                continue;
+            }
+
+            yield $mName => $m;
+        }
+    }
+
     /**
      * @param $value
      *
