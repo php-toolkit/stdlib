@@ -126,7 +126,7 @@ abstract class AbstractMap implements JsonSerializable
     /**
      * @return mixed
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }

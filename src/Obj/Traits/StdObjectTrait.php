@@ -91,7 +91,7 @@ trait StdObjectTrait
      *
      * @return mixed
      */
-    public function __call($method, array $args)
+    public function __call(string $method, array $args)
     {
         // if (method_exists($this, $method) && $this->isAllowCall($method) ) {
         //     return call_user_func_array( array($this, $method), (array) $args);

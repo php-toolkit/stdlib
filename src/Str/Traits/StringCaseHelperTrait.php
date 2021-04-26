@@ -178,24 +178,25 @@ trait StringCaseHelperTrait
     }
 
     /**
-     * to camel
+     * string to camel case
      *
      * @param string $name
-     * @param bool   $upperFirst
+     * @param bool   $upFirst
+     * @param string $sep eg: -_/
      *
      * @return string
      */
-    public static function camelCase(string $name, bool $upperFirst = false): string
+    public static function camelCase(string $name, bool $upFirst = false, string $sep = '-'): string
     {
-        $name = trim($name, '-_');
+        $name = trim($name, " $sep");
 
         // convert 'first-second' to 'firstSecond'
-        if (strpos($name, '-')) {
-            $name = ucwords(str_replace('-', ' ', $name));
-            $name = str_replace(' ', '', lcfirst($name));
+        if (strpos($name, $sep) > 0) {
+            $name = ucwords(str_replace($sep, ' ', $name));
+            $name = str_replace(' ', '', $name);
         }
 
-        return $upperFirst ? ucfirst($name) : $name;
+        return $upFirst ? $name : lcfirst($name);
     }
 
     /**

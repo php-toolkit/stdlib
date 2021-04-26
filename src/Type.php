@@ -9,14 +9,19 @@
 
 namespace Toolkit\Stdlib;
 
+use function gettype;
+
 /**
  * Class Type - php data type
  *
  * @package Toolkit\PhpKit
+ * @see     \gettype()
  */
 final class Type
 {
-    // basic types
+    // ------ basic types ------
+
+    // TIPS: not in gettype returns.
     public const INT = 'int';
 
     public const INTEGER = 'integer';
@@ -25,21 +30,51 @@ final class Type
 
     public const DOUBLE = 'double';
 
+    // TIPS: not in gettype returns.
     public const BOOL = 'bool';
 
     public const BOOLEAN = 'boolean';
 
     public const STRING = 'string';
 
-    // complex types
+    // ------ complex types ------
     public const ARRAY  = 'array';
 
     public const OBJECT = 'object';
 
     public const RESOURCE = 'resource';
 
+    // TIPS: since 7.2.0
+    public const RESOURCE_CLOSED = 'resource (closed)';
+
+    // ------ other type names ------
+
+    public const CALLABLE        = 'callable';
+
+    public const MiXED = 'mixed';
+
+    public const UNKNOWN = 'unknown type';
+
+    /**
+     * @param mixed $val
+     *
+     * @return string
+     */
+    public static function get($val): string
+    {
+        $typName = gettype($val);
+        if ($typName === self::UNKNOWN) {
+            $typName = self::MiXED;
+        } elseif ($typName === self::RESOURCE_CLOSED) {
+            $typName = self::RESOURCE;
+        }
+
+        return $typName;
+    }
+
     /**
      * @return array
+     * @see \gettype()
      */
     public static function all(): array
     {

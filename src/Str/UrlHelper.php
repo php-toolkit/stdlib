@@ -72,18 +72,22 @@ class UrlHelper
     }
 
     /**
-     * @param string $url
-     * @param mixed  $data
+     * @param string       $baseUrl
+     * @param array|object $data
      *
      * @return string
      */
-    public static function build($url, $data = null): string
+    public static function build(string $baseUrl, $data = null): string
     {
         if ($data && ($param = http_build_query($data))) {
-            $url .= (strpos($url, '?') ? '&' : '?') . $param;
+            if ($baseUrl) {
+                $baseUrl .= (strpos($baseUrl, '?') ? '&' : '?') . $param;
+            } else {
+                $baseUrl = $param;
+            }
         }
 
-        return $url;
+        return $baseUrl;
     }
 
     /**
