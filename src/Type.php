@@ -49,24 +49,35 @@ final class Type
 
     // ------ other type names ------
 
-    public const CALLABLE        = 'callable';
+    public const CALLABLE = 'callable';
 
     public const MiXED = 'mixed';
 
     public const UNKNOWN = 'unknown type';
 
     /**
+     * has shorts
+     */
+    public const SHORT_TYPES = [
+        self::BOOLEAN => self::BOOL,
+        self::INTEGER => self::INT,
+    ];
+
+    /**
      * @param mixed $val
+     * @param bool  $toShort
      *
      * @return string
      */
-    public static function get($val): string
+    public static function get($val, bool $toShort = false): string
     {
         $typName = gettype($val);
         if ($typName === self::UNKNOWN) {
             $typName = self::MiXED;
         } elseif ($typName === self::RESOURCE_CLOSED) {
             $typName = self::RESOURCE;
+        } elseif ($toShort && isset(self::SHORT_TYPES[$typName])) {
+            $typName = self::SHORT_TYPES[$typName];
         }
 
         return $typName;
