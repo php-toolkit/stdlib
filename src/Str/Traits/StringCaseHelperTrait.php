@@ -194,9 +194,11 @@ trait StringCaseHelperTrait
         if (strpos($name, $sep) > 0) {
             $name = ucwords(str_replace($sep, ' ', $name));
             $name = str_replace(' ', '', $name);
+
+            return $upFirst ? $name : lcfirst($name);
         }
 
-        return $upFirst ? $name : lcfirst($name);
+        return $upFirst ? ucfirst($name) : lcfirst($name);
     }
 
     /**
