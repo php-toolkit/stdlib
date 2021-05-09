@@ -12,6 +12,18 @@ use Toolkit\Stdlib\Str;
  */
 class StringHelperTest extends TestCase
 {
+    public function testShellQuote(): void
+    {
+        $tests = [
+            ['', ''],
+            ['abc', 'abc'],
+            ['ab"c', 'ab"c'],
+        ];
+        foreach ($tests as [$given, $want]) {
+            self::assertSame($want, Str::shellQuote($given));
+        }
+    }
+
     public function testStrLen(): void
     {
         $tests = [
