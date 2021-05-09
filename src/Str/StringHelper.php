@@ -35,10 +35,12 @@ use function mb_strwidth;
 use function mb_substr;
 use function preg_match;
 use function preg_match_all;
+use function preg_split;
 use function random_bytes;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
+use function str_word_count;
 use function strip_tags;
 use function strlen;
 use function strpos;
@@ -256,7 +258,7 @@ abstract class StringHelper
      *
      * @return string 格式化后的字符串
      */
-    public static function wordFormat($keyword): string
+    public static function wordFormat(string $keyword): string
     {
         // 将全角角逗号换为空格
         $keyword = str_replace(['，', ','], ' ', $keyword);
@@ -312,6 +314,26 @@ abstract class StringHelper
     ////////////////////////////////////////////////////////////
     /// Other
     ////////////////////////////////////////////////////////////
+
+    /**
+     * @param string $str
+     *
+     * @return int
+     */
+    public static function wordCount(string $str): int
+    {
+        return str_word_count($str);
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return int
+     */
+    public static function utf8WordCount(string $str): int
+    {
+        return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
+    }
 
     /**
      * @param string $arg
