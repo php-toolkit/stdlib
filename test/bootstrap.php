@@ -15,13 +15,13 @@ spl_autoload_register(static function ($class): void {
 
     if (0 === strpos($class, 'Toolkit\Stdlib\Example\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\Example\\')));
-        $file = dirname(__DIR__) . "/example/{$path}.php";
+        $file = dirname(__DIR__) . "/example/$path.php";
     } elseif (0 === strpos($class, 'Toolkit\StdlibTest\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\StdlibTest\\')));
         $file = __DIR__ . "/{$path}.php";
     } elseif (0 === strpos($class, 'Toolkit\Stdlib\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\\')));
-        $file = dirname(__DIR__) . "/src/{$path}.php";
+        $file = dirname(__DIR__) . "/src/$path.php";
     }
 
     if ($file && is_file($file)) {

@@ -10,11 +10,15 @@
 namespace Toolkit\Stdlib;
 
 use function defined;
+use function explode;
 use function function_exists;
+use function getenv;
 use function getmyuid;
 use function in_array;
 use function php_uname;
 use function posix_getuid;
+use function putenv;
+use function rtrim;
 use function stripos;
 use const PHP_OS;
 use const PHP_OS_FAMILY;
@@ -152,6 +156,97 @@ class OS
         return $tmp;
     }
 
+    /** @var string|null */
+    private static $homeDir;
+
+    /**
+     * @param bool $refresh
+     *
+     * @return string
+     */
+    public static function useHomeDir(bool $refresh = false): string
+    {
+        return self::getUserHomeDir($refresh);
+    }
+
+    /**
+     * @param bool $refresh
+     *
+     * @return string
+     */
+    public static function getUserHomeDir(bool $refresh = false): string
+    {
+        // has cache value.
+        if (self::$homeDir && $refresh === false) {
+            return self::$homeDir;
+        }
+
+        if (!$home = self::getEnvVal('HOME')) {
+            $isWin = self::isWindows();
+
+            // home on windows
+            if ($isWin && !empty($_SERVER['HOMEDRIVE']) && !empty($_SERVER['HOMEPATH'])) {
+                $home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'];
+                // If HOMEPATH is a root directory the path can end with a slash.
+                // Make sure that doesn't happen.
+                $home = rtrim($home, '\\/');
+            }
+        }
+
+        self::$homeDir = $home;
+        return $home;
+    }
+
+    /**
+     * @param string $key
+     * @param string $default
+     *
+     * @return string
+     */
+    public static function getEnvVal(string $key, string $default = ''): string
+    {
+        return getenv($key) ?: (string)($_SERVER[$key] ?? $default);
+    }
+
+    /**
+     * @param string $key
+     * @param string|int $value
+     *
+     * @return bool
+     */
+    public static function setEnvVar(string $key, $value): bool
+    {
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+        return putenv($key . '=' . $value);
+    }
+
+    /**
+     * @param array $kvMap
+     *
+     * @return void
+     */
+    public static function setEnvVars(array $kvMap): void
+    {
+        foreach ($kvMap as $key => $value) {
+            self::setEnvVar($key, $value);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public static function getEnvPaths(): array
+    {
+        $pathStr = $_SERVER['PATH'] ?? '';
+        if (!$pathStr) {
+            return [];
+        }
+
+        $sepChar = self::isWindows() ? ';' : ':';
+        return explode($sepChar, $pathStr);
+    }
+
     /**
      * @return string
      */
@@ -179,7 +274,7 @@ class OS
      *
      * @return boolean
      */
-    public static function isInteractive($fileDescriptor): bool
+    public static function isInteractive(int $fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }
