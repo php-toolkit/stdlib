@@ -13,7 +13,7 @@ use Exception;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
-use Toolkit\Stdlib\Str\Traits\StringSplitHelperTrait;
+use Toolkit\Stdlib\Str\Traits\StringConvertTrait;
 use Toolkit\Stdlib\Str\Traits\StringTruncateHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
 use function array_merge;
@@ -50,7 +50,7 @@ abstract class StringHelper
     use StringCaseHelperTrait;
     use StringCheckHelperTrait;
     use StringLengthHelperTrait;
-    use StringSplitHelperTrait;
+    use StringConvertTrait;
     use StringTruncateHelperTrait;
 
     /**

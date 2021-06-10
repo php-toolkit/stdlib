@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Str\Traits;
 
+use Toolkit\Stdlib\Helper\DataHelper;
 use function array_map;
 use function array_values;
 use function count;
@@ -29,8 +30,17 @@ use const PREG_SPLIT_NO_EMPTY;
  *
  * @package Toolkit\Stdlib\Str\Traits
  */
-trait StringSplitHelperTrait
+trait StringConvertTrait
 {
+    /**
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function toBool(string $str): bool
+    {
+        return DataHelper::boolean($str);
+    }
 
     ////////////////////////////////////////////////////////////////////////
     /// split to array
@@ -185,7 +195,7 @@ trait StringSplitHelperTrait
 
     /**
      * @param string $str
-     * @param int $length
+     * @param int    $length
      *
      * @return array|string[]
      * @link https://www.php.net/manual/zh/function.str-split.php

@@ -44,7 +44,7 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtolower()`
      *
-     * @param string $str
+     * @param string|int $str
      *
      * @return string
      */
@@ -56,7 +56,7 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtolower()`
      *
-     * @param string $str
+     * @param string|int $str
      *
      * @return string
      */
@@ -86,7 +86,7 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtoupper()`
      *
-     * @param string $str
+     * @param string|int $str
      *
      * @return string
      */
@@ -98,7 +98,7 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtoupper()`
      *
-     * @param string $str
+     * @param string|int $str
      *
      * @return string
      */
@@ -108,7 +108,7 @@ trait StringCaseHelperTrait
     }
 
     /**
-     * @param string $str
+     * @param string|int $str
      *
      * @return string
      */

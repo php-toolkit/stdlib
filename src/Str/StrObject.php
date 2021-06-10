@@ -92,8 +92,19 @@ class StrObject
      */
     public function trim(string $chars = " \t\n\r\0\x0B"): self
     {
-        $this->string = trim($this->string, $chars);
+        if ($this->string) {
+            $this->string = trim($this->string, $chars);
+        }
+
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->string !== '';
     }
 
     /**
@@ -149,6 +160,14 @@ class StrObject
     /**
      * @return int
      */
+    public function toInt(): int
+    {
+        return (int)$this->string;
+    }
+
+    /**
+     * @return int
+     */
     public function getInt(): int
     {
         return (int)$this->string;
@@ -157,9 +176,41 @@ class StrObject
     /**
      * @return int[]
      */
-    public function getInts(string $sep = ','): array
+    public function toInts(string $sep = ','): array
     {
         return Str::str2ints($this->string, $sep);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getInts(string $sep = ','): array
+    {
+        return $this->toInts($sep);
+    }
+
+    /**
+     * @return bool
+     */
+    public function toBool(): bool
+    {
+        return Str::toBool($this->string);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function toArray(string $sep = ',', int $limit = 0): array
+    {
+        return $this->toStrings($sep, $limit);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function toStrings(string $sep = ',', int $limit = 0): array
+    {
+        return Str::explode($this->string, $sep, $limit);
     }
 
     /**
@@ -167,7 +218,7 @@ class StrObject
      */
     public function getStrings(string $sep = ',', int $limit = 0): array
     {
-        return Str::explode($this->string, $sep, $limit);
+        return $this->toStrings($sep, $limit);
     }
 
     /**
