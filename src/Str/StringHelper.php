@@ -17,38 +17,24 @@ use Toolkit\Stdlib\Str\Traits\StringSplitHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringTruncateHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
 use function array_merge;
-use function array_slice;
 use function base64_encode;
 use function count;
-use function func_get_arg;
-use function func_num_args;
-use function function_exists;
 use function hash;
 use function hex2bin;
-use function implode;
-use function in_array;
 use function is_int;
 use function is_string;
-use function mb_internal_encoding;
-use function mb_strlen;
 use function mb_strwidth;
-use function mb_substr;
-use function preg_match;
-use function preg_match_all;
 use function preg_split;
 use function random_bytes;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
 use function str_word_count;
-use function strip_tags;
 use function strlen;
 use function strpos;
 use function substr;
 use function trim;
 use function uniqid;
-use function utf8_decode;
-use function utf8_encode;
 use const STR_PAD_LEFT;
 use const STR_PAD_RIGHT;
 
@@ -68,10 +54,10 @@ abstract class StringHelper
     use StringTruncateHelperTrait;
 
     /**
-     * @param string $str
-     * @param int    $padLen
-     * @param string $padStr
-     * @param int    $padType
+     * @param string|mixed $str
+     * @param int|float    $padLen
+     * @param string       $padStr
+     * @param int          $padType
      *
      * @return string
      */
@@ -81,9 +67,9 @@ abstract class StringHelper
     }
 
     /**
-     * @param string $str
-     * @param int    $padLen
-     * @param string $padStr
+     * @param string|mixed $str
+     * @param int|float    $padLen
+     * @param string       $padStr
      *
      * @return string
      */
@@ -93,9 +79,9 @@ abstract class StringHelper
     }
 
     /**
-     * @param string $str
-     * @param int    $padLen
-     * @param string $padStr
+     * @param string|mixed $str
+     * @param int|float    $padLen
+     * @param string       $padStr
      *
      * @return string
      */
@@ -105,8 +91,8 @@ abstract class StringHelper
     }
 
     /**
-     * @param string $str
-     * @param int    $padLen
+     * @param string|mixed $str
+     * @param int|float    $padLen
      * @param string $padStr
      * @param int    $padType
      *
@@ -332,7 +318,7 @@ abstract class StringHelper
      */
     public static function utf8WordCount(string $str): int
     {
-        return count(preg_split('~[^\p{L}\p{N}\']+~u',$str));
+        return count(preg_split('~[^\p{L}\p{N}\']+~u', $str));
     }
 
     /**

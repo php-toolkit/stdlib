@@ -55,6 +55,39 @@ trait StringSplitHelperTrait
         return preg_split("/\s*$sep\s*/", $str, -1, PREG_SPLIT_NO_EMPTY);
     }
 
+    /**
+     * @param string $string
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function str2ints(string $string, string $delimiter = ',', int $limit = 0): array
+    {
+        $values = self::toArray($string, $delimiter, $limit);
+
+        return array_map('intval', $values);
+    }
+
+    /**
+     * @param string $string
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function toInts(string $string, string $delimiter = ',', int $limit = 0): array
+    {
+        return self::str2ints($string, $delimiter, $limit);
+    }
+
+    /**
+     * @param string $string
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
     public static function toArray(string $string, string $delimiter = ',', int $limit = 0): array
     {
         $string = trim($string, "$delimiter ");
@@ -157,7 +190,7 @@ trait StringSplitHelperTrait
      * @return array|string[]
      * @link https://www.php.net/manual/zh/function.str-split.php
      */
-    public static function splitUnicode(string $str, $length = 1): array
+    public static function splitUnicode(string $str, int $length = 1): array
     {
         if ($length > 0) {
             $ret = [];

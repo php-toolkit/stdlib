@@ -190,6 +190,30 @@ trait StringCheckHelperTrait
     }
 
     /**
+     * @param string $str
+     * @param string $prefix
+     *
+     * @return bool
+     */
+    public static function hasPrefix(string $str, string $prefix): bool
+    {
+        return self::strpos($str,$prefix) === 0;
+    }
+
+    /**
+     * @param string $str
+     * @param string $suffix
+     *
+     * @return bool
+     */
+    public static function hasSuffix(string $str, string $suffix): bool
+    {
+        $pos = self::strpos($str, $suffix);
+
+        return $pos !== false && self::substr($str, - self::strlen($suffix)) === $suffix;
+    }
+
+    /**
      * 使用正则验证数据
      *
      * @param string $value 要验证的数据

@@ -33,7 +33,7 @@ trait StringLengthHelperTrait
     /**
      * from Symfony
      *
-     * @param string $string
+     * @param string|int $string
      *
      * @return int
      */
@@ -61,14 +61,19 @@ trait StringLengthHelperTrait
     }
 
     /**
-     * @param string $str
-     * @param string $encoding
+     * @param string|mixed $str
+     * @param string       $encoding
+     * @param bool         $decodeHTML
      *
      * @return int
      */
-    public static function strlen($str, string $encoding = 'UTF-8'): int
+    public static function strlen($str, string $encoding = 'UTF-8', bool $decodeHTML = false): int
     {
-        $str = html_entity_decode((string)$str, ENT_COMPAT, 'UTF-8');
+        if ($decodeHTML) {
+            $str = html_entity_decode((string)$str, ENT_COMPAT, 'UTF-8');
+        } else {
+            $str = (string)$str;
+        }
 
         return function_exists('mb_strlen') ? mb_strlen($str, $encoding) : strlen($str);
     }

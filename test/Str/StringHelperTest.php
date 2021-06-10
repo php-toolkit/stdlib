@@ -37,4 +37,25 @@ class StringHelperTest extends TestCase
             $this->assertSame($want, Str::strlen($case));
         }
     }
+
+    public function testStrpos(): void
+    {
+        $tests = [
+            ['abc', 'a'],
+            ['23ab', 'a'],
+        ];
+
+        foreach ($tests as [$case, $want]) {
+            $this->assertTrue(Str::has($case, $want));
+            $this->assertTrue(Str::contains($case, $want));
+            $this->assertTrue(Str::ihas($case, $want));
+            $this->assertTrue(Str::icontains($case, $want));
+        }
+
+        self::assertTrue(Str::hasPrefix('abc', 'a'));
+        self::assertFalse(Str::hasPrefix('abc', 'c'));
+        self::assertTrue(Str::hasSuffix('abc', 'c'));
+        self::assertTrue(Str::hasSuffix('abc', 'bc'));
+        self::assertFalse(Str::hasSuffix('abc', 'b'));
+    }
 }
