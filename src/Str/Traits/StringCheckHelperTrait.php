@@ -197,7 +197,7 @@ trait StringCheckHelperTrait
      */
     public static function hasPrefix(string $str, string $prefix): bool
     {
-        return self::strpos($str,$prefix) === 0;
+        return self::strpos($str, $prefix) === 0;
     }
 
     /**

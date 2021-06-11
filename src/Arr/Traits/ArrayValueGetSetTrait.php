@@ -29,7 +29,6 @@ use function trim;
  */
 trait ArrayValueGetSetTrait
 {
-
     /**
      * Add an element to an array using "dot" notation if it doesn't exist.
      *
@@ -266,5 +265,4 @@ trait ArrayValueGetSetTrait
         // Now, path go to the end, means we get latest node, set value to this node.
         $dataTmp = $value;
     }
-
 }

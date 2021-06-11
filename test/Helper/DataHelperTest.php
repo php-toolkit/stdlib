@@ -1,9 +1,17 @@
 <?php declare(strict_types=1);
+/**
+ * This file is part of toolkit/stdlib.
+ *
+ * @author   https://github.com/inhere
+ * @link     https://github.com/php-toolkit/stdlib
+ * @license  MIT
+ */
 
 namespace Toolkit\StdlibTest\Str;
 
 use PHPUnit\Framework\TestCase;
 use Toolkit\Stdlib\Helper\DataHelper;
+use Toolkit\Stdlib\Str;
 
 /**
  * Class DataHelperTest
@@ -33,13 +41,7 @@ class DataHelperTest extends TestCase
         self::assertEquals('<NULL>', DataHelper::toString(null));
         self::assertEquals('["ab",23]', DataHelper::toString(['ab', 23]));
 
-        $objStr = <<<OBJ
-object(stdClass)#73 (2) {
-  ["0"]=> string(2) "ab"
-  ["1"]=> int(23)
-}
-
-OBJ;
-        self::assertEquals($objStr, DataHelper::toString((object)['ab', 23]));
+        $str = DataHelper::toString((object)['ab', 23]);
+        self::assertTrue(Str::contains($str, 'object(stdClass)'));
     }
 }

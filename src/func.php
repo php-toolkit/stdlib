@@ -1,4 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of toolkit/stdlib.
+ *
+ * @author   https://github.com/inhere
+ * @link     https://github.com/php-toolkit/stdlib
+ * @license  MIT
+ */
 
 if (!function_exists('vdump')) {
     /**
@@ -6,7 +13,7 @@ if (!function_exists('vdump')) {
      *
      * @param mixed ...$vars
      */
-    function vdump(...$vars)
+    function vdump(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
@@ -27,7 +34,7 @@ if (!function_exists('edump')) {
      *
      * @param mixed ...$vars
      */
-    function edump(...$vars)
+    function edump(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
@@ -49,7 +56,7 @@ if (!function_exists('ddump')) {
      *
      * @param mixed ...$vars
      */
-    function ddump(...$vars)
+    function ddump(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
@@ -71,7 +78,7 @@ if (!function_exists('pprints')) {
      *
      * @param mixed ...$vars
      */
-    function pprint(...$vars)
+    function pprint(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
@@ -92,7 +99,7 @@ if (!function_exists('eprints')) {
      *
      * @param mixed ...$vars
      */
-    function eprints(...$vars)
+    function eprints(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 
