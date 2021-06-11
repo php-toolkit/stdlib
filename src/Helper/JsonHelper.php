@@ -39,13 +39,15 @@ class JsonHelper
     // ----------- encode -----------
 
     /**
-     * @param $data
+     * @param mixed $data
+     * @param int $flags
+     * @param int $depth
      *
      * @return string
      */
-    public static function enc($data): string
+    public static function enc($data, int $flags = 0, int $depth = 512): string
     {
-        return json_encode($data);
+        return json_encode($data, $flags, $depth);
     }
 
     /**

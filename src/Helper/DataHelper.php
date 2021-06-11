@@ -3,7 +3,13 @@
 namespace Toolkit\Stdlib\Helper;
 
 use function filter_var;
+use function gettype;
+use function is_array;
+use function is_bool;
+use function is_object;
 use function is_scalar;
+use function json_encode;
+use function method_exists;
 use const FILTER_NULL_ON_FAILURE;
 use const FILTER_VALIDATE_BOOLEAN;
 
@@ -45,5 +51,38 @@ class DataHelper
     public static function toBool($val, $nullAsFalse = false): bool
     {
         return self::boolean($val, $nullAsFalse);
+    }
+
+    /**
+     * @param mixed $val
+     *
+     * @return string
+     */
+    public static function toString($val): string
+    {
+        // print_r($value)
+        // var_export($value)
+        if (is_scalar($val)) {
+            if (is_bool($val)) {
+                return $val ? 'bool(TRUE)' : 'bool(FALSE)';
+            }
+
+            return (string)$val;
+        }
+
+        if (is_array($val)) {
+            return json_encode($val);
+        }
+
+        if (is_object($val)) {
+            if (method_exists($val, '__toString')) {
+                return (string)$val;
+            }
+
+            return PhpHelper::dumpVars($val);
+        }
+
+        $typeName = gettype($val);
+        return '<' . $typeName . '>';
     }
 }
