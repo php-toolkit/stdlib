@@ -54,7 +54,7 @@ class Math
      */
     public static function round($value, int $precision = 0, int $mode = PHP_ROUND_HALF_UP): float
     {
-        return (float)round((float)$value, $precision, $mode);
+        return round((float)$value, $precision, $mode);
     }
 
     /**

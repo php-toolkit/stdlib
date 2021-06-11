@@ -274,7 +274,7 @@ class OS
      *
      * @return boolean
      */
-    public static function isInteractive(int $fileDescriptor): bool
+    public static function isInteractive($fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }

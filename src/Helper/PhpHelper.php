@@ -116,7 +116,7 @@ class PhpHelper
      * get $_SERVER value
      *
      * @param string $name
-     * @param string $default
+     * @param string|mixed $default
      *
      * @return mixed
      */
@@ -192,7 +192,7 @@ class PhpHelper
      *
      * @return array
      */
-    public static function runtime($startTime, $startMem, array $info = [], $realUsage = false): array
+    public static function runtime(int $startTime, $startMem, array $info = [], bool $realUsage = false): array
     {
         $info['startTime'] = $startTime;
         $info['endTime']   = microtime(true);
@@ -202,8 +202,8 @@ class PhpHelper
         $info['runtime'] = number_format(($info['endTime'] - $startTime) * 1000, 3) . 'ms';
 
         if ($startMem) {
-            $startMem = array_sum(explode(' ', $startMem));
-            $endMem   = array_sum(explode(' ', $info['endMemory']));
+            $startMem = array_sum(explode(' ', (string)$startMem));
+            $endMem   = array_sum(explode(' ', (string)$info['endMemory']));
 
             $info['memory'] = number_format(($endMem - $startMem) / 1024, 3) . 'kb';
         }

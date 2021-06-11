@@ -21,8 +21,7 @@ final class Type
 {
     // ------ basic types ------
 
-    // TIPS: not in gettype returns.
-    public const INT = 'int';
+    public const INT = 'int'; // TIPS: not in gettype returns.
 
     public const INTEGER = 'integer';
 
@@ -30,8 +29,7 @@ final class Type
 
     public const DOUBLE = 'double';
 
-    // TIPS: not in gettype returns.
-    public const BOOL = 'bool';
+    public const BOOL = 'bool'; // TIPS: not in gettype returns.
 
     public const BOOLEAN = 'boolean';
 
@@ -49,9 +47,11 @@ final class Type
 
     // ------ other type names ------
 
-    public const CALLABLE = 'callable';
+    public const NULL = 'null';
 
     public const MiXED = 'mixed';
+
+    public const CALLABLE = 'callable';
 
     public const UNKNOWN = 'unknown type';
 
