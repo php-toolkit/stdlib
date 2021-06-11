@@ -3,6 +3,7 @@
 namespace Toolkit\Stdlib\Str;
 
 use Toolkit\Stdlib\Str;
+use function in_array;
 use function trim;
 
 /**
@@ -153,6 +154,26 @@ class StrObject
     public function hasSuffix(string $suffix): bool
     {
         return Str::hasSuffix($this->string, $suffix);
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return bool
+     */
+    public function isSubstrOf(string $str): bool
+    {
+        return Str::strpos($str, $this->string) !== false;
+    }
+
+    /**
+     * @param string[] $arr
+     *
+     * @return bool
+     */
+    public function isOneOf(array $arr): bool
+    {
+        return in_array($this->string, $arr, true);
     }
 
     // ------------------ convert ------------------

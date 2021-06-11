@@ -9,30 +9,64 @@
 
 namespace Toolkit\Stdlib\Str;
 
+use function array_unshift;
+use function implode;
+use function sprintf;
+
 /**
  * Class StrBuffer
+ *
  * @package Toolkit\Stdlib\Str
  */
-final class StrBuffer
+class StrBuffer
 {
     /**
-     * @var string
+     * @var self
      */
-    private $body;
+    private static $global;
 
     /**
-     * @param string $content
+     * @var string[]
+     */
+    private $parts = [];
+
+    /**
+     * @param string $str
+     *
+     * @return self
+     */
+    public static function global(string $str = ''): self
+    {
+        if (!self::$global) {
+            self::$global = new self($str);
+        }
+
+        return self::$global;
+    }
+
+    /**
+     * @param string $str
      *
      * @return static
      */
-    public static function new(string $content): self
+    public static function new(string $str = ''): self
     {
-        return new self($content);
+        return new self($str);
     }
 
-    public function __construct(string $content = '')
+    /**
+     * Class constructor.
+     *
+     * @param string $str
+     */
+    public function __construct(string $str = '')
     {
-        $this->body = $content;
+        $this->write($str);
+    }
+
+    public function reset(): void
+    {
+        $this->parts = [];
     }
 
     /**
@@ -40,7 +74,24 @@ final class StrBuffer
      */
     public function write(string $content): void
     {
-        $this->body .= $content;
+        $this->parts[] = $content;
+    }
+
+    /**
+     * @param string $fmt
+     * @param mixed  ...$args
+     */
+    public function writef(string $fmt, ...$args): void
+    {
+        $this->parts[] = sprintf($fmt, ...$args);
+    }
+
+    /**
+     * @param string $content
+     */
+    public function writeln(string $content): void
+    {
+        $this->parts[] = $content . "\n";
     }
 
     /**
@@ -56,7 +107,7 @@ final class StrBuffer
      */
     public function prepend(string $content): void
     {
-        $this->body = $content . $this->body;
+        array_unshift($this->parts, $content);
     }
 
     /**
@@ -64,27 +115,19 @@ final class StrBuffer
      */
     public function clear(): string
     {
-        $string = $this->body;
+        $strings = $this->parts;
         // clear
-        $this->body = '';
+        $this->parts = [];
 
-        return $string;
+        return implode($strings);
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getBody(): string
+    public function getParts(): array
     {
-        return $this->body;
-    }
-
-    /**
-     * @param string $body
-     */
-    public function setBody(string $body): void
-    {
-        $this->body = $body;
+        return $this->parts;
     }
 
     /**
@@ -92,7 +135,7 @@ final class StrBuffer
      */
     public function toString(): string
     {
-        return $this->body;
+        return implode($this->parts);
     }
 
     /**
