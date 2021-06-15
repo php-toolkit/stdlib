@@ -214,6 +214,17 @@ trait StringCheckHelperTrait
     }
 
     /**
+     * 检查字符串是否是正确的变量名
+     *
+     * @param string $string
+     * @return bool
+     */
+    public static function isVarName(string $string): bool
+    {
+        return preg_match('@^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*@i', $string) === 1;
+    }
+
+    /**
      * 使用正则验证数据
      *
      * @param string $value 要验证的数据

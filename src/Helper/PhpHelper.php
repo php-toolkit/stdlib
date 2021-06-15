@@ -18,6 +18,8 @@ use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
 use function explode;
 use function fopen;
+use function ftok;
+use function function_exists;
 use function is_array;
 use function is_callable;
 use function is_object;
@@ -30,6 +32,9 @@ use function number_format;
 use function ob_get_clean;
 use function ob_start;
 use function preg_replace;
+use function sprintf;
+use function stat;
+use function strlen;
 use function strpos;
 use function strtoupper;
 use function var_dump;
@@ -287,5 +292,27 @@ class PhpHelper
         }
 
         return preg_replace('/=>\s+\n\s+array \(/', '=> array (', $string);
+    }
+
+    /**
+     * @param string     $pathname
+     * @param int|string $projectId This must be a one character
+     * @return int|string
+     */
+    public static function ftok(string $pathname, $projectId)
+    {
+        if (strlen($projectId) > 1) {
+            throw new RuntimeException("The project id must be a one character(int/str). Input: $projectId");
+        }
+
+        if (function_exists('ftok')) {
+            return ftok($pathname, $projectId);
+        }
+
+        if (!$st = @stat($pathname)) {
+            return -1;
+        }
+
+        return sprintf('%u', ($st['ino'] & 0xffff) | (($st['dev'] & 0xff) << 16) | (($projectId & 0xff) << 24));
     }
 }

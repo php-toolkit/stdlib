@@ -200,7 +200,7 @@ class AutoLoader
     /**
      * @param array $psr4Map
      */
-    public function setPsr4Map($psr4Map): void
+    public function setPsr4Map(array $psr4Map): void
     {
         $this->psr4Map = $psr4Map;
     }
@@ -287,7 +287,7 @@ class AutoLoader
             return $this->classMap[$class];
         }
 
-        $file = $this->findFileWithExtension($class, '.php');
+        $file = $this->findFileWithExtension($class);
 
         if (false === $file) {
             // Remember that this class does not exist.
@@ -299,14 +299,13 @@ class AutoLoader
 
     /**
      * @param string $class
-     * @param string $ext
      *
      * @return bool|string
      */
-    private function findFileWithExtension(string $class, string $ext)
+    private function findFileWithExtension(string $class)
     {
         // PSR-4 lookup
-        $logicalPathPsr4 = str_replace('\\', DIRECTORY_SEPARATOR, $class) . $ext;
+        $logicalPathPsr4 = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
         // PSR-4
         foreach ($this->psr4Map as $prefix => $dir) {
@@ -320,7 +319,7 @@ class AutoLoader
         }
 
         // PEAR-like class name
-        $logicalPathPsr0 = str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
+        $logicalPathPsr0 = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 
         foreach ($this->psr0Map as $prefix => $dir) {
             if (0 === strpos($class, $prefix)) {
@@ -362,5 +361,6 @@ function _globalIncludeFile($fileIdentifier, $file): void
  */
 function _includeClassFile($file): void
 {
+    /** @noinspection PhpIncludeInspection */
     include $file;
 }

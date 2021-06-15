@@ -14,8 +14,10 @@ use function html_entity_decode;
 use function htmlentities;
 use function htmlspecialchars;
 use function htmlspecialchars_decode;
+use function in_array;
 use function is_array;
 use function is_string;
+use function json_encode;
 use function preg_match_all;
 use function preg_replace;
 use function strpos;
@@ -97,7 +99,7 @@ class HtmlHelper
      * @param int    $type
      * @param string $encoding
      *
-     * @return array|mixed|string
+     * @return array|string
      */
     public static function escape($data, int $type = 0, string $encoding = 'UTF-8')
     {
@@ -235,5 +237,24 @@ class HtmlHelper
         $replace = [' ', ' ', '>', '<', '\\1'];
 
         return preg_replace($search, $replace, $html);
+    }
+
+    /**
+     * Display a var dump in firebug console
+     *
+     * @param mixed  $object Object to display
+     * @param string $type
+     */
+    public static function fd($object, $type = 'log'): void
+    {
+        $types = ['log', 'debug', 'info', 'warn', 'error', 'assert'];
+
+        if (!in_array($type, $types, true)) {
+            $type = 'log';
+        }
+
+        $data = json_encode($object);
+
+        echo '<script type="text/javascript">console.' . $type . '(' . $data . ');</script>';
     }
 }

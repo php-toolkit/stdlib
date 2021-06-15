@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib;
 
+use Toolkit\Stdlib\Helper\IntHelper;
 use function abs;
 use function ceil;
 use function floor;
@@ -20,7 +21,7 @@ use const PHP_ROUND_HALF_UP;
  *
  * @package Toolkit\Stdlib
  */
-class Math
+class Math extends IntHelper
 {
     /**
      * @param int|float $value
