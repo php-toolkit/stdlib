@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Str;
 
+use DateTime;
 use Exception;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
@@ -16,16 +17,21 @@ use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringConvertTrait;
 use Toolkit\Stdlib\Str\Traits\StringTruncateHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
+use function abs;
 use function array_merge;
 use function base64_encode;
 use function count;
+use function crc32;
+use function gethostname;
 use function hash;
 use function hex2bin;
 use function is_int;
 use function is_string;
 use function mb_strwidth;
+use function microtime;
 use function preg_split;
 use function random_bytes;
+use function random_int;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
@@ -174,6 +180,16 @@ abstract class StringHelper
     }
 
     /**
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public static function uniqId(string $prefix = ''): string
+    {
+        return uniqid($prefix, true);
+    }
+
+    /**
      * gen UUID
      *
      * @param int  $version
@@ -181,10 +197,61 @@ abstract class StringHelper
      * @param null $ns
      *
      * @return UUID
+     * @throws Exception
      */
-    public static function genUUID(int $version = 1, $node = null, $ns = null)
+    public static function genUUID(int $version = 1, $node = null, $ns = null): UUID
     {
         return UUID::generate($version, $node, $ns);
+    }
+
+    /**
+     * Generate order number
+     *
+     * @param string|int $prefix
+     *
+     * @return string If no prefix, default length is 20
+     * @throws Exception
+     */
+    public static function genNOV1($prefix = '', array $randomRange = []): string
+    {
+        $host = gethostname();
+        $time = microtime(true) * 10000;
+
+        $id = (string)abs(crc32($host) % 100);
+        $id = str_pad($id, 2, '0', STR_PAD_LEFT);
+
+        $randomRange = $randomRange ?: [1000, 9999];
+        [$min, $max] = $randomRange;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $random = random_int($min, $max);
+
+        return $prefix . $time . $id . $random;
+    }
+
+    /**
+     * Generate order number v2
+     *
+     * @param string|int $prefix
+     *
+     * @return string If no prefix, default length is 26
+     * @throws Exception
+     */
+    public static function genNOV2($prefix = '', array $randomRange = []): string
+    {
+        $host = gethostname();
+        // u - 可以打印微妙，但是使用 date 函数时无效
+        // $date = date('YmdHisu');
+        $date = (new DateTime())->format('YmdHisu');
+
+        $id = (string)abs(crc32($host) % 100);
+        $id = str_pad($id, 2, '0', STR_PAD_LEFT);
+
+        $randomRange = $randomRange ?: [100, 999];
+        [$min, $max] = $randomRange;
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $random = random_int($min, $max);
+
+        return $prefix . $date . $id . $random;
     }
 
     ////////////////////////////////////////////////////////////////////////
