@@ -23,7 +23,7 @@ class ConfigObject extends ArrayObject
      *
      * @return static
      */
-    public static function new(array $data = [])
+    public static function new(array $data = []): self
     {
         return new static($data);
     }
@@ -90,6 +90,21 @@ class ConfigObject extends ArrayObject
     {
         if ($this->offsetExists($key)) {
             return (string)$this->offsetGet($key);
+        }
+
+        return $default;
+    }
+
+    /**
+     * @param string $key
+     * @param array  $default
+     *
+     * @return array
+     */
+    public function getArray(string $key, array $default = []): array
+    {
+        if ($this->offsetExists($key)) {
+            return (array)$this->offsetGet($key);
         }
 
         return $default;
