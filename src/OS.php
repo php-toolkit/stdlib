@@ -12,6 +12,7 @@ namespace Toolkit\Stdlib;
 use function defined;
 use function explode;
 use function function_exists;
+use function getcwd;
 use function getenv;
 use function getmyuid;
 use function in_array;
@@ -124,6 +125,14 @@ class OS
     public static function getCurrentUser(): array
     {
         return posix_getpwuid(posix_getuid());
+    }
+
+    /**
+     * @return string
+     */
+    public static function getWorkDir(): string
+    {
+        return (string)getcwd();
     }
 
     /**
