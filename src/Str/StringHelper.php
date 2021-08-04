@@ -117,6 +117,17 @@ abstract class StringHelper
         return $padType === STR_PAD_RIGHT ? $str . $buildString : $buildString . $str;
     }
 
+    /**
+     * @param string|int $str
+     * @param string|int $times
+     *
+     * @return string
+     */
+    public static function repeat($str, $times): string
+    {
+        return str_repeat((string)$str, (int)$times);
+    }
+
     ////////////////////////////////////////////////////////////
     /// Security
     ////////////////////////////////////////////////////////////
