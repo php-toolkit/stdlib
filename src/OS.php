@@ -16,6 +16,9 @@ use function getcwd;
 use function getenv;
 use function getmyuid;
 use function in_array;
+use function is_dir;
+use function is_writable;
+use function mkdir;
 use function php_uname;
 use function posix_getuid;
 use function putenv;
@@ -287,4 +290,19 @@ class OS
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }
+
+    /**
+     * Support the creation of hierarchical directories
+     *
+     * @param string    $path
+     * @param int $mode
+     * @param bool       $recursive
+     *
+     * @return bool
+     */
+    public static function mkdir(string $path, int $mode = 0775, bool $recursive = true): bool
+    {
+        return (is_dir($path) || !(!@mkdir($path, $mode, $recursive) && !is_dir($path))) && is_writable($path);
+    }
+
 }
