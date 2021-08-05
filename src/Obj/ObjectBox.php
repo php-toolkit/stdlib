@@ -76,6 +76,8 @@ class ObjectBox implements ContainerInterface
     }
 
     /**
+     * Get an object by registered ID name
+     *
      * @param string $id
      *
      * @return mixed|object
@@ -100,7 +102,7 @@ class ObjectBox implements ContainerInterface
                 }
             }
 
-            // storage
+            // storage it.
             $this->objects[$id] = $obj;
             return $obj;
         }
@@ -128,17 +130,6 @@ class ObjectBox implements ContainerInterface
         }
 
         $obj = null;
-        // array config:
-        // [
-        //  'class' => string,
-        //  // option for create.
-        //  '__opt' => [
-        //      'callInit'   => true,
-        //      'argsForNew' => [$arg0, $arg1],
-        //  ],
-        //  // props settings ...
-        //  'propName' => value,
-        // ]
         if (is_array($value)) {
             $count = count($value);
 
@@ -173,6 +164,31 @@ class ObjectBox implements ContainerInterface
     }
 
     /**
+     * Register an service definition to the box.
+     *
+     * **$definition**:
+     *
+     * - Closure
+     * - Object and has __invoke()
+     * - string: an function name
+     * - array: callable array [class, method]
+     * - array: config array
+     *
+     * ```php
+     * [
+     *  'class' => string,
+     *  // option for create object.
+     *  '__opt' => [
+     *      'callInit'   => true,
+     *      'argsForNew' => [$arg0, $arg1],
+     *  ],
+     *  // props settings ...
+     *  'propName' => value,
+     * ]
+     * ```
+     *
+     * - more, any type as config data.
+     *
      * @param string $id
      * @param mixed  $definition
      * @param bool   $override
