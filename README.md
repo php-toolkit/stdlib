@@ -5,23 +5,48 @@
 [![Latest Stable Version](http://img.shields.io/packagist/v/toolkit/stdlib.svg)](https://packagist.org/packages/toolkit/stdlib)
 [![Github Actions Status](https://github.com/php-toolkit/stdlib/workflows/Unit-Tests/badge.svg)](https://github.com/php-toolkit/stdlib/actions)
 
-Some useful basic tool class for php.
+Some useful basic tools for php.
 
 Contains:
 
-- array handle
-- object handle
-- string handle
-- simple autoloader
-- dot env load `.env`
+- array helper
+- object helper
+- string helper
 - common php helper
-- os env info
+- OS env information
+- dotenv load `.env`
+- simple autoloader
+- simple object container
 - and more ...
 
 ## Install
 
 ```bash
 composer require toolkit/stdlib
+```
+
+## Usage
+
+### Object Box
+
+```php
+$box = \Toolkit\Stdlib\Obj\ObjectBox::global();
+
+// set
+$box->set('router', function () {
+    return new MyRouter();
+});
+
+$box->set('renderer', [
+    'class' => MyRenderer::class,
+    'tplDir' => 'path/to/dir',
+]);
+
+// get
+/** @var MyRouter $router */
+$router = $box->get('router');
+/** @var MyRenderer $renderer */
+$renderer = $box->get('renderer');
 ```
 
 ## License
