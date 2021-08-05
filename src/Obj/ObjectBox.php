@@ -18,24 +18,50 @@ use function method_exists;
  *
  * An simple object containers implements
  *
+ * NOTICE: require the `psr/container` package.
+ *
  * @package Toolkit\Stdlib\Obj
  */
 class ObjectBox implements ContainerInterface
 {
     /**
+     * @var self
+     */
+    private static $global;
+
+    /**
+     * @var bool
+     */
+    private $callInit = true;
+
+    /**
+     * @var string
+     */
+    private $initMethod = 'init';
+
+    /**
+     * Created objects
+     *
      * @var array
      */
     private $objects = [];
 
     /**
+     * Definitions for create objects
+     *
      * @var array
      */
     private $definitions = [];
 
     /**
-     * @var self
+     * Class constructor.
+     *
+     * @param array $options
      */
-    private static $global;
+    public function __construct(array $options = [])
+    {
+        Obj::init($this, $options);
+    }
 
     /**
      * @return static
@@ -56,12 +82,23 @@ class ObjectBox implements ContainerInterface
      */
     public function get(string $id)
     {
+        // has created.
         if (isset($this->objects[$id])) {
             return $this->objects[$id];
         }
 
+        // create from definition
         if (isset($this->definitions[$id])) {
-            $obj = $this->createObject($this->definitions[$id]);
+            [$obj, $opt] = $this->createObject($this->definitions[$id]);
+
+            if (is_object($obj)) {
+                $callInit = $opt['callInit'] ?? $this->callInit;
+
+                // has init method in the object, call it.
+                if ($callInit && method_exists($obj, $this->initMethod)) {
+                    $obj->init();
+                }
+            }
 
             // storage
             $this->objects[$id] = $obj;
@@ -72,32 +109,46 @@ class ObjectBox implements ContainerInterface
     }
 
     /**
-     * @param mixed $value
+     * @param mixed $value The definition value.
      *
-     * @return mixed
+     * @return array
      */
-    protected function createObject($value)
+    protected function createObject($value): array
     {
+        $opt = [];
+
         // Closure or has __invoke()
         if (is_object($value) && is_callable($value)) {
-            return $value($this);
+            return [$value($this), $opt];
         }
 
-        // function
+        // function name
         if (is_string($value) && is_callable($value)) {
-            return $value($this);
+            return [$value($this), $opt];
         }
 
         $obj = null;
+        // array config:
+        // [
+        //  'class' => string,
+        //  // option for create.
+        //  '__opt' => [
+        //      'callInit'   => true,
+        //      'argsForNew' => [$arg0, $arg1],
+        //  ],
+        //  // props settings ...
+        //  'propName' => value,
+        // ]
         if (is_array($value)) {
             $count = count($value);
 
+            // like [class, method]
             if ($count === 2 && isset($value[0], $value[1]) && is_callable($value)) {
                 $obj = $value($this);
-            } elseif (isset($value['class'])) {
+            } elseif (isset($value['class'])) { // full config
                 $cls = $value['class'];
-                $opt = $value['__opts'] ?? [];
-                unset($value['class'], $value['__opts']);
+                $opt = $value['__opt'] ?? [];
+                unset($value['class'], $value['__opt']);
 
                 // set construct args, will expand for new object.
                 if ($argsForNew = $opt['argsForNew'] ?? []) {
@@ -110,13 +161,6 @@ class ObjectBox implements ContainerInterface
                 if ($value) {
                     Obj::init($obj, $value);
                 }
-
-                if ($opt) {
-                    $init = $opt['init'] ?? true;
-                    if ($init && method_exists($obj, 'init')) {
-                        $obj->init();
-                    }
-                }
             }
         }
 
@@ -125,7 +169,7 @@ class ObjectBox implements ContainerInterface
             $obj = $value;
         }
 
-        return $obj;
+        return [$obj, $opt];
     }
 
     /**
@@ -189,5 +233,39 @@ class ObjectBox implements ContainerInterface
     public function getDefinition(string $id)
     {
         return $this->definitions[$id] ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCallInit(): bool
+    {
+        return $this->callInit;
+    }
+
+    /**
+     * @param bool $callInit
+     */
+    public function setCallInit(bool $callInit): void
+    {
+        $this->callInit = $callInit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInitMethod(): string
+    {
+        return $this->initMethod;
+    }
+
+    /**
+     * @param string $initMethod
+     */
+    public function setInitMethod(string $initMethod): void
+    {
+        if ($initMethod) {
+            $this->initMethod = $initMethod;
+        }
     }
 }
