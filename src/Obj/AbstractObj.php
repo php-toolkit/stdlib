@@ -19,7 +19,7 @@ abstract class AbstractObj
      *
      * @param array $config
      */
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
         Obj::init($this, $config);
     }
