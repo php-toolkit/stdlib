@@ -304,5 +304,4 @@ class OS
     {
         return (is_dir($path) || !(!@mkdir($path, $mode, $recursive) && !is_dir($path))) && is_writable($path);
     }
-
 }
