@@ -20,6 +20,7 @@ use function is_dir;
 use function is_writable;
 use function mkdir;
 use function php_uname;
+use function posix_getpwuid;
 use function posix_getuid;
 use function putenv;
 use function rtrim;
@@ -34,6 +35,106 @@ use const PHP_OS_FAMILY;
  */
 class OS
 {
+    /**************************************************************************
+     * user info
+     *************************************************************************/
+
+    /** @var string|null */
+    private static $homeDir;
+
+    /**
+     * @param bool $refresh
+     *
+     * @return string
+     */
+    public static function getUserHomeDir(bool $refresh = false): string
+    {
+        // has cache value.
+        if (self::$homeDir && $refresh === false) {
+            return self::$homeDir;
+        }
+
+        if (!$home = self::getEnvVal('HOME')) {
+            $isWin = self::isWindows();
+
+            // home on windows
+            if ($isWin && !empty($_SERVER['HOMEDRIVE']) && !empty($_SERVER['HOMEPATH'])) {
+                $home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'];
+                // If HOMEPATH is a root directory the path can end with a slash.
+                // Make sure that doesn't happen.
+                $home = rtrim($home, '\\/');
+            }
+        }
+
+        self::$homeDir = $home;
+        return $home;
+    }
+
+    /**
+     * @param string $path
+     * @param bool   $refresh
+     *
+     * @return string
+     */
+    public static function userHomeDir(string $path = '', bool $refresh = false): string
+    {
+        return self::getUserHomeDir($refresh) . ($path ? "/$path" : '');
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string eg: ~/.config/kite.php
+     */
+    public static function userConfigDir(string $path = ''): string
+    {
+        return self::getUserHomeDir() . '/.config' . ($path ? "/$path" : '');
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string  eg: ~/.cache/kite/some.log
+     */
+    public static function userCacheDir(string $path = ''): string
+    {
+        return self::getUserHomeDir() . '/.cache' . ($path ? "/$path" : '');
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isRoot(): bool
+    {
+        return self::isRootUser();
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isRootUser(): bool
+    {
+        if (function_exists('posix_getuid')) {
+            return posix_getuid() === 0;
+        }
+
+        return getmyuid() === 0;
+    }
+
+    /**
+     * Get unix user of current process.
+     *
+     * @return array
+     */
+    public static function getCurrentUser(): array
+    {
+        return posix_getpwuid(posix_getuid());
+    }
+
+    /**************************************************************************
+     * system env
+     *************************************************************************/
+
     /**
      * @return string
      */
@@ -45,10 +146,6 @@ class OS
 
         return PHP_OS;
     }
-
-    /**************************************************************************
-     * system env
-     *************************************************************************/
 
     /**
      * @return bool
@@ -101,36 +198,6 @@ class OS
     }
 
     /**
-     * @return bool
-     */
-    public static function isRoot(): bool
-    {
-        return self::isRootUser();
-    }
-
-    /**
-     * @return bool
-     */
-    public static function isRootUser(): bool
-    {
-        if (function_exists('posix_getuid')) {
-            return posix_getuid() === 0;
-        }
-
-        return getmyuid() === 0;
-    }
-
-    /**
-     * Get unix user of current process.
-     *
-     * @return array
-     */
-    public static function getCurrentUser(): array
-    {
-        return posix_getpwuid(posix_getuid());
-    }
-
-    /**
      * @return string
      */
     public static function getWorkDir(): string
@@ -166,47 +233,6 @@ class OS
         // @codeCoverageIgnoreEnd
 
         return $tmp;
-    }
-
-    /** @var string|null */
-    private static $homeDir;
-
-    /**
-     * @param bool $refresh
-     *
-     * @return string
-     */
-    public static function useHomeDir(bool $refresh = false): string
-    {
-        return self::getUserHomeDir($refresh);
-    }
-
-    /**
-     * @param bool $refresh
-     *
-     * @return string
-     */
-    public static function getUserHomeDir(bool $refresh = false): string
-    {
-        // has cache value.
-        if (self::$homeDir && $refresh === false) {
-            return self::$homeDir;
-        }
-
-        if (!$home = self::getEnvVal('HOME')) {
-            $isWin = self::isWindows();
-
-            // home on windows
-            if ($isWin && !empty($_SERVER['HOMEDRIVE']) && !empty($_SERVER['HOMEPATH'])) {
-                $home = $_SERVER['HOMEDRIVE'] . $_SERVER['HOMEPATH'];
-                // If HOMEPATH is a root directory the path can end with a slash.
-                // Make sure that doesn't happen.
-                $home = rtrim($home, '\\/');
-            }
-        }
-
-        self::$homeDir = $home;
-        return $home;
     }
 
     /**

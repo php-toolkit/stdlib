@@ -21,6 +21,6 @@ class OSTest extends TestCase
 {
     public function testGetUserHomeDir(): void
     {
-        self::assertNotEmpty(OS::useHomeDir());
+        self::assertNotEmpty(OS::userHomeDir());
     }
 }
