@@ -54,7 +54,7 @@ class OS
             return self::$homeDir;
         }
 
-        if (!$home = self::getEnvVal('HOME')) {
+        if (!$home = self::getEnvStrVal('HOME')) {
             $isWin = self::isWindows();
 
             // home on windows
@@ -237,13 +237,24 @@ class OS
 
     /**
      * @param string $key
+     * @param string|mixed $default
+     *
+     * @return mixed
+     */
+    public static function getEnvVal(string $key, string $default = '')
+    {
+        return getenv($key) ?: ($_SERVER[$key] ?? $default);
+    }
+
+    /**
+     * @param string $key
      * @param string $default
      *
      * @return string
      */
-    public static function getEnvVal(string $key, string $default = ''): string
+    public static function getEnvStrVal(string $key, string $default = ''): string
     {
-        return getenv($key) ?: (string)($_SERVER[$key] ?? $default);
+        return (string)self::getEnvVal($key, $default);
     }
 
     /**

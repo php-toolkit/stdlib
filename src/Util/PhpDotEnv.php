@@ -56,7 +56,7 @@ class PhpDotEnv
      *
      * @return static
      */
-    public static function load(string $fileDir, string $fileName = '.env')
+    public static function load(string $fileDir, string $fileName = '.env'): self
     {
         return new self($fileDir, $fileName);
     }
