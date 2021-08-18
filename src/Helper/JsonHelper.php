@@ -14,6 +14,7 @@ use RuntimeException;
 use stdClass;
 use function array_merge;
 use function basename;
+use function defined;
 use function dirname;
 use function file_exists;
 use function file_get_contents;
@@ -29,6 +30,12 @@ use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 
+// Compatible with lower versions
+if (!defined('JSON_THROW_ON_ERROR')) {
+    define('JSON_THROW_ON_ERROR', 4194304); // since php 7.3
+    // class JsonException extends RuntimeException {}
+}
+
 /**
  * Class JsonHelper
  *
@@ -40,14 +47,16 @@ class JsonHelper
 
     /**
      * @param mixed $data
-     * @param int $flags
-     * @param int $depth
+     * @param int   $flags
+     * @param int   $depth
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function enc($data, int $flags = 0, int $depth = 512): string
     {
-        return json_encode($data, $flags, $depth);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, $flags, $depth);
     }
 
     /**
@@ -58,10 +67,12 @@ class JsonHelper
      * @param int   $depth
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function encode($data, int $options = 0, int $depth = 512): string
     {
-        return json_encode($data, $options, $depth);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return (string)json_encode($data, \JSON_THROW_ON_ERROR | $options, $depth);
     }
 
     /**
@@ -72,66 +83,78 @@ class JsonHelper
      * @param int   $depth
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function encodeCN(
         $data,
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
         int $depth = 512
     ): string {
-        return json_encode($data, $options, $depth);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, $options, $depth);
     }
 
     /**
      * @param $data
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function pretty($data): string
     {
-        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * @param mixed $data
      * @param int   $flags
      *
-     * @return false|string
+     * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function prettyJSON(
         $data,
         int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-    ) {
-        return json_encode($data, $flags);
+    ): string {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, $flags);
     }
 
     /**
      * @param $data
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function unescaped($data): string
     {
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
      * @param $data
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function unescapedSlashes($data): string
     {
-        return json_encode($data, JSON_UNESCAPED_SLASHES);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, JSON_UNESCAPED_SLASHES);
     }
 
     /**
      * @param $data
      *
      * @return string
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function unescapedUnicode($data): string
     {
-        return json_encode($data, JSON_UNESCAPED_UNICODE);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::encode($data, JSON_UNESCAPED_UNICODE);
     }
 
     // ----------- decode -----------
@@ -142,10 +165,12 @@ class JsonHelper
      * @param bool   $assoc
      *
      * @return array|mixed
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function dec(string $json, bool $assoc = true)
     {
-        $data = json_decode($json, $assoc);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $data = json_decode($json, $assoc, 512, JSON_THROW_ON_ERROR);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidArgumentException('json_decode error: ' . json_last_error_msg());
@@ -163,10 +188,12 @@ class JsonHelper
      * @param int    $options
      *
      * @return array|object
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
     {
-        $data = json_decode($json, $assoc, $depth, $options);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $data = json_decode($json, $assoc, $depth, JSON_THROW_ON_ERROR | $options);
 
         if ($errCode = json_last_error()) {
             $errMsg = json_last_error_msg();
@@ -185,15 +212,17 @@ class JsonHelper
      * @param int    $options
      *
      * @return array|object
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function decodeFile(string $jsonFile, bool $assoc = false, int $depth = 512, int $options = 0)
     {
         if (!is_file($jsonFile)) {
-            throw new InvalidArgumentException("json file not found: {$jsonFile}");
+            throw new InvalidArgumentException("json file not found: $jsonFile");
         }
 
         $json = file_get_contents($jsonFile);
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return self::decode($json, $assoc, $depth, $options);
     }
 
@@ -201,8 +230,7 @@ class JsonHelper
      * @param string $data
      * @param bool   $toArray
      *
-     * @return array|mixed|stdClass
-     * @throws InvalidArgumentException
+     * @return array|stdClass
      */
     public static function parse(string $data, bool $toArray = true)
     {
@@ -217,12 +245,12 @@ class JsonHelper
      * @param string $jsonFile
      * @param bool   $toArray
      *
-     * @return array|mixed|stdClass
+     * @return array|stdClass
      */
     public static function parseFile(string $jsonFile, bool $toArray = true)
     {
         if (!is_file($jsonFile)) {
-            throw new InvalidArgumentException("File not found: {$jsonFile}");
+            throw new InvalidArgumentException("File not found: $jsonFile");
         }
 
         $json = file_get_contents($jsonFile);
@@ -233,7 +261,8 @@ class JsonHelper
      * @param string $json
      * @param bool   $toArray
      *
-     * @return array|mixed|stdClass
+     * @return array|stdClass
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public static function parseString(string $json, bool $toArray = true)
     {
@@ -242,6 +271,7 @@ class JsonHelper
         }
 
         $json = self::stripComments($json);
+        /** @noinspection PhpUnhandledExceptionInspection */
         return self::decode($json, $toArray);
     }
 
@@ -286,9 +316,9 @@ class JsonHelper
      * @param string $output
      * @param array  $options
      *
-     * @return bool|int
+     * @return bool
      */
-    public static function saveAs(string $data, string $output, array $options = [])
+    public static function saveAs(string $data, string $output, array $options = []): bool
     {
         $default = ['type' => 'min', 'file' => ''];
         $options = array_merge($default, $options);
@@ -306,7 +336,7 @@ class JsonHelper
             $data = preg_replace('/(?!\w)\s*?(?!\w)/i', '', $data);
         }
 
-        return file_put_contents($file, $data);
+        return file_put_contents($file, $data) > 0;
     }
 
     /**

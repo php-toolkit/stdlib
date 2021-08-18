@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Obj\Exception\ContainerException;
 use Toolkit\Stdlib\Obj\Exception\NotFoundException;
+use function array_keys;
 use function count;
 use function is_array;
 use function is_callable;
@@ -249,6 +250,22 @@ class ObjectBox implements ContainerInterface
     public function getDefinition(string $id)
     {
         return $this->definitions[$id] ?? null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefinitions(): array
+    {
+        return $this->definitions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getObjectIds(): array
+    {
+        return array_keys($this->definitions);
     }
 
     /**
