@@ -48,7 +48,30 @@ use function putenv;
  */
 class PhpDotEnv
 {
-    public const FULL_KEY = 'PHP_DOTENV_VARS';
+    public const FULL_ENV_KEY = 'PHP_DOTENV_VARS';
+    public const DEFAULT_NAME = '.env';
+
+    /**
+     * @var self
+     */
+    private static $global;
+
+    /**
+     * @var array
+     */
+    private $loadedFiles = [];
+
+    /**
+     * @return static
+     */
+    public static function global(): self
+    {
+        if (!self::$global) {
+            self::$global = new self('');
+        }
+
+        return self::$global;
+    }
 
     /**
      * @param string $fileDir
@@ -56,22 +79,23 @@ class PhpDotEnv
      *
      * @return static
      */
-    public static function load(string $fileDir, string $fileName = '.env'): self
+    public static function load(string $fileDir, string $fileName = self::DEFAULT_NAME): self
     {
         return new self($fileDir, $fileName);
     }
 
     /**
-     * constructor.
+     * class constructor.
      *
      * @param string $fileDir
      * @param string $fileName
      */
-    public function __construct(string $fileDir, string $fileName = '.env')
+    public function __construct(string $fileDir, string $fileName = self::DEFAULT_NAME)
     {
-        $file = $fileDir . DIRECTORY_SEPARATOR . ($fileName ?: '.env');
-
-        $this->add($file);
+        if ($fileDir) {
+            $file = $fileDir . DIRECTORY_SEPARATOR . ($fileName ?: self::DEFAULT_NAME);
+            $this->add($file);
+        }
     }
 
     /**
@@ -80,6 +104,7 @@ class PhpDotEnv
     public function add(string $file): void
     {
         if (is_file($file) && is_readable($file)) {
+            $this->loadedFiles[] = $file;
             $this->settingEnv(parse_ini_file($file));
         }
     }
@@ -91,7 +116,7 @@ class PhpDotEnv
      */
     private function settingEnv(array $data): void
     {
-        $loadedVars = array_flip(explode(',', getenv(self::FULL_KEY)));
+        $loadedVars = array_flip(explode(',', (string)getenv(self::FULL_ENV_KEY)));
         unset($loadedVars['']);
 
         foreach ($data as $name => $value) {
@@ -99,10 +124,15 @@ class PhpDotEnv
                 continue;
             }
 
-            $name        = strtoupper($name);
-            $notHttpName = 0 !== strpos($name, 'HTTP_');
+            // fix: comments start with #
+            if ($name[0] === '#') {
+                continue;
+            }
+
+            $name = strtoupper($name);
 
             // don't check existence with getenv() because of thread safety issues
+            $notHttpName = 0 !== strpos($name, 'HTTP_');
             if ((isset($_ENV[$name]) || (isset($_SERVER[$name]) && $notHttpName)) && !isset($loadedVars[$name])) {
                 continue;
             }
@@ -125,9 +155,17 @@ class PhpDotEnv
 
         if ($loadedVars) {
             $loadedVars = implode(',', array_keys($loadedVars));
-            putenv(self::FULL_KEY . "=$loadedVars");
-            $_ENV[self::FULL_KEY]    = $loadedVars;
-            $_SERVER[self::FULL_KEY] = $loadedVars;
+            putenv(self::FULL_ENV_KEY . "=$loadedVars");
+            $_ENV[self::FULL_ENV_KEY]    = $loadedVars;
+            $_SERVER[self::FULL_ENV_KEY] = $loadedVars;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getLoadedFiles(): array
+    {
+        return $this->loadedFiles;
     }
 }
