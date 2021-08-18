@@ -50,7 +50,7 @@ class UrlHelper
     }
 
     /**
-     * @param $str
+     * @param string $str
      *
      * @return bool
      */
@@ -62,7 +62,33 @@ class UrlHelper
     }
 
     /**
-     * @param $url
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function isGitUrl(string $str): bool
+    {
+        if (strpos($str, 'git@') === 0) {
+            $str = 'ssh://' . $str;
+        }
+
+        $rule = '/^(http|https|ssh):\/\/(.+@)*([\w\.]+)(:[\d]+)?\/*(.*)/i';
+
+        return preg_match($rule, $str) === 1;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return bool
+     */
+    public static function simpleCheck(string $url): bool
+    {
+        return preg_match('/^(\w+://)(.+@)*([\w\.]+)(:[\d]+)?/*(.*)/', $url) === 1;
+    }
+
+    /**
+     * @param string $url
      *
      * @return bool
      */
@@ -91,7 +117,7 @@ class UrlHelper
     }
 
     /**
-     * @param $url
+     * @param string $url
      *
      * @return bool
      */
@@ -111,9 +137,8 @@ class UrlHelper
                 return $statusCode === 200;
             }
         } elseif (function_exists('get_headers')) {
-            $headers = get_headers($url, 1);
-
-            return strpos($headers[0], 200) > 0;
+            $headers = get_headers($url, true);
+            return strpos($headers[0], '200') > 0;
         } else {
             $opts     = [
                 'http' => ['timeout' => 5,]
@@ -202,11 +227,11 @@ class UrlHelper
      * $url2 =  urldecode($url);
      * echo $url1.PHP_EOL.$url2.PHP_EOL;
      *
-     * @param $url
+     * @param string $url
      *
-     * @return mixed|string
+     * @return string
      */
-    public static function encode(string $url)
+    public static function encode(string $url): string
     {
         if (!$url = trim($url)) {
             return $url;
@@ -216,9 +241,8 @@ class UrlHelper
         $url = urldecode($url);
 
         $encodeUrl = urlencode($url);
-        $encodeUrl = str_replace(self::$entities, self::$replacements, $encodeUrl);
 
-        return $encodeUrl;
+        return str_replace(self::$entities, self::$replacements, $encodeUrl);
     }
 
     /**
@@ -231,9 +255,9 @@ class UrlHelper
      *
      * @param string $url
      *
-     * @return mixed|string
+     * @return string
      */
-    public static function encode2(string $url)
+    public static function encode2(string $url): string
     {
         if (!$url = trim($url)) {
             return $url;
@@ -244,8 +268,6 @@ class UrlHelper
 
         $encodeUrl = rawurlencode(mb_convert_encoding($url, 'utf-8'));
         // $url  = rawurlencode($url);
-        $encodeUrl = str_replace(self::$entities, self::$replacements, $encodeUrl);
-
-        return $encodeUrl;
+        return str_replace(self::$entities, self::$replacements, $encodeUrl);
     }
 }
