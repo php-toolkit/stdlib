@@ -130,7 +130,7 @@ trait ArrayValueGetSetTrait
      *
      * @return array
      */
-    public static function gets(array &$data, array $needKeys = [], $unsetKey = false): array
+    public static function gets(array &$data, array $needKeys = [], bool $unsetKey = false): array
     {
         $needed = [];
 

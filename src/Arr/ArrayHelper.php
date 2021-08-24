@@ -102,7 +102,7 @@ class ArrayHelper
      *
      * @return mixed
      */
-    public static function toObject($array, $class = stdClass::class)
+    public static function toObject($array, string $class = stdClass::class)
     {
         $object = new $class;
 
@@ -387,7 +387,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function divide($array): array
+    public static function divide(array $array): array
     {
         return [array_keys($array), array_values($array)];
     }
@@ -456,7 +456,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function flatten($array, int $depth = INF): array
+    public static function flatten(array $array, int $depth = INF): array
     {
         return array_reduce($array, static function ($result, $item) use ($depth) {
             if (is_object($item) && method_exists($item, 'toArray')) {
@@ -571,7 +571,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function prepend($array, $value, $key = null): array
+    public static function prepend(array $array, $value, $key = null): array
     {
         if (null === $key) {
             array_unshift($array, $value);
@@ -585,13 +585,13 @@ class ArrayHelper
     /**
      * remove the $key of the $arr, and return value.
      *
-     * @param string $key
+     * @param string|int $key
      * @param array  $arr
      * @param mixed  $default
      *
      * @return mixed
      */
-    public static function remove(&$arr, $key, $default = null)
+    public static function remove(array &$arr, $key, $default = null)
     {
         if (isset($arr[$key])) {
             $value = $arr[$key];
@@ -629,7 +629,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function only($array, $keys): array
+    public static function only(array $array, $keys): array
     {
         return array_intersect_key($array, array_flip((array)$keys));
     }
@@ -641,7 +641,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function shuffle($array): array
+    public static function shuffle(array $array): array
     {
         shuffle($array);
 
@@ -656,7 +656,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function where($array, callable $callback): array
+    public static function where(array $array, callable $callback): array
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
     }
@@ -680,9 +680,9 @@ class ArrayHelper
     /**
      * array 递归 转换成 字符串
      *
-     * @param array     $array  [大于1200字符 strlen($string)>1200
+     * @param array     $array
      * @param int       $length
-     * @param array|int $cycles [至多循环六次 $num >= 6
+     * @param int       $cycles 至多循环六次 $num >= 6
      * @param bool      $showKey
      * @param bool      $addMark
      * @param string    $separator
@@ -692,12 +692,12 @@ class ArrayHelper
      */
     public static function toString(
         $array,
-        $length = 800,
-        $cycles = 6,
-        $showKey = true,
-        $addMark = false,
-        $separator = ', ',
-        $string = ''
+        int $length = 800,
+        int $cycles = 6,
+        bool $showKey = true,
+        bool $addMark = false,
+        string $separator = ', ',
+        string $string = ''
     ): string {
         if (!is_array($array) || empty($array)) {
             return '';
@@ -754,9 +754,9 @@ class ArrayHelper
      * @param array $array
      * @param int   $length
      *
-     * @return mixed|null|string|string[]
+     * @return string
      */
-    public static function toFormatString($array, $length = 400)
+    public static function toFormatString($array, int $length = 400): string
     {
         $string = var_export($array, true);
 

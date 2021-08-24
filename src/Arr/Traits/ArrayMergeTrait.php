@@ -24,6 +24,26 @@ use function is_int;
 trait ArrayMergeTrait
 {
     /**
+     * 替换值合并数组
+     * - 只会将同时存在于两个数组的key，使用第二个数组对应的值替换
+     *
+     * @param array $base
+     * @param array $replacements
+     *
+     * @return array
+     */
+    public static function replace(array $base, array $replacements): array
+    {
+        foreach ($base as $key => $value) {
+            if (isset($replacements[$key])) {
+                $base[$key] = $replacements[$key];
+            }
+        }
+
+        return $base;
+    }
+
+    /**
      * quick merge `append` array to `base` array.
      * - Process at most secondary arrays
      *
