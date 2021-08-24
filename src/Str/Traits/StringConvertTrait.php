@@ -130,27 +130,47 @@ trait StringConvertTrait
     }
 
     /**
-     * @param string $string
+     * @param string $str
      * @param string $delimiter
      * @param int    $limit
      *
      * @return array
      */
-    public static function split2Array(string $string, string $delimiter = ',', int $limit = 0): array
+    public static function split2Array(string $str, string $delimiter = ',', int $limit = 0): array
     {
-        $string = trim($string, "$delimiter ");
+        $str = trim($str, "$delimiter ");
 
-        if (!strpos($string, $delimiter)) {
-            return [$string];
+        if (!strpos($str, $delimiter)) {
+            return [$str];
         }
 
         if ($limit < 1) {
-            $list = explode($delimiter, $string);
+            $list = explode($delimiter, $str);
         } else {
-            $list = explode($delimiter, $string, $limit);
+            $list = explode($delimiter, $str, $limit);
         }
 
         return array_values(array_filter(array_map('trim', $list), 'strlen'));
+    }
+
+    /**
+     * @param string $str
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function splitTrimmed(string $str, string $delimiter = ',', int $limit = 0): array
+    {
+        $str = trim($str, "$delimiter ");
+
+        if (!strpos($str, $delimiter)) {
+            return [$str];
+        }
+
+        $list = $limit > 1 ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
+
+        return array_map('trim', $list);
     }
 
     /**
