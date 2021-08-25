@@ -22,6 +22,7 @@ use function array_merge;
 use function base64_encode;
 use function count;
 use function crc32;
+use function escapeshellarg;
 use function gethostname;
 use function hash;
 use function hex2bin;
@@ -29,6 +30,7 @@ use function is_int;
 use function is_string;
 use function mb_strwidth;
 use function microtime;
+use function preg_match;
 use function preg_split;
 use function random_bytes;
 use function random_int;
@@ -38,6 +40,7 @@ use function str_replace;
 use function str_word_count;
 use function strlen;
 use function strpos;
+use function strtr;
 use function substr;
 use function trim;
 use function uniqid;
@@ -375,6 +378,17 @@ abstract class StringHelper
         return preg_replace($preg_arr, '', $data);
     }
 
+    /**
+     * @param string $template
+     * @param array  $vars
+     *
+     * @return string
+     */
+    public static function replaces(string $template, array $vars): string
+    {
+        return strtr($template, $vars);
+    }
+
     ////////////////////////////////////////////////////////////
     /// Other
     ////////////////////////////////////////////////////////////
@@ -397,6 +411,18 @@ abstract class StringHelper
     public static function utf8WordCount(string $str): int
     {
         return count(preg_split('~[^\p{L}\p{N}\']+~u', $str));
+    }
+
+    /**
+     * Escapes a token through escape shell arg if it contains unsafe chars.
+     *
+     * @param string $token
+     *
+     * @return string
+     */
+    public static function escapeToken(string $token): string
+    {
+        return preg_match('{^[\w-]+$}', $token) ? $token : escapeshellarg($token);
     }
 
     /**
