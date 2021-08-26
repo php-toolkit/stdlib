@@ -176,7 +176,7 @@ class ArrayHelper
      * 将数组中的值全部转为大写或小写
      *
      * @param array|iterable $arr
-     * @param bool  $toUpper
+     * @param bool           $toUpper
      *
      * @return array
      */
@@ -242,9 +242,9 @@ class ArrayHelper
      * ******* 不区分大小写，检查 一个或多个值是否 全存在数组中 *******
      * 有一个不存在即返回 false
      *
-     * @param string|array $need
-     * @param array        $arr  只能检查一维数组
-     * @param bool         $type 是否同时验证类型
+     * @param string|array   $need
+     * @param array|iterable $arr  只能检查一维数组
+     * @param bool           $type 是否同时验证类型
      *
      * @return bool | string 不存在的会返回 检查到的 字段，判断时 请使用 ArrHelper::existsAll($need,$arr)===true 来验证是否全存在
      */
@@ -273,9 +273,9 @@ class ArrayHelper
      * ******* 不区分大小写，检查 一个或多个值是否存在数组中 *******
      * 有一个存在就返回 true 都不存在 return false
      *
-     * @param string|array $need
+     * @param string|array   $need
      * @param array|iterable $arr  只能检查一维数组
-     * @param bool         $type 是否同时验证类型
+     * @param bool           $type 是否同时验证类型
      *
      * @return bool
      */
@@ -327,7 +327,7 @@ class ArrayHelper
         foreach ($data as $key => $value) {
             // key is not a integer
             if (!$excludeInt || !is_numeric($key)) {
-                $width    = mb_strlen($key, 'UTF-8');
+                $width    = mb_strlen((string)$key, 'UTF-8');
                 $maxWidth = $width > $maxWidth ? $width : $maxWidth;
             }
         }
@@ -356,7 +356,7 @@ class ArrayHelper
         foreach ($keys as $key) {
             // key is not a integer
             if (!$excludeInt || !is_numeric($key)) {
-                $keyWidth = mb_strlen($key, 'UTF-8');
+                $keyWidth = mb_strlen((string)$key, 'UTF-8');
                 $maxWidth = $keyWidth > $maxWidth ? $keyWidth : $maxWidth;
             }
         }
@@ -617,8 +617,8 @@ class ArrayHelper
      * remove the $key of the $arr, and return value.
      *
      * @param string|int $key
-     * @param array  $arr
-     * @param mixed  $default
+     * @param array      $arr
+     * @param mixed      $default
      *
      * @return mixed
      */
@@ -637,9 +637,9 @@ class ArrayHelper
     /**
      * Get a value from the array, and remove it.
      *
-     * @param array|ArrayAccess  $array
-     * @param string|int $key
-     * @param mixed  $default
+     * @param array|ArrayAccess $array
+     * @param string|int        $key
+     * @param mixed             $default
      *
      * @return mixed
      */
@@ -711,13 +711,13 @@ class ArrayHelper
     /**
      * array 递归 转换成 字符串
      *
-     * @param array     $array
-     * @param int       $length
-     * @param int       $cycles 至多循环六次 $num >= 6
-     * @param bool      $showKey
-     * @param bool      $addMark
-     * @param string    $separator
-     * @param string    $string
+     * @param array  $array
+     * @param int    $length
+     * @param int    $cycles 至多循环六次 $num >= 6
+     * @param bool   $showKey
+     * @param bool   $addMark
+     * @param string $separator
+     * @param string $string
      *
      * @return string
      */
@@ -749,14 +749,14 @@ class ArrayHelper
 
             if (is_array($value)) {
                 $string .= $keyStr . 'Array(' . self::toString(
-                    $value,
-                    $length,
-                    $cycles,
-                    $showKey,
-                    $addMark,
-                    $separator,
-                    $string
-                ) . ')' . $separator;
+                        $value,
+                        $length,
+                        $cycles,
+                        $showKey,
+                        $addMark,
+                        $separator,
+                        $string
+                    ) . ')' . $separator;
             } elseif (is_object($value)) {
                 $string .= $keyStr . 'Object(' . get_class($value) . ')' . $separator;
             } elseif (is_resource($value)) {
