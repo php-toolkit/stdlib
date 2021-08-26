@@ -159,7 +159,7 @@ class ArrayHelper
      */
     public static function valueToLower(array $arr): array
     {
-        return self::changeValueCase($arr, 0);
+        return self::changeValueCase($arr, false);
     }
 
     /**
@@ -175,12 +175,12 @@ class ArrayHelper
     /**
      * 将数组中的值全部转为大写或小写
      *
-     * @param array $arr
-     * @param int   $toUpper 1 值大写 0 值小写
+     * @param array|iterable $arr
+     * @param bool  $toUpper
      *
      * @return array
      */
-    public static function changeValueCase($arr, $toUpper = 1): array
+    public static function changeValueCase($arr, bool $toUpper = true): array
     {
         $function = $toUpper ? 'strtoupper' : 'strtolower';
         $newArr   = []; //格式化后的数组
@@ -248,7 +248,7 @@ class ArrayHelper
      *
      * @return bool | string 不存在的会返回 检查到的 字段，判断时 请使用 ArrHelper::existsAll($need,$arr)===true 来验证是否全存在
      */
-    public static function existsAll($need, $arr, $type = false)
+    public static function existsAll($need, $arr, bool $type = false)
     {
         if (is_array($need)) {
             foreach ((array)$need as $v) {
@@ -274,12 +274,12 @@ class ArrayHelper
      * 有一个存在就返回 true 都不存在 return false
      *
      * @param string|array $need
-     * @param array        $arr  只能检查一维数组
+     * @param array|iterable $arr  只能检查一维数组
      * @param bool         $type 是否同时验证类型
      *
      * @return bool
      */
-    public static function existsOne($need, $arr, $type = false): bool
+    public static function existsOne($need, $arr, bool $type = false): bool
     {
         if (is_array($need)) {
             foreach ((array)$need as $v) {
@@ -309,28 +309,59 @@ class ArrayHelper
     /**
      * get key Max Width
      *
-     * @param array $data
-     *     [
+     * ```php
+     * $data = [
      *     'key1'      => 'value1',
      *     'key2-test' => 'value2',
-     *     ]
-     * @param bool  $expectInt
+     * ]
+     * ```
+     *
+     * @param array $data
+     * @param bool  $excludeInt
      *
      * @return int
      */
-    public static function getKeyMaxWidth(array $data, $expectInt = true): int
+    public static function getKeyMaxWidth(array $data, bool $excludeInt = true): int
     {
-        $keyMaxWidth = 0;
-
+        $maxWidth = 0;
         foreach ($data as $key => $value) {
             // key is not a integer
-            if (!$expectInt || !is_numeric($key)) {
-                $width       = mb_strlen($key, 'UTF-8');
-                $keyMaxWidth = $width > $keyMaxWidth ? $width : $keyMaxWidth;
+            if (!$excludeInt || !is_numeric($key)) {
+                $width    = mb_strlen($key, 'UTF-8');
+                $maxWidth = $width > $maxWidth ? $width : $maxWidth;
             }
         }
 
-        return $keyMaxWidth;
+        return $maxWidth;
+    }
+
+    /**
+     * get max width
+     *
+     * ```php
+     * $keys = [
+     *     'key1',
+     *     'key2-test',
+     * ]
+     * ```
+     *
+     * @param array $keys
+     * @param bool  $excludeInt
+     *
+     * @return int
+     */
+    public static function getMaxWidth(array $keys, bool $excludeInt = true): int
+    {
+        $maxWidth = 0;
+        foreach ($keys as $key) {
+            // key is not a integer
+            if (!$excludeInt || !is_numeric($key)) {
+                $keyWidth = mb_strlen($key, 'UTF-8');
+                $maxWidth = $keyWidth > $maxWidth ? $keyWidth : $maxWidth;
+            }
+        }
+
+        return $maxWidth;
     }
 
     ////////////////////////////////////////////////////////////
@@ -606,8 +637,8 @@ class ArrayHelper
     /**
      * Get a value from the array, and remove it.
      *
-     * @param array  $array
-     * @param string $key
+     * @param array|ArrayAccess  $array
+     * @param string|int $key
      * @param mixed  $default
      *
      * @return mixed

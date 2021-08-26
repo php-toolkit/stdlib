@@ -15,10 +15,23 @@ use function is_int;
 /**
  * Class IntHelper
  *
- * @link    http://cn2.php.net/manual/zh/function.pack.php#119402
+ * @link http://cn2.php.net/manual/zh/function.pack.php#119402
  */
 class IntHelper
 {
+    /**
+     * @param int $val1
+     * @param int $val2
+     *
+     * @return int
+     */
+    public static function getMax(int $val1, int $val2): int
+    {
+        return $val1 > $val2 ? $val1 : $val2;
+    }
+
+    // ----- http://cn2.php.net/manual/zh/function.pack.php#119402
+
     /**
      * @param $i
      *

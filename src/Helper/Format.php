@@ -42,6 +42,18 @@ class Format
     ];
 
     /**
+     * format timestamp to how long ago
+     *
+     * @param int $secs
+     *
+     * @return string
+     */
+    public static function howLongAgo(int $secs): string
+    {
+        return self::beforeTime($secs);
+    }
+
+    /**
      * format Time
      *
      * @param int $secs
