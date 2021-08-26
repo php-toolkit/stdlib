@@ -64,11 +64,6 @@ class StrBuffer
         $this->write($str);
     }
 
-    public function reset(): void
-    {
-        $this->parts = [];
-    }
-
     /**
      * @param string $content
      */
@@ -108,6 +103,11 @@ class StrBuffer
     public function prepend(string $content): void
     {
         array_unshift($this->parts, $content);
+    }
+
+    public function reset(): void
+    {
+        $this->parts = [];
     }
 
     /**

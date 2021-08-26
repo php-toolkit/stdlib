@@ -25,6 +25,9 @@ use function property_exists;
  */
 trait ArrayAccessByGetterSetterTrait
 {
+    /** @var bool */
+    // protected $__strict__ = false;
+
     /**
      * Checks whether an offset exists in the iterator.
      *
@@ -49,7 +52,7 @@ trait ArrayAccessByGetterSetterTrait
         $getter = 'get' . ucfirst($offset);
 
         if (method_exists($this, $getter)) {
-            $this->$getter();
+            return $this->$getter();
         }
 
         return null;

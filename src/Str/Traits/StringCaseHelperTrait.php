@@ -92,7 +92,7 @@ trait StringCaseHelperTrait
      */
     public static function upper($str): string
     {
-        return static::strtoupper($str);
+        return static::toUpper($str);
     }
 
     /**
@@ -103,16 +103,6 @@ trait StringCaseHelperTrait
      * @return string
      */
     public static function toUpper($str): string
-    {
-        return static::strtoupper($str);
-    }
-
-    /**
-     * @param string|int $str
-     *
-     * @return string
-     */
-    public static function strtoupper($str): string
     {
         if (!is_scalar($str)) {
             return '';
@@ -126,12 +116,23 @@ trait StringCaseHelperTrait
     }
 
     /**
+     * @param string|int $str
+     *
+     * @return string
+     */
+    public static function strtoupper($str): string
+    {
+       return self::toUpper($str);
+    }
+
+    /**
      * @param $str
      *
      * @return string
      */
-    public static function ucfirst($str): string
+    public static function upFirst($str): string
     {
+
         if (!is_scalar($str)) {
             return '';
         }
@@ -148,10 +149,20 @@ trait StringCaseHelperTrait
      *
      * @return string
      */
-    public static function ucwords(string $str): string
+    public static function ucfirst($str): string
+    {
+        return self::upFirst($str);
+    }
+
+    /**
+     * @param $str
+     *
+     * @return string
+     */
+    public static function ucwords($str): string
     {
         return function_exists('mb_convert_case') ?
-            mb_convert_case($str, MB_CASE_TITLE) :
+            mb_convert_case((string)$str, MB_CASE_TITLE) :
             ucwords(self::strtolower($str));
     }
 
