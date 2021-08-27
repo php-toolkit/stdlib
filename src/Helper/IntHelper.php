@@ -30,6 +30,17 @@ class IntHelper
         return $val1 > $val2 ? $val1 : $val2;
     }
 
+    /**
+     * @param int $val1
+     * @param int $val2
+     *
+     * @return int
+     */
+    public static function getMin(int $val1, int $val2): int
+    {
+        return $val1 < $val2 ? $val1 : $val2;
+    }
+
     // ----- http://cn2.php.net/manual/zh/function.pack.php#119402
 
     /**
