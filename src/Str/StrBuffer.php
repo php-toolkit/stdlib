@@ -111,15 +111,25 @@ class StrBuffer
     }
 
     /**
-     * clear data
+     * Get and clear data
+     *
+     * @return string
      */
-    public function clear(): string
+    public function getAndClear(): string
     {
         $strings = $this->parts;
         // clear
         $this->parts = [];
 
         return implode($strings);
+    }
+
+    /**
+     * clear data
+     */
+    public function clear(): string
+    {
+        return $this->getAndClear();
     }
 
     /**
