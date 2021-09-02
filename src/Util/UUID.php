@@ -13,6 +13,7 @@ use Exception;
 use InvalidArgumentException;
 use function microtime;
 use function base_convert;
+use function property_exists;
 use function random_bytes;
 use function preg_replace;
 use function strlen;
@@ -129,8 +130,8 @@ class UUID
 
     /**
      * @param int    $ver
-     * @param string $node
-     * @param string $ns
+     * @param string|null $node
+     * @param string|null $ns
      * @return UUID
      * @throws InvalidArgumentException
      * @throws Exception
@@ -179,7 +180,7 @@ class UUID
      * Generates a Version 1 UUID.
      * These are derived from the time at which they were generated.
      *
-     * @param string $node
+     * @param string|null $node
      * @return string
      * @throws Exception
      */
@@ -190,7 +191,7 @@ class UUID
          * integer size limits.
          * Note that this will never be more accurate than to the microsecond.
          */
-        $time = microtime(1) * 10000000 + static::INTERVAL;
+        $time = microtime(true) * 10000000 + static::INTERVAL;
 
         // Convert to a string representation
         $time = sprintf('%F', $time);
@@ -237,7 +238,7 @@ class UUID
      * @return string
      * @throws Exception
      */
-    public static function randomBytes($bytes): string
+    public static function randomBytes(int $bytes): string
     {
         return random_bytes($bytes);
     }
@@ -250,7 +251,7 @@ class UUID
      * @param integer     $len
      * @return string|null
      */
-    protected static function makeBin($str, $len): ?string
+    protected static function makeBin($str, int$len): ?string
     {
         if ($str instanceof self) {
             return $str->bytes;
@@ -301,11 +302,11 @@ class UUID
         switch ($ver) {
             case static::MD5:
                 $version = static::VERSION_3;
-                $uuid = md5($ns . $node, 1);
+                $uuid = md5($ns . $node, true);
                 break;
             case static::SHA1:
                 $version = static::VERSION_5;
-                $uuid = substr(sha1($ns . $node, 1), 0, 16);
+                $uuid = substr(sha1($ns . $node, true), 0, 16);
                 break;
             default:
                 // no default really required here
@@ -375,12 +376,17 @@ class UUID
      */
     public static function validate(string $uuid): bool
     {
-        return (boolean)preg_match('~' . static::VALID_UUID_REGEX . '~', static::import($uuid)->string);
+        return (bool)preg_match('~' . static::VALID_UUID_REGEX . '~', static::import($uuid)->string);
     }
 
-    public function __isset($var): void
+    /**
+     * @param string $var
+     *
+     * @return bool
+     */
+    public function __isset(string $var): bool
     {
-        //
+        return property_exists($this, $var);
     }
 
     public function __set($var, $val): void
