@@ -84,6 +84,42 @@ final class Type
     }
 
     /**
+     * Get type default value.
+     *
+     * @param string $type
+     *
+     * @return array|false|float|int|string|null
+     */
+    public static function getDefault(string $type)
+    {
+        $value = null;
+        switch ($type) {
+            case self::INT:
+            case self::INTEGER:
+                $value = 0;
+                break;
+            case self::BOOL:
+            case self::BOOLEAN:
+                $value = false;
+                break;
+            case self::FLOAT:
+                $value = (float)0;
+                break;
+            case self::DOUBLE:
+                $value = (double)0;
+                break;
+            case self::STRING:
+                $value = '';
+                break;
+            case self::ARRAY:
+                $value = [];
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
      * @return array
      * @see \gettype()
      */
