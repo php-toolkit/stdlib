@@ -9,12 +9,14 @@
 
 namespace Toolkit\Stdlib;
 
+use Toolkit\Cli\Helper\FlagHelper;
 use function gettype;
+use function is_string;
 
 /**
  * Class Type - php data type
  *
- * @package Toolkit\PhpKit
+ * @package Toolkit\Stdlib
  * @see     \gettype()
  */
 final class Type
@@ -120,39 +122,95 @@ final class Type
     }
 
     /**
+     * @param string $type
+     * @param mixed  $value
+     *
+     * @return array|bool|float|int|mixed|string
+     */
+    public static function fmtValue(string $type, $value)
+    {
+        switch ($type) {
+            case self::INT:
+            case self::INTEGER:
+                $value = (int)$value;
+                break;
+            case self::BOOL:
+            case self::BOOLEAN:
+                if (is_string($value)) {
+                    $value = FlagHelper::str2bool($value);
+                } else {
+                    $value = (bool)$value;
+                }
+                break;
+            case self::FLOAT:
+                $value = (float)$value;
+                break;
+            case self::DOUBLE:
+                $value = (double)$value;
+                break;
+            case self::STRING:
+                $value = (string)$value;
+                break;
+            case self::ARRAY:
+                $value = (array)$value;
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param bool $withAlias
+     *
      * @return array
      * @see \gettype()
      */
-    public static function all(): array
+    public static function all(bool $withAlias = true): array
     {
-        return [
+        $types = [
             self::ARRAY,
-            self::BOOL,
+            // self::BOOL,
             self::BOOLEAN,
             self::DOUBLE,
             self::FLOAT,
-            self::INT,
+            // self::INT,
             self::INTEGER,
             self::OBJECT,
             self::STRING,
             self::RESOURCE
         ];
+
+        if ($withAlias) {
+            $types[] = self::BOOL;
+            $types[] = self::INT;
+        }
+
+        return $types;
     }
 
     /**
+     * @param bool $withAlias
+     *
      * @return array
      */
-    public static function scalars(): array
+    public static function scalars(bool $withAlias = true): array
     {
-        return [
-            self::BOOL,
+        $types = [
+            // self::BOOL,
             self::BOOLEAN,
             self::DOUBLE,
             self::FLOAT,
-            self::INT,
+            // self::INT,
             self::INTEGER,
             self::STRING
         ];
+
+        if ($withAlias) {
+            $types[] = self::BOOL;
+            $types[] = self::INT;
+        }
+
+        return $types;
     }
 
     /**
