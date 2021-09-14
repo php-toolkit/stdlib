@@ -13,6 +13,7 @@ use ArrayAccess;
 use Closure;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use RuntimeException;
 use Traversable;
@@ -30,6 +31,7 @@ use function method_exists;
 use function property_exists;
 use function serialize;
 use function spl_object_hash;
+use function sprintf;
 use function ucfirst;
 use function unserialize;
 
@@ -193,29 +195,29 @@ class ObjectHelper
      * @from https://github.com/ventoviro/windwalker
      * Build an array of constructor parameters.
      *
-     * @param ReflectionMethod $method Method for which to build the argument array.
-     * @param array            $extraArgs
+     * @param ReflectionMethod $method      Method for which to build the argument array.
+     * @param array            $provideArgs Manual provide params map.
      *
      * @return array
      * @throws RuntimeException
      * @throws ReflectionException
      */
-    public static function getMethodArgs(ReflectionMethod $method, array $extraArgs = []): array
+    public static function getMethodArgs(ReflectionMethod $method, array $provideArgs = []): array
     {
         $methodArgs = [];
 
         foreach ($method->getParameters() as $idx => $param) {
             // if user have been provide arg
-            if (isset($extraArgs[$idx])) {
-                $methodArgs[] = $extraArgs[$idx];
+            if (isset($provideArgs[$idx])) {
+                $methodArgs[] = $provideArgs[$idx];
                 continue;
             }
 
-            $dependencyClass = $param->getClass();
+            // $depRftClass = $param->getClass();
+            $depRftClass = $param->getType();
 
             // If we have a dependency, that means it has been type-hinted.
-            if ($dependencyClass && ($depClass = $dependencyClass->getName()) !== Closure::class) {
-                $depClass  = $dependencyClass->getName();
+            if ($depRftClass && ($depClass = $depRftClass->getName()) !== Closure::class) {
                 $depObject = self::create($depClass);
 
                 if ($depObject instanceof $depClass) {
@@ -240,6 +242,49 @@ class ObjectHelper
         }
 
         return $methodArgs;
+    }
+
+    /**
+     * @param ReflectionFunctionAbstract $rftFunc
+     * @param array                      $provideArgs
+     *
+     * @psalm-param array<string, mixed> $provideArgs
+     *
+     * @return array
+     * @throws ReflectionException
+     */
+    public static function buildReflectCallArgs(ReflectionFunctionAbstract $rftFunc, array $provideArgs = []): array
+    {
+        $funcArgs = [];
+        foreach ($rftFunc->getParameters() as $param) {
+            // filling by param type. eg: an class name
+            $typeName = (string)$param->getType();
+            if ($typeName !== Closure::class && isset($provideArgs[$typeName])) {
+                $funcArgs[] = $provideArgs[$typeName];
+                continue;
+            }
+
+            // filling by param name
+            $name = $param->getName();
+            if (isset($provideArgs[$name])) {
+                $funcArgs[] = $provideArgs[$name];
+                continue;
+            }
+
+            // Finally, if there is a default parameter, use it.
+            if ($param->isOptional()) {
+                $funcArgs[] = $param->getDefaultValue();
+                continue;
+            }
+
+            throw new RuntimeException(sprintf(
+                'Could not resolve dependency: %s for the %dth parameter',
+                $param->getPosition(),
+                $name
+            ));
+        }
+
+        return $funcArgs;
     }
 
     /**
