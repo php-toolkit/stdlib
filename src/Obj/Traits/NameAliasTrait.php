@@ -3,6 +3,7 @@
 namespace Toolkit\Stdlib\Obj\Traits;
 
 use InvalidArgumentException;
+use function count;
 
 /**
  * trait NameAliasTrait
@@ -55,6 +56,14 @@ trait NameAliasTrait
     public function hasAlias(string $alias): bool
     {
         return isset($this->aliases[$alias]);
+    }
+
+    /**
+     * @return int
+     */
+    public function countAlias(): int
+    {
+        return count($this->aliases);
     }
 
     /**

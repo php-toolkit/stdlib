@@ -38,7 +38,7 @@ class DataHelperTest extends TestCase
         self::assertEquals('abc', DataHelper::toString('abc'));
         self::assertEquals('bool(TRUE)', DataHelper::toString(true));
         self::assertEquals('bool(FALSE)', DataHelper::toString(false));
-        self::assertEquals('<NULL>', DataHelper::toString(null));
+        self::assertEquals('NULL', DataHelper::toString(null));
         self::assertEquals('["ab",23]', DataHelper::toString(['ab', 23]));
 
         $str = DataHelper::toString((object)['ab', 23]);
