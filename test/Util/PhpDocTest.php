@@ -5,7 +5,6 @@ namespace Toolkit\StdlibTest\Util;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use Toolkit\Stdlib\Util\PhpDoc;
-use function vdump;
 
 /**
  * class PhpDocTest

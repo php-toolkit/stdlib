@@ -11,7 +11,6 @@ namespace Toolkit\Stdlib\Util;
 
 use function array_merge;
 use function in_array;
-use function is_array;
 use function preg_match;
 use function preg_replace;
 use function preg_split;
@@ -28,6 +27,17 @@ use const PREG_SPLIT_NO_EMPTY;
  */
 class PhpDoc
 {
+    /**
+     * @param string $doc
+     * @param array $options
+     *
+     * @return array
+     */
+    public static function getTags(string $doc, array $options = []): array
+    {
+        return self::parseDocs($doc, $options);
+    }
+
     /**
      * 以下三个方法来自 yii2 console/Controller.php 做了一些调整
      */
@@ -46,7 +56,7 @@ class PhpDoc
      *
      * @return array The parsed tags
      */
-    public static function getTags(string $comment, array $options = []): array
+    public static function parseDocs(string $comment, array $options = []): array
     {
         if (!$comment = trim($comment, "/ \n")) {
             return [];
@@ -86,12 +96,11 @@ class PhpDoc
                     continue;
                 }
 
-                if (!isset($tags[$name])) {
-                    $tags[$name] = trim($matches[2]);
-                } elseif (is_array($tags[$name])) {
+                // allow multi tag
+                if ($multi && in_array($name, $multi, true)) {
                     $tags[$name][] = trim($matches[2]);
                 } else {
-                    $tags[$name] = [$tags[$name], trim($matches[2])];
+                    $tags[$name] = trim($matches[2]);
                 }
             }
         }
