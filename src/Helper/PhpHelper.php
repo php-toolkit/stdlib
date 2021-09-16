@@ -13,6 +13,7 @@ use Closure;
 use Generator;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
 use RuntimeException;
 use Toolkit\Stdlib\Obj\ObjectHelper;
 use function array_sum;
@@ -20,6 +21,7 @@ use function explode;
 use function fopen;
 use function ftok;
 use function function_exists;
+use function get_class;
 use function is_array;
 use function is_callable;
 use function is_object;
@@ -53,18 +55,44 @@ class PhpHelper
     private static $reflects = [];
 
     /**
-     * @param string $class
+     * @var ReflectionMethod[]
+     */
+    private static $reflectMths = [];
+
+    /**
+     * @param string|object $classOrObj
      *
      * @return ReflectionClass
      * @throws ReflectionException
      */
-    public static function reflectClass(string $class): ReflectionClass
+    public static function reflectClass($classOrObj): ReflectionClass
     {
-        if (!isset(self::$reflects[$class])) {
-            self::$reflects[$class] = new ReflectionClass($class);
+        $id = is_string($classOrObj) ? $classOrObj : get_class($classOrObj);
+
+        if (!isset(self::$reflects[$id])) {
+            self::$reflects[$id] = new ReflectionClass($classOrObj);
         }
 
-        return self::$reflects[$class];
+        return self::$reflects[$id];
+    }
+
+    /**
+     * @param string|object $classOrObj
+     * @param string $method
+     *
+     * @return ReflectionMethod
+     * @throws ReflectionException
+     */
+    public static function reflectMethod($classOrObj, string $method): ReflectionMethod
+    {
+        $id = is_string($classOrObj) ? $classOrObj : get_class($classOrObj);
+        $id .= '.' . $method;
+
+        if (!isset(self::$reflectMths[$id])) {
+            self::$reflectMths[$id] = new ReflectionMethod($classOrObj, $method);
+        }
+
+        return self::$reflectMths[$id];
     }
 
     /**
@@ -74,7 +102,7 @@ class PhpHelper
      *
      * @return Generator
      */
-    public static function reflectMethods(ReflectionClass $reflectClass, int $flags = 0, Closure $nameFilter = null): ?Generator
+    public static function getReflectMethods(ReflectionClass $reflectClass, int $flags = 0, Closure $nameFilter = null): ?Generator
     {
         foreach ($reflectClass->getMethods($flags) as $m) {
             $mName = $m->getName();
