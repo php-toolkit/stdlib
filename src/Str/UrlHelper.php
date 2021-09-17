@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Str;
 
+use InvalidArgumentException;
 use function preg_match;
 use function http_build_query;
 use function curl_init;
@@ -220,6 +221,27 @@ class UrlHelper
     }
 
     /**
+     * @param string $url
+     *
+     * @return array
+     */
+    public static function parse2(string $url): array
+    {
+        $info = parse_url($url);
+        if ($info === false) {
+            throw new InvalidArgumentException('invalid request url: ' . $url);
+        }
+
+        return array_merge([
+            'scheme' => 'http',
+            'host'   => '',
+            'port'   => 80,
+            'path'   => '/',
+            'query'  => '',
+        ], $info);
+    }
+
+    /**
      * url_encode form urlencode(),但是 : / ? & = ...... 几个符号不会被转码为 %3A %2F %3F %26 %3D ......
      * $url="ftp://ud03:password@www.xxx.net/中文/中文.rar";
      * $url1 =  url_encode1($url);
@@ -238,9 +260,8 @@ class UrlHelper
         }
 
         // 若已被编码的url，将被解码，再继续重新编码
-        $url = urldecode($url);
-
-        $encodeUrl = urlencode($url);
+        $decodeUrl = urldecode($url);
+        $encodeUrl = urlencode($decodeUrl);
 
         return str_replace(self::$entities, self::$replacements, $encodeUrl);
     }

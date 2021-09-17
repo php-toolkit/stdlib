@@ -60,7 +60,7 @@ trait ArrayMergeTrait
                 if (is_array($item)) {
                     $base[$key] = array_merge($base[$key], $item);
                 } else {
-                    throw new RuntimeException("Array merge error! the '{$key}' must be an array");
+                    throw new RuntimeException("Array merge error! the '$key' must be an array");
                 }
             } else { // set new value OR add new key.
                 $base[$key] = $item;
