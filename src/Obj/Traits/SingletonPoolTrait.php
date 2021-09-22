@@ -10,11 +10,11 @@
 namespace Toolkit\Stdlib\Obj\Traits;
 
 /**
- * Trait CreateSingletonTrait
+ * Trait SingletonPoolTrait
  *
  * @package Toolkit\Stdlib\Obj\Traits
  */
-trait CreateSingletonTrait
+trait SingletonPoolTrait
 {
     /**
      * @var array

@@ -10,8 +10,8 @@
 namespace Toolkit\Stdlib;
 
 use Toolkit\Stdlib\Obj\ObjectHelper;
-use Toolkit\Stdlib\Obj\Traits\CreateSingletonTrait;
 use Toolkit\Stdlib\Obj\Traits\ObjectPoolTrait;
+use Toolkit\Stdlib\Obj\Traits\SingletonPoolTrait;
 
 /**
  * Class Obj
@@ -21,5 +21,5 @@ use Toolkit\Stdlib\Obj\Traits\ObjectPoolTrait;
  */
 class Obj extends ObjectHelper
 {
-    use ObjectPoolTrait, CreateSingletonTrait;
+    use ObjectPoolTrait, SingletonPoolTrait;
 }

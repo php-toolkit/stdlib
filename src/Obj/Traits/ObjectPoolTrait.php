@@ -58,12 +58,12 @@ trait ObjectPoolTrait
     }
 
     /**
-     * @param string  $class
+     * @param string $class
      * @param Closure $handler
      *
      * @return mixed
      */
-    public static function use($class, Closure $handler)
+    public static function use(string $class, Closure $handler)
     {
         $obj = self::get($class);
         $ret = $handler($obj);

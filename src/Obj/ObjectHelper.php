@@ -16,9 +16,13 @@ use ReflectionException;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use RuntimeException;
+use Toolkit\Stdlib\Helper\PhpHelper;
 use Traversable;
 use function base64_decode;
 use function base64_encode;
+use function basename;
+use function dirname;
+use function gettype;
 use function gzcompress;
 use function gzuncompress;
 use function is_array;
@@ -32,6 +36,8 @@ use function property_exists;
 use function serialize;
 use function spl_object_hash;
 use function sprintf;
+use function str_replace;
+use function strpos;
 use function ucfirst;
 use function unserialize;
 
@@ -49,7 +55,7 @@ class ObjectHelper
      * - 会先尝试用 setter 方法设置属性
      * - 再尝试直接设置属性
      *
-     * @param mixed $object An object instance
+     * @param object|mixed $object An object instance
      * @param array $options
      *
      * @return mixed
@@ -92,12 +98,28 @@ class ObjectHelper
     /**
      * 给对象设置属性值
      *
-     * @param       $object
+     * @param object|mixed  $object
      * @param array $options
      */
     public static function setAttrs($object, array $options): void
     {
         self::configure($object, $options);
+    }
+
+    /**
+     * @param object|mixed $object
+     * @param array $data
+     *
+     * @throws ReflectionException
+     */
+    public static function mappingProps($object, array $data): void
+    {
+        // TODO
+        $rftObj = PhpHelper::reflectClass($object);
+        foreach ($rftObj->getProperties() as $rftProp) {
+            // TODO
+            // $typeName = $rftProp->getType()
+        }
     }
 
     /**
@@ -160,7 +182,7 @@ class ObjectHelper
     }
 
     /**
-     * @param object $object
+     * @param object|mixed $object
      *
      * @return bool
      */
@@ -171,11 +193,11 @@ class ObjectHelper
 
     /**
      * @param mixed $object
-     * @param bool  $unique
+     * @param bool $unique
      *
      * @return string
      */
-    public static function hash($object, $unique = true): string
+    public static function hash($object, bool $unique = true): string
     {
         if (is_object($object)) {
             $hash = spl_object_hash($object);
@@ -192,8 +214,7 @@ class ObjectHelper
     }
 
     /**
-     * @from https://github.com/ventoviro/windwalker
-     * Build an array of constructor parameters.
+     * Build an array of class method parameters.
      *
      * @param ReflectionMethod $method      Method for which to build the argument array.
      * @param array            $provideArgs Manual provide params map.
@@ -245,6 +266,8 @@ class ObjectHelper
     }
 
     /**
+     * Build an array of class method parameters.
+     *
      * @param ReflectionFunctionAbstract $rftFunc
      * @param array                      $provideArgs
      *
@@ -264,9 +287,9 @@ class ObjectHelper
                 continue;
             }
 
-            // filling by param name
+            // filling by param name and type is same.
             $name = $param->getName();
-            if (isset($provideArgs[$name])) {
+            if (isset($provideArgs[$name]) && $typeName === gettype($provideArgs[$name])) {
                 $funcArgs[] = $provideArgs[$name];
                 continue;
             }
@@ -325,6 +348,7 @@ class ObjectHelper
      */
     public static function createByArray($config)
     {
+        // is class name.
         if (is_string($config)) {
             return new $config;
         }
@@ -341,4 +365,34 @@ class ObjectHelper
 
         return null;
     }
+
+
+    /**
+     * Get class namespace
+     *
+     * @param string $fullClass
+     *
+     * @return string
+     */
+    public static function spaceName(string $fullClass): string
+    {
+        $fullClass = str_replace('\\', '/', $fullClass);
+
+        return strpos($fullClass, '/') ? dirname($fullClass) : '';
+    }
+
+    /**
+     * Get class name without namespace.
+     *
+     * @param null|string $fullClass
+     *
+     * @return string
+     */
+    public static function className(string $fullClass): string
+    {
+        $fullClass = str_replace('\\', '/', $fullClass);
+
+        return basename($fullClass);
+    }
+
 }
