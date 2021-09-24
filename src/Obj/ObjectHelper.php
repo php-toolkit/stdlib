@@ -15,6 +15,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
+use ReflectionNamedType;
 use RuntimeException;
 use Toolkit\Stdlib\Helper\PhpHelper;
 use Traversable;
@@ -114,7 +115,6 @@ class ObjectHelper
      */
     public static function mappingProps($object, array $data): void
     {
-        // TODO
         $rftObj = PhpHelper::reflectClass($object);
         foreach ($rftObj->getProperties() as $rftProp) {
             // TODO
@@ -216,58 +216,6 @@ class ObjectHelper
     /**
      * Build an array of class method parameters.
      *
-     * @param ReflectionMethod $method      Method for which to build the argument array.
-     * @param array            $provideArgs Manual provide params map.
-     *
-     * @return array
-     * @throws RuntimeException
-     * @throws ReflectionException
-     */
-    public static function getMethodArgs(ReflectionMethod $method, array $provideArgs = []): array
-    {
-        $methodArgs = [];
-
-        foreach ($method->getParameters() as $idx => $param) {
-            // if user have been provide arg
-            if (isset($provideArgs[$idx])) {
-                $methodArgs[] = $provideArgs[$idx];
-                continue;
-            }
-
-            // $depRftClass = $param->getClass();
-            $depRftClass = $param->getType();
-
-            // If we have a dependency, that means it has been type-hinted.
-            if ($depRftClass && ($depClass = $depRftClass->getName()) !== Closure::class) {
-                $depObject = self::create($depClass);
-
-                if ($depObject instanceof $depClass) {
-                    $methodArgs[] = $depObject;
-                    continue;
-                }
-            }
-
-            // Finally, if there is a default parameter, use it.
-            if ($param->isOptional()) {
-                $methodArgs[] = $param->getDefaultValue();
-                continue;
-            }
-
-            // $dependencyVarName = $param->getName();
-            // Couldn't resolve dependency, and no default was provided.
-            throw new RuntimeException(sprintf(
-                'Could not resolve dependency: %s for the %dth parameter',
-                $param->getPosition(),
-                $param->getName()
-            ));
-        }
-
-        return $methodArgs;
-    }
-
-    /**
-     * Build an array of class method parameters.
-     *
      * @param ReflectionFunctionAbstract $rftFunc
      * @param array                      $provideArgs
      *
@@ -280,15 +228,29 @@ class ObjectHelper
     {
         $funcArgs = [];
         foreach ($rftFunc->getParameters() as $param) {
+            $name = $param->getName();
+            $pType = $param->getType();
+            if (!$pType instanceof ReflectionNamedType) {
+                if ($param->isOptional()) {
+                    $funcArgs[] = $param->getDefaultValue();
+                    continue;
+                }
+
+                throw new RuntimeException(sprintf(
+                    'Could not resolve the %dth parameter(%s)',
+                    $param->getPosition(),
+                    $name
+                ));
+            }
+
             // filling by param type. eg: an class name
-            $typeName = (string)$param->getType();
+            $typeName = $pType->getName();
             if ($typeName !== Closure::class && isset($provideArgs[$typeName])) {
                 $funcArgs[] = $provideArgs[$typeName];
                 continue;
             }
 
             // filling by param name and type is same.
-            $name = $param->getName();
             if (isset($provideArgs[$name]) && $typeName === gettype($provideArgs[$name])) {
                 $funcArgs[] = $provideArgs[$name];
                 continue;
@@ -301,7 +263,7 @@ class ObjectHelper
             }
 
             throw new RuntimeException(sprintf(
-                'Could not resolve dependency: %s for the %dth parameter',
+                'Could not resolve the %dth parameter(%s)',
                 $param->getPosition(),
                 $name
             ));
@@ -366,6 +328,57 @@ class ObjectHelper
         return null;
     }
 
+    /**
+     * Build an array of class method parameters.
+     *
+     * @param ReflectionMethod $method      Method for which to build the argument array.
+     * @param array            $provideArgs Manual provide params map.
+     *
+     * @return array
+     * @throws RuntimeException
+     * @throws ReflectionException
+     */
+    public static function getMethodArgs(ReflectionMethod $method, array $provideArgs = []): array
+    {
+        $methodArgs = [];
+
+        foreach ($method->getParameters() as $idx => $param) {
+            // if user have been provide arg
+            if (isset($provideArgs[$idx])) {
+                $methodArgs[] = $provideArgs[$idx];
+                continue;
+            }
+
+            // $depRftClass = $param->getClass();
+            $depRftClass = $param->getType();
+
+            // If we have a dependency, that means it has been type-hinted.
+            if ($depRftClass && ($depClass = $depRftClass->getName()) !== Closure::class) {
+                $depObject = self::create($depClass);
+
+                if ($depObject instanceof $depClass) {
+                    $methodArgs[] = $depObject;
+                    continue;
+                }
+            }
+
+            // Finally, if there is a default parameter, use it.
+            if ($param->isOptional()) {
+                $methodArgs[] = $param->getDefaultValue();
+                continue;
+            }
+
+            // $dependencyVarName = $param->getName();
+            // Couldn't resolve dependency, and no default was provided.
+            throw new RuntimeException(sprintf(
+                'Could not resolve dependency: %s for the %dth parameter',
+                $param->getName(),
+                $param->getPosition()
+            ));
+        }
+
+        return $methodArgs;
+    }
 
     /**
      * Get class namespace
