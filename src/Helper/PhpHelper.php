@@ -15,8 +15,12 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
+use Throwable;
 use Toolkit\Stdlib\Obj\ObjectHelper;
+use Toolkit\Stdlib\Util\PhpError;
+use Toolkit\Stdlib\Util\PhpException;
 use function array_sum;
+use function error_get_last;
 use function explode;
 use function fopen;
 use function ftok;
@@ -249,6 +253,19 @@ class PhpHelper
     }
 
     /**
+     * Returns the last occurred PHP error or an empty string if no error occurred.
+     *
+     * @return string
+     */
+    public static function getLastError(): string
+    {
+        $message = error_get_last()['message'] ?? '';
+        // $message = ini_get('html_errors') ? Html::htmlToText($message) : $message;
+
+        return preg_replace('#^\w+\(.*?\): #', '', $message);
+    }
+
+    /**
      * Usage:
      *
      * $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
@@ -320,6 +337,38 @@ class PhpHelper
         }
 
         return preg_replace('/=>\s+\n\s+array \(/', '=> array (', $string);
+    }
+
+    /**
+     * @return array
+     */
+    public static function lastError2array(): array
+    {
+        return PhpError::lastError2array();
+    }
+
+    /**
+     * @param Throwable $e
+     * @param bool $getTrace
+     * @param string|null $catcher
+     *
+     * @return string
+     */
+    public static function exception2string(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    {
+        return PhpException::toString($e, $getTrace, $catcher);
+    }
+
+    /**
+     * @param Throwable $e
+     * @param bool $getTrace
+     * @param string|null $catcher
+     *
+     * @return string
+     */
+    public static function exception2html(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    {
+        return PhpException::toHtml($e, $getTrace, $catcher);
     }
 
     /**
