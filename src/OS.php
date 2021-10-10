@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib;
 
+use RuntimeException;
 use function defined;
 use function explode;
 use function function_exists;
@@ -25,6 +26,8 @@ use function posix_getuid;
 use function putenv;
 use function rtrim;
 use function stripos;
+use function tempnam;
+use function tmpfile;
 use const PHP_OS;
 use const PHP_OS_FAMILY;
 
@@ -203,6 +206,31 @@ class OS
     public static function getWorkDir(): string
     {
         return (string)getcwd();
+    }
+
+    /**
+     * Creates a temporary file
+     *
+     * @return resource
+     */
+    public static function newTempFile()
+    {
+        $fh = tmpfile();
+        if ($fh === false) {
+            throw new RuntimeException('create an temporary file fail');
+        }
+
+        return $fh;
+    }
+
+    /**
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public static function tempFilePath(string $prefix = 'tmp_'): string
+    {
+        return tempnam(self::getTempDir(), $prefix);
     }
 
     /**

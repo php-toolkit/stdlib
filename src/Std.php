@@ -9,5 +9,4 @@ namespace Toolkit\Stdlib;
  */
 class Std
 {
-
 }
