@@ -9,12 +9,15 @@
 
 namespace Toolkit\Stdlib\Str\Traits;
 
+use JetBrains\PhpStorm\Pure;
 use function function_exists;
 use function is_array;
 use function is_string;
 use function mb_strpos;
 use function mb_strrpos;
 use function preg_match;
+use function str_ends_with;
+use function str_starts_with;
 use function stripos;
 use function strpos;
 use function strrpos;
@@ -52,6 +55,16 @@ trait StringCheckHelperTrait
      * @param string|array $needle
      * @return bool
      */
+    public static function notContains(string $string, $needle): bool
+    {
+        return !self::has($string, $needle);
+    }
+
+    /**
+     * @param string       $string
+     * @param string|array $needle
+     * @return bool
+     */
     public static function contains(string $string, $needle): bool
     {
         return self::has($string, $needle);
@@ -65,12 +78,12 @@ trait StringCheckHelperTrait
     public static function has(string $string, $needle): bool
     {
         if (is_string($needle)) {
-            return strpos($string, $needle) !== false;
+            return str_contains($string, $needle);
         }
 
         if (is_array($needle)) {
             foreach ((array)$needle as $item) {
-                if (strpos($string, $item) !== false) {
+                if (str_contains($string, $item)) {
                     return true;
                 }
             }
@@ -191,26 +204,46 @@ trait StringCheckHelperTrait
 
     /**
      * @param string $str
-     * @param string $prefix
+     * @param string $needle
      *
      * @return bool
      */
-    public static function hasPrefix(string $str, string $prefix): bool
+    public static function isStartWiths(string $str, string $needle): bool
     {
-        return self::strpos($str, $prefix) === 0;
+        return self::hasPrefix($str, $needle);
     }
 
     /**
      * @param string $str
-     * @param string $suffix
+     * @param string $needle
      *
      * @return bool
      */
-    public static function hasSuffix(string $str, string $suffix): bool
+    public static function hasPrefix(string $str, string $needle): bool
     {
-        $pos = self::strpos($str, $suffix);
+        return str_starts_with($str, $needle);
+    }
 
-        return $pos !== false && self::substr($str, - self::strlen($suffix)) === $suffix;
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function isEndWiths(string $str, string $needle): bool
+    {
+        return self::hasSuffix($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function hasSuffix(string $str, string $needle): bool
+    {
+        return str_ends_with($str, $needle);
     }
 
     /**
