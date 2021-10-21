@@ -38,7 +38,7 @@ class DataHelper
      *
      * @return bool
      */
-    public static function boolean($val, $nullAsFalse = false): bool
+    public static function boolean($val, bool $nullAsFalse = false): bool
     {
         if ($val !== null && !is_scalar($val)) {
             return (bool)$val;
@@ -55,7 +55,7 @@ class DataHelper
      *
      * @return bool
      */
-    public static function toBool($val, $nullAsFalse = false): bool
+    public static function toBool($val, bool $nullAsFalse = false): bool
     {
         return self::boolean($val, $nullAsFalse);
     }

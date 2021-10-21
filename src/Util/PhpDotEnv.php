@@ -132,7 +132,7 @@ class PhpDotEnv
             $name = strtoupper($name);
 
             // don't check existence with getenv() because of thread safety issues
-            $notHttpName = 0 !== strpos($name, 'HTTP_');
+            $notHttpName = !str_starts_with($name, 'HTTP_');
             if ((isset($_ENV[$name]) || (isset($_SERVER[$name]) && $notHttpName)) && !isset($loadedVars[$name])) {
                 continue;
             }

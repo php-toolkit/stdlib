@@ -95,7 +95,7 @@ class UrlHelper
      */
     public static function isFullUrl(string $url): bool
     {
-        return 0 === strpos($url, 'http:') || 0 === strpos($url, 'https:') || 0 === strpos($url, '//');
+        return str_starts_with($url, 'http:') || str_starts_with($url, 'https:') || str_starts_with($url, '//');
     }
 
     /**

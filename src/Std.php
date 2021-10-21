@@ -2,6 +2,8 @@
 
 namespace Toolkit\Stdlib;
 
+use Toolkit\Stdlib\Helper\DataHelper;
+
 /**
  * Class Std
  *
@@ -9,4 +11,13 @@ namespace Toolkit\Stdlib;
  */
 class Std
 {
+    /**
+     * @param mixed $data
+     *
+     * @return string
+     */
+    public static function toString($data): string
+    {
+        return  DataHelper::toString($data);
+    }
 }

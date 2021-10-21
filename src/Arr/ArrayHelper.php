@@ -12,6 +12,7 @@ namespace Toolkit\Stdlib\Arr;
 use ArrayAccess;
 use ArrayObject;
 use stdClass;
+use Toolkit\Stdlib\Helper\DataHelper;
 use Traversable;
 use function array_change_key_case;
 use function array_diff;
@@ -29,6 +30,7 @@ use function count;
 use function explode;
 use function get_class;
 use function gettype;
+use function implode;
 use function in_array;
 use function is_array;
 use function is_numeric;
@@ -212,7 +214,7 @@ class ArrayHelper
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
             $check = trim($check, ', ');
-            $check = strpos($check, ',') !== false ? (array)explode(',', $check) : [$check];
+            $check = str_contains($check, ',') ? explode(',', $check) : [$check];
         }
 
         return !array_diff((array)$check, $sampleArr);
@@ -232,7 +234,7 @@ class ArrayHelper
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
             $check = trim($check, ', ');
-            $check = strpos($check, ',') !== false ? (array)explode(',', $check) : [$check];
+            $check = str_contains($check, ',') ? explode(',', $check) : [$check];
         }
 
         return (bool)array_intersect((array)$check, $sampleArr);
@@ -254,7 +256,7 @@ class ArrayHelper
             foreach ((array)$need as $v) {
                 self::existsAll($v, $arr, $type);
             }
-        } elseif (strpos($need, ',') !== false) {
+        } elseif (str_contains($need, ',')) {
             $need = explode(',', $need);
             self::existsAll($need, $arr, $type);
         } else {
@@ -289,7 +291,7 @@ class ArrayHelper
                 }
             }
         } else {
-            if (strpos($need, ',') !== false) {
+            if (str_contains($need, ',')) {
                 $need = explode(',', $need);
 
                 return self::existsOne($need, $arr, $type);
@@ -514,7 +516,7 @@ class ArrayHelper
      *
      * @return void
      */
-    public static function forget(&$array, $keys): void
+    public static function forget(array &$array, $keys): void
     {
         $original = &$array;
         $keys     = (array)$keys;
@@ -787,7 +789,7 @@ class ArrayHelper
      *
      * @return string
      */
-    public static function toFormatString($array, int $length = 400): string
+    public static function toFormatString(array $array, int $length = 400): string
     {
         $string = var_export($array, true);
 
@@ -834,7 +836,23 @@ class ArrayHelper
         }
 
         // $num++;
-
         return $array;
+    }
+
+    /**
+     * @param array $data
+     * @param string $kvSep
+     * @param string $lineSep
+     *
+     * @return string
+     */
+    public static function toKVString(array $data, string $kvSep = '=', string $lineSep = "\n"): string
+    {
+        $lines = [];
+        foreach ($data as $key => $val) {
+            $lines = $key . $kvSep . DataHelper::toString($val);
+        }
+
+        return implode($lineSep, $lines);
     }
 }

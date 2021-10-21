@@ -349,8 +349,8 @@ abstract class StringHelper
     public static function deleteStripSpace($fileName, $type = 0)
     {
         $data = trim(file_get_contents($fileName));
-        $data = 0 === strpos($data, '<?php') ? substr($data, 5) : $data;
-        $data = substr($data, -2) === '?>' ? substr($data, 0, -2) : $data;
+        $data = str_starts_with($data, '<?php') ? substr($data, 5) : $data;
+        $data = str_ends_with($data, '?>') ? substr($data, 0, -2) : $data;
 
         //去掉所有注释 换行空白保留
         if ((int)$type === 1) {

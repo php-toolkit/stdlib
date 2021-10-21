@@ -309,7 +309,7 @@ class AutoLoader
 
         // PSR-4
         foreach ($this->psr4Map as $prefix => $dir) {
-            if (0 === strpos($class, $prefix)) {
+            if (str_starts_with($class, $prefix)) {
                 $length = strlen($prefix);
 
                 if (file_exists($file = $dir . DIRECTORY_SEPARATOR . substr($logicalPathPsr4, $length))) {
@@ -322,7 +322,7 @@ class AutoLoader
         $logicalPathPsr0 = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
 
         foreach ($this->psr0Map as $prefix => $dir) {
-            if (0 === strpos($class, $prefix)) {
+            if (str_starts_with($class, $prefix)) {
                 $file = $dir . DIRECTORY_SEPARATOR . $logicalPathPsr0;
 
                 if (file_exists($file)) {
