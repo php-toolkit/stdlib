@@ -88,8 +88,38 @@ trait StringCheckHelperTrait
                 }
             }
         }
-
         return false;
+    }
+
+    /**
+     * @param string       $string
+     * @param string|array $needle
+     * @return bool
+     */
+    public static function containsAll(string $string, $needle): bool
+    {
+        return self::hasAll($string, $needle);
+    }
+
+    /**
+     * @param string       $string
+     * @param string|array $needle
+     * @return bool
+     */
+    public static function hasAll(string $string, $needle): bool
+    {
+        if (is_string($needle)) {
+            return str_contains($string, $needle);
+        }
+
+        if (is_array($needle)) {
+            foreach ((array)$needle as $item) {
+                if (!str_contains($string, $item)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -124,8 +154,30 @@ trait StringCheckHelperTrait
                 }
             }
         }
-
         return false;
+    }
+
+    /**
+     * Check all substr must in the haystack, will ignore case
+     *
+     * @param string       $haystack
+     * @param string|array $needle
+     * @return bool
+     */
+    public static function iHasAll(string $haystack, $needle): bool
+    {
+        if (is_string($needle)) {
+            return stripos($haystack, $needle) !== false;
+        }
+
+        if (is_array($needle)) {
+            foreach ((array)$needle as $item) {
+                if (stripos($haystack, $item) === false) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
