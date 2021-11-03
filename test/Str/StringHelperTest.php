@@ -19,6 +19,13 @@ use Toolkit\Stdlib\Str;
  */
 class StringHelperTest extends TestCase
 {
+    public function testBasicStrMethods(): void
+    {
+        $this->assertEquals('', Str::wrap('', '"'));
+        $this->assertEquals('"a"', Str::wrap('a', '"'));
+        $this->assertEquals(['"a"', '"b"'], Str::wrapList(['a', 'b'], '"'));
+    }
+
     public function testShellQuote(): void
     {
         $tests = [
@@ -71,4 +78,16 @@ class StringHelperTest extends TestCase
         self::assertTrue(Str::notContains('abc', 'd'));
         self::assertFalse(Str::notContains('abc', 'b'));
     }
+
+    public function testToArray(): void
+    {
+        $tests = [
+            ['34,56,678, 678, 89, ', ['34', '56' , '678', '678', '89']],
+        ];
+
+        foreach ($tests as [$given, $want]) {
+            $this->assertEquals($want, Str::toArray($given));
+        }
+    }
+
 }

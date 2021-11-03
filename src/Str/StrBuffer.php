@@ -66,43 +66,82 @@ class StrBuffer
 
     /**
      * @param string $content
+     *
+     * @return self
      */
-    public function write(string $content): void
+    public function write(string $content): self
     {
         $this->parts[] = $content;
+        return $this;
     }
 
     /**
      * @param string $fmt
      * @param mixed  ...$args
+     *
+     * @return self
      */
-    public function writef(string $fmt, ...$args): void
+    public function writef(string $fmt, ...$args): self
     {
         $this->parts[] = sprintf($fmt, ...$args);
+        return $this;
     }
 
     /**
      * @param string $content
+     *
+     * @return self
      */
-    public function writeln(string $content): void
+    public function writeln(string $content): self
     {
         $this->parts[] = $content . "\n";
+        return $this;
     }
 
     /**
      * @param string $content
+     *
+     * @return self
      */
-    public function append(string $content): void
+    public function append(string $content): self
     {
         $this->write($content);
+        return $this;
+    }
+
+    /**
+     * @param string ...$contents
+     *
+     * @return self
+     */
+    public function appends(string ...$contents): self
+    {
+        foreach ($contents as $content) {
+            $this->parts[] = $content;
+        }
+        return $this;
     }
 
     /**
      * @param string $content
+     *
+     * @return self
      */
-    public function prepend(string $content): void
+    public function prepend(string $content): self
     {
         array_unshift($this->parts, $content);
+        return $this;
+    }
+
+    /**
+     * @param string ...$contents
+     *
+     * @return self
+     */
+    public function prepends(string ...$contents): self
+    {
+        array_unshift($this->parts, ...$contents);
+        return $this;
     }
 
     public function reset(): void
@@ -115,13 +154,23 @@ class StrBuffer
      *
      * @return string
      */
-    public function getAndClear(): string
+    public function fetch(): string
     {
         $strings = $this->parts;
         // clear
         $this->parts = [];
 
         return implode($strings);
+    }
+
+    /**
+     * Get and clear data
+     *
+     * @return string
+     */
+    public function getAndClear(): string
+    {
+        return $this->fetch();
     }
 
     /**
@@ -141,11 +190,21 @@ class StrBuffer
     }
 
     /**
+     * @param string $sep
+     *
+     * @return string
+     */
+    public function join(string $sep): string
+    {
+        return implode($sep, $this->parts);
+    }
+
+    /**
      * @return string
      */
     public function toString(): string
     {
-        return implode($this->parts);
+        return implode('', $this->parts);
     }
 
     /**
