@@ -255,14 +255,25 @@ trait StringCheckHelperTrait
     }
 
     /**
+     * Assert is start withs one
+     *
      * @param string $str
-     * @param string $needle
+     * @param string|array $needle
      *
      * @return bool
      */
-    public static function isStartWiths(string $str, string $needle): bool
+    public static function isStartWiths(string $str, $needle): bool
     {
-        return self::hasPrefix($str, $needle);
+        if (is_array($needle)) {
+            foreach ($needle as $sub) {
+                if (str_starts_with($str, $sub)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return str_starts_with($str, $needle);
     }
 
     /**
@@ -274,6 +285,17 @@ trait StringCheckHelperTrait
     public static function hasPrefix(string $str, string $needle): bool
     {
         return str_starts_with($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string[] $needles
+     *
+     * @return bool
+     */
+    public static function hasPrefixes(string $str, array $needles): bool
+    {
+        return self::isStartWiths($str, $needles);
     }
 
     /**

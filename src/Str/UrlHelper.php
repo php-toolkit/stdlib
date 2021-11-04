@@ -10,6 +10,7 @@
 namespace Toolkit\Stdlib\Str;
 
 use InvalidArgumentException;
+use function implode;
 use function preg_match;
 use function http_build_query;
 use function curl_init;
@@ -47,7 +48,7 @@ class UrlHelper
      */
     public static function isRelative(string $url): bool
     {
-        return false === strpos($url, '//') && strpos($url, '://') === false;
+        return !str_contains($url, '//') && !str_contains($url, '://');
     }
 
     /**
@@ -69,7 +70,7 @@ class UrlHelper
      */
     public static function isGitUrl(string $str): bool
     {
-        if (strpos($str, 'git@') === 0) {
+        if (str_starts_with($str, 'git@')) {
             $str = 'ssh://' . $str;
         }
 
@@ -99,12 +100,23 @@ class UrlHelper
     }
 
     /**
-     * @param string       $baseUrl
-     * @param array|object $data
+     * @param string $baseUri
+     * @param string ...$paths
      *
      * @return string
      */
-    public static function build(string $baseUrl, $data = null): string
+    public static function joinPath(string $baseUri, string ...$paths): string
+    {
+        return $baseUri . ($paths ? '/' . implode('/', $paths) : '');
+    }
+
+    /**
+     * @param string $baseUrl
+     * @param array $data
+     *
+     * @return string
+     */
+    public static function build(string $baseUrl, array $data = []): string
     {
         if ($data && ($param = http_build_query($data))) {
             if ($baseUrl) {
@@ -154,7 +166,7 @@ class UrlHelper
     }
 
     // Build arrays of values we need to decode before parsing
-    protected static $entities = [
+    protected static array $entities = [
         '%21',
         '%2A',
         '%27',
@@ -174,7 +186,7 @@ class UrlHelper
         '%5D'
     ];
 
-    protected static $replacements = [
+    protected static array $replacements = [
         '!',
         '*',
         "'",

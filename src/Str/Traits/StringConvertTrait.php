@@ -10,7 +10,6 @@
 namespace Toolkit\Stdlib\Str\Traits;
 
 use Toolkit\Stdlib\Helper\DataHelper;
-use Toolkit\Stdlib\Str;
 use function array_map;
 use function array_values;
 use function count;
@@ -145,6 +144,20 @@ trait StringConvertTrait
      *
      * @return array
      */
+    public static function toTrimFilteredArray(string $str, string $delimiter = ',', int $limit = 0): array
+    {
+        return self::splitTrimFiltered($str, $delimiter, $limit);
+    }
+
+    /**
+     * Like explode, but will trim each item and filter empty item.
+     *
+     * @param string $str
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
     public static function splitTrimFiltered(string $str, string $delimiter = ',', int $limit = 0): array
     {
         if (!$str = trim($str)) {
@@ -158,6 +171,20 @@ trait StringConvertTrait
         $list = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
 
         return array_values(array_filter(array_map('trim', $list), 'strlen'));
+    }
+
+    /**
+     * Like explode, but will trim each item.
+     *
+     * @param string $str
+     * @param string $delimiter
+     * @param int $limit
+     *
+     * @return array
+     */
+    public static function toTrimmedArray(string $str, string $delimiter = ',', int $limit = 0): array
+    {
+        return self::splitTrimmed($str, $delimiter, $limit);
     }
 
     /**
@@ -179,6 +206,28 @@ trait StringConvertTrait
         $list = $limit > 1 ? explode($delimiter, $str, $limit) : explode($delimiter, $str);
 
         return array_map('trim', $list);
+    }
+
+    /**
+     * @param string $str
+     * @param string $delimiter
+     *
+     * @return array
+     */
+    public static function toTypedArray(string $str, string $delimiter = ','): array
+    {
+        return self::splitTypedList($str, $delimiter);
+    }
+
+    /**
+     * @param string $str
+     * @param string $delimiter
+     *
+     * @return array
+     */
+    public static function toTypedList(string $str, string $delimiter = ','): array
+    {
+        return self::splitTypedList($str, $delimiter);
     }
 
     /**

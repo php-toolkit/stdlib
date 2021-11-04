@@ -286,7 +286,7 @@ trait StringCaseHelperTrait
 
         // 默认 ：下划线式 =>驼峰式
         if ($toCamelCase) {
-            if (strpos($str, '_') === false) {
+            if (!str_contains($str, '_')) {
                 return $str;
             }
 
@@ -302,6 +302,17 @@ trait StringCaseHelperTrait
 
         // 驼峰式 => 下划线式
         return strtolower(preg_replace('/((?<=[a-z])(?=[A-Z]))/', '_', $str));
+    }
+
+    /**
+     * @param string $str
+     * @param string $dstCase
+     *
+     * @return string
+     */
+    public static function changeCase(string $str, string $dstCase = 'auto'): string
+    {
+        return $str;
     }
 
     /**
