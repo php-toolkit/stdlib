@@ -10,18 +10,23 @@
 namespace Toolkit\Stdlib\Str\Traits;
 
 use Toolkit\Stdlib\Helper\DataHelper;
+use Toolkit\Stdlib\Str;
 use function array_map;
 use function array_values;
 use function count;
 use function explode;
+use function is_numeric;
 use function mb_convert_encoding;
 use function mb_convert_variables;
 use function mb_detect_encoding;
 use function mb_strwidth;
 use function preg_split;
+use function str_contains;
 use function str_pad;
 use function str_split;
+use function strlen;
 use function strpos;
+use function substr;
 use function trim;
 use const PREG_SPLIT_NO_EMPTY;
 
@@ -47,25 +52,6 @@ trait StringConvertTrait
     ////////////////////////////////////////////////////////////////////////
 
     /**
-     * var_dump(str2array('34,56,678, 678, 89, '));
-     *
-     * @param string $str
-     * @param string $sep
-     *
-     * @return array
-     */
-    public static function str2array(string $str, string $sep = ','): array
-    {
-        $str = trim($str, "$sep ");
-
-        if (!$str) {
-            return [];
-        }
-
-        return preg_split("/\s*$sep\s*/", $str, -1, PREG_SPLIT_NO_EMPTY);
-    }
-
-    /**
      * @param string $string
      * @param string $delimiter
      * @param int    $limit
@@ -78,15 +64,15 @@ trait StringConvertTrait
     }
 
     /**
-     * @param string $string
+     * @param string $str
      * @param string $delimiter
      * @param int    $limit
      *
      * @return array
      */
-    public static function str2ints(string $string, string $delimiter = ',', int $limit = 0): array
+    public static function str2ints(string $str, string $delimiter = ',', int $limit = 0): array
     {
-        $values = self::toArray($string, $delimiter, $limit);
+        $values = self::splitTrimFiltered($str, $delimiter, $limit);
 
         return array_map('intval', $values);
     }
@@ -100,21 +86,7 @@ trait StringConvertTrait
      */
     public static function toArray(string $str, string $delimiter = ',', int $limit = 0): array
     {
-        $str = trim($str);
-        if ($str === '') {
-            return [];
-        }
-
-        $values  = [];
-        $rawList = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
-
-        foreach ($rawList as $val) {
-            if (($val = trim($val)) !== '') {
-                $values[] = $val;
-            }
-        }
-
-        return $values;
+        return self::splitTrimFiltered($str, $delimiter, $limit);;
     }
 
     /**
@@ -128,7 +100,26 @@ trait StringConvertTrait
      */
     public static function explode(string $str, string $separator = '.', int $limit = 0): array
     {
-        return static::split2Array($str, $separator, $limit);
+        return self::splitTrimFiltered($str, $separator, $limit);
+    }
+
+    /**
+     * split to array.
+     *
+     * @param string $str
+     * @param string $sep
+     * @param int $limit
+     *
+     * @return array
+     */
+    public static function str2array(string $str, string $sep = ',', int $limit = 0): array
+    {
+        // $str = trim($str, "$sep ");
+        // if (!$str) {
+        //     return [];
+        // }
+        // return preg_split("/\s*$sep\s*/", $str, -1, PREG_SPLIT_NO_EMPTY);
+        return self::splitTrimFiltered($str, $sep, $limit);
     }
 
     /**
@@ -142,6 +133,20 @@ trait StringConvertTrait
      */
     public static function split2Array(string $str, string $delimiter = ',', int $limit = 0): array
     {
+        return self::splitTrimFiltered($str, $delimiter, $limit);
+    }
+
+    /**
+     * Like explode, but will trim each item and filter empty item.
+     *
+     * @param string $str
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function splitTrimFiltered(string $str, string $delimiter = ',', int $limit = 0): array
+    {
         if (!$str = trim($str)) {
             return [];
         }
@@ -150,16 +155,14 @@ trait StringConvertTrait
             return [$str];
         }
 
-        if ($limit < 1) {
-            $list = explode($delimiter, $str);
-        } else {
-            $list = explode($delimiter, $str, $limit);
-        }
+        $list = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
 
         return array_values(array_filter(array_map('trim', $list), 'strlen'));
     }
 
     /**
+     * Like explode, but will trim each item.
+     *
      * @param string $str
      * @param string $delimiter
      * @param int    $limit
@@ -178,6 +181,27 @@ trait StringConvertTrait
         return array_map('trim', $list);
     }
 
+    /**
+     * @param string $str
+     * @param string $delimiter
+     *
+     * @return array
+     */
+    public static function splitTypedList(string $str, string $delimiter = ','): array
+    {
+        if (!$str) {
+            return [];
+        }
+
+        $arr = self::splitTrimFiltered($str, $delimiter);
+        foreach ($arr as &$val) {
+            if (is_numeric($val) && strlen($val) < 11) {
+                $val = str_contains($val, '.') ? (float)$val : (int)$val;
+            }
+        }
+
+        return $arr;
+    }
     /**
      * @param string $string
      * @param int    $width

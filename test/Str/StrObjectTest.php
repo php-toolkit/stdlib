@@ -14,7 +14,7 @@ use Toolkit\Stdlib\Str\StrObject;
 
 class StrObjectTest extends TestCase
 {
-    public function testBasic(): void
+    public function testStrObjectBasic(): void
     {
         $s = StrObject::new('abc ');
 

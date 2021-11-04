@@ -90,4 +90,16 @@ class StringHelperTest extends TestCase
         }
     }
 
+    public function testSplitTypedList(): void
+    {
+        $tests = [
+            ['34,56,678, 678, 89, ', [34,56,678, 678, 89]],
+            ['a,,34, 3.4 ', ['a', 34, 3.4]],
+        ];
+
+        foreach ($tests as [$given, $want]) {
+            $this->assertEquals($want, Str::splitTypedList($given));
+        }
+    }
+
 }
