@@ -341,7 +341,7 @@ abstract class StringHelper
     {
         $new = [];
         foreach ($list as $val) {
-            $new = self::wrap($val, $wrapChar);
+            $new[] = self::wrap($val, $wrapChar);
         }
 
         return $new;

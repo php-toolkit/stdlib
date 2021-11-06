@@ -10,6 +10,7 @@
 namespace Toolkit\Stdlib\Str\Traits;
 
 use Toolkit\Stdlib\Helper\DataHelper;
+use function array_filter;
 use function array_map;
 use function array_values;
 use function count;
@@ -85,6 +86,64 @@ trait StringConvertTrait
     }
 
     /**
+     * Like explode, but will trim each item and filter empty item.
+     * - alias of toNoEmptyArray()
+     *
+     * @param string $str
+     * @param string $separator
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function explode(string $str, string $separator = '.', int $limit = 0): array
+    {
+        return self::toNoEmptyArray($str, $separator, $limit);
+        // return self::splitTrimFiltered($str, $separator, $limit);
+    }
+
+    /**
+     * alias of toNoEmptyArray()
+     *
+     * @param string $str
+     * @param string $sep
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function toArray(string $str, string $sep = ',', int $limit = 0): array
+    {
+        return self::toNoEmptyArray($str, $sep, $limit);;
+    }
+
+    /**
+     * alias of toNoEmptyArray()
+     *
+     * @param string $str
+     * @param string $sep
+     * @param int $limit
+     *
+     * @return array
+     */
+    public static function str2array(string $str, string $sep = ',', int $limit = 0): array
+    {
+        return self::toNoEmptyArray($str, $sep, $limit);
+    }
+
+    /**
+     * alias of toNoEmptyArray()
+     *
+     * @param string $str
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function split2Array(string $str, string $delimiter = ',', int $limit = 0): array
+    {
+        return self::toNoEmptyArray($str, $delimiter, $limit);
+    }
+
+    /**
      * like explode, split string to no empty array
      *
      * - Difference toNoEmptyArray() and splitTrimFiltered().
@@ -119,85 +178,6 @@ trait StringConvertTrait
     public static function splitNoEmptyArray(string $str, string $sep = ',', int $limit = 0): array
     {
         return self::toNoEmptyArray($str, $sep, $limit);;
-    }
-
-    /**
-     * @param string $str
-     * @param string $sep
-     * @param int    $limit
-     *
-     * @return array
-     */
-    public static function toArray(string $str, string $sep = ',', int $limit = 0): array
-    {
-        return self::toNoEmptyArray($str, $sep, $limit);;
-    }
-
-    /**
-     * split to array.
-     *
-     * @param string $str
-     * @param string $sep
-     * @param int $limit
-     *
-     * @return array
-     */
-    public static function str2array(string $str, string $sep = ',', int $limit = 0): array
-    {
-        return self::toNoEmptyArray($str, $sep, $limit);
-    }
-
-    /**
-     * Like explode, but will trim each item and filter empty item.
-     *
-     * @param string $str
-     * @param string $separator
-     * @param int    $limit
-     *
-     * @return array
-     */
-    public static function explode(string $str, string $separator = '.', int $limit = 0): array
-    {
-        return self::toNoEmptyArray($str, $separator, $limit);
-        // return self::splitTrimFiltered($str, $separator, $limit);
-    }
-
-    /**
-     * Like explode, but will trim each item and filter empty item.
-     *
-     * @param string $str
-     * @param string $delimiter
-     * @param int    $limit
-     *
-     * @return array
-     */
-    public static function split2Array(string $str, string $delimiter = ',', int $limit = 0): array
-    {
-        return self::toNoEmptyArray($str, $delimiter, $limit);
-    }
-
-    /**
-     * Like explode, but will trim each item and filter empty item.
-     *
-     * @param string $str
-     * @param string $delimiter
-     * @param int    $limit
-     *
-     * @return array
-     */
-    public static function splitTrimFiltered(string $str, string $delimiter = ',', int $limit = 0): array
-    {
-        if (!$str = trim($str)) {
-            return [];
-        }
-
-        if (!strpos($str, $delimiter)) {
-            return [$str];
-        }
-
-        $list = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
-
-        return array_values(array_filter(array_map('trim', $list), 'strlen'));
     }
 
     /**
@@ -279,6 +259,31 @@ trait StringConvertTrait
 
         return $arr;
     }
+
+    /**
+     * Like explode, but will trim each item and filter empty item.
+     *
+     * @param string $str
+     * @param string $delimiter
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public static function splitTrimFiltered(string $str, string $delimiter = ',', int $limit = 0): array
+    {
+        if (!$str = trim($str)) {
+            return [];
+        }
+
+        if (!strpos($str, $delimiter)) {
+            return [$str];
+        }
+
+        $list = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
+
+        return array_values(array_filter(array_map('trim', $list), 'strlen'));
+    }
+
     /**
      * @param string $string
      * @param int    $width
