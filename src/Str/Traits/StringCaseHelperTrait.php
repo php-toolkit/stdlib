@@ -72,7 +72,7 @@ trait StringCaseHelperTrait
      */
     public static function strtolower(string $str): string
     {
-        if (!is_scalar($str)) {
+        if (!$str || !is_scalar($str)) {
             return '';
         }
 
@@ -104,7 +104,7 @@ trait StringCaseHelperTrait
      */
     public static function toUpper($str): string
     {
-        if (!is_scalar($str)) {
+        if (!$str || !is_scalar($str)) {
             return '';
         }
 
@@ -126,14 +126,13 @@ trait StringCaseHelperTrait
     }
 
     /**
-     * @param $str
+     * @param string|int $str
      *
      * @return string
      */
     public static function upFirst($str): string
     {
-
-        if (!is_scalar($str)) {
+        if (!$str || !is_scalar($str)) {
             return '';
         }
 
@@ -141,7 +140,7 @@ trait StringCaseHelperTrait
             return (string)$str;
         }
 
-        return self::strtoupper(Str::substr($str, 0, 1)) . Str::substr($str, 1);
+        return self::toUpper(Str::substr($str, 0, 1)) . Str::substr($str, 1);
     }
 
     /**
@@ -222,7 +221,7 @@ trait StringCaseHelperTrait
      */
     public static function toCamelCase(string $str, bool $upperFirst = false): string
     {
-        $str = self::strtolower($str);
+        $str = self::toLower($str);
 
         if ($upperFirst) {
             $str = self::ucfirst($str);

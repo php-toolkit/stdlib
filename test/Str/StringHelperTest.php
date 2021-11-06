@@ -79,21 +79,74 @@ class StringHelperTest extends TestCase
         self::assertFalse(Str::notContains('abc', 'b'));
     }
 
-    public function testToArray(): void
+    public function testToArray_no_limit(): void
     {
         $tests = [
-            ['34,56,678, 678, 89, ', ['34', '56' , '678', '678', '89']],
+            ['34,56,678, 678, 89, ', ',', ['34', '56', '678', '678', '89']],
+            [' fieldName   some  desc', ' ', ['fieldName', 'some', 'desc']],
+            [' ab   0  cd ', ' ', ['ab', '0', 'cd']],
         ];
 
-        foreach ($tests as [$given, $want]) {
-            $this->assertEquals($want, Str::toArray($given));
+        foreach ($tests as [$given, $sep, $want]) {
+            $this->assertEquals($want, Str::toNoEmptyArray($given, $sep));
+            $this->assertEquals($want, Str::splitTrimFiltered($given, $sep));
         }
+    }
+
+    public function testToArray_limit(): void
+    {
+        $tests = [
+            [
+                ' fieldName   some  desc msg ',
+                ' ',
+                2,
+                ['fieldName', 'some  desc msg']
+            ],
+            [
+                ' ab   0  cd ',
+                ' ',
+                2,
+                ['ab', '0  cd']
+            ],
+        ];
+
+        foreach ($tests as [$given, $sep, $limit, $want]) {
+            $this->assertEquals($want, Str::splitTrimFiltered($given, $sep, $limit));
+            $this->assertEquals($want, Str::toNoEmptyArray($given, $sep, $limit));
+        }
+    }
+
+    /**
+     * TIP: recommend use Str::toNoEmptyArray()
+     */
+    public function testDiff_splitTrimFiltered_toNoEmptyArray(): void
+    {
+        $str = ' fieldName,,   some,  desc, msg ';
+        $this->assertEquals(
+            ['fieldName', 'some',  'desc, msg'], // better
+            Str::toNoEmptyArray($str, ',', 3)
+        );
+        $this->assertEquals(
+            ['fieldName', 'some,  desc, msg'], // only two elem
+            Str::splitTrimFiltered($str, ',', 3)
+        );
+
+        $sep = ' ';
+        $str = ' fieldName   some  desc msg ';
+        $this->assertEquals(
+            ['fieldName', 'some',  'desc msg'],  // better
+            Str::toNoEmptyArray($str, $sep, 3)
+        );
+        $this->assertEquals(
+            ['fieldName', 'some  desc msg'], // only two elem
+            Str::splitTrimFiltered($str, $sep, 3)
+        );
     }
 
     public function testSplitTypedList(): void
     {
         $tests = [
-            ['34,56,678, 678, 89, ', [34,56,678, 678, 89]],
+            ['34,56,678, 678, 89, ', [34, 56, 678, 678, 89]],
             ['a,,34, 3.4 ', ['a', 34, 3.4]],
         ];
 
