@@ -24,6 +24,31 @@ class StringHelperTest extends TestCase
         $this->assertEquals('', Str::wrap('', '"'));
         $this->assertEquals('"a"', Str::wrap('a', '"'));
         $this->assertEquals(['"a"', '"b"'], Str::wrapList(['a', 'b'], '"'));
+
+        $this->assertTrue(Str::isNull('null'));
+        $this->assertFalse(Str::isNull('abc'));
+    }
+
+    public function testIsBool(): void
+    {
+        $this->assertTrue(Str::isBool('true'));
+        $this->assertTrue(Str::isBool('false'));
+        $this->assertFalse(Str::isBool('abc'));
+    }
+
+    public function testToTyped(): void
+    {
+        $tests = [
+            ['abc', 'abc'],
+            ['true', true],
+            ['23', 23],
+            ['23.4', 23.4],
+        ];
+        foreach ($tests as [$in, $out]) {
+            $this->assertEquals($out, Str::toTyped($in,  true));
+        }
+
+        $this->assertEquals('true', Str::toTyped('true'));
     }
 
     public function testShellQuote(): void
@@ -148,10 +173,12 @@ class StringHelperTest extends TestCase
         $tests = [
             ['34,56,678, 678, 89, ', [34, 56, 678, 678, 89]],
             ['a,,34, 3.4 ', ['a', 34, 3.4]],
+            ['ab,,true ', ['ab', true]],
         ];
 
         foreach ($tests as [$given, $want]) {
             $this->assertEquals($want, Str::splitTypedList($given));
+            $this->assertEquals($want, Str::toTypedArray($given));
         }
     }
 

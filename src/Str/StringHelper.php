@@ -55,6 +55,10 @@ use const STR_PAD_RIGHT;
  */
 abstract class StringHelper
 {
+    // These words will be as a Boolean value
+    public const TRUE_WORDS  = '|on|yes|true|';
+    public const FALSE_WORDS = '|off|no|false|';
+
     public static $defaultEncoding = 'UTF-8';
 
     use StringCaseHelperTrait;

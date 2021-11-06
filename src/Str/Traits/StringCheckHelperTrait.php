@@ -9,7 +9,7 @@
 
 namespace Toolkit\Stdlib\Str\Traits;
 
-use JetBrains\PhpStorm\Pure;
+use Toolkit\Stdlib\Str\StringHelper;
 use function function_exists;
 use function is_array;
 use function is_string;
@@ -31,9 +31,30 @@ use function trim;
  */
 trait StringCheckHelperTrait
 {
-    ////////////////////////////////////////////////////////////////////////
-    /// Check value
-    ////////////////////////////////////////////////////////////////////////
+    /**
+     * check is bool string. eg: 'true', 'false'
+     *
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function isBool(string $str): bool
+    {
+        return false !== stripos(StringHelper::TRUE_WORDS, "|$str|")
+            || false !== stripos(StringHelper::FALSE_WORDS, "|$str|");
+    }
+
+    /**
+     * check is null string. eg: 'Null', 'null'
+     *
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function isNull(string $str): bool
+    {
+        return false !== stripos('|null|', "|$str|");
+    }
 
     /**
      * @param string $string

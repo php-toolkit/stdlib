@@ -10,11 +10,13 @@
 namespace Toolkit\Stdlib\Str\Traits;
 
 use Toolkit\Stdlib\Helper\DataHelper;
+use Toolkit\Stdlib\Str\StringHelper;
 use function array_filter;
 use function array_map;
 use function array_values;
 use function count;
 use function explode;
+use function is_bool;
 use function is_numeric;
 use function mb_convert_encoding;
 use function mb_convert_variables;
@@ -24,9 +26,9 @@ use function preg_split;
 use function str_contains;
 use function str_pad;
 use function str_split;
+use function stripos;
 use function strlen;
 use function strpos;
-use function substr;
 use function trim;
 use const PREG_SPLIT_NO_EMPTY;
 
@@ -38,6 +40,25 @@ use const PREG_SPLIT_NO_EMPTY;
 trait StringConvertTrait
 {
     /**
+     * @param string $val
+     *
+     * @return bool|string
+     */
+    public static function tryToBool(string $val)
+    {
+        // check it is a bool value.
+        if (false !== stripos(StringHelper::TRUE_WORDS, "|$val|")) {
+            return true;
+        }
+
+        if (false !== stripos(StringHelper::FALSE_WORDS, "|$val|")) {
+            return false;
+        }
+
+        return $val;
+    }
+
+    /**
      * @param string $str
      *
      * @return bool
@@ -47,6 +68,56 @@ trait StringConvertTrait
         return DataHelper::boolean($str);
     }
 
+    /**
+     * @param string $val
+     *
+     * @return bool
+     */
+    public static function toBool2(string $val): bool
+    {
+        // check it is a bool value.
+        return false !== stripos(StringHelper::TRUE_WORDS, "|$val|");
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function toBoolTrue(string $str): bool
+    {
+        return DataHelper::boolean($str);
+    }
+
+    /**
+     * auto convert string to typed value
+     *
+     * @param string $str
+     * @param bool $parseBool
+     * @param int $intMaxLen
+     *
+     * @return float|int|string|bool
+     */
+    public static function toTyped(string $str, bool $parseBool = false, int $intMaxLen = 11)
+    {
+        if (is_numeric($str) && strlen($str) <= $intMaxLen) {
+            if (str_contains($str, '.')) {
+                $val = (float)$str;
+            } else {
+                $val = (int)$str;
+            }
+
+            return $val;
+        }
+
+        // parse bool: true, false
+        if ($parseBool && strlen($str) < 6) {
+            return self::tryToBool($str);
+        }
+
+        return $str;
+    }
+
     ////////////////////////////////////////////////////////////////////////
     /// split to array
     ////////////////////////////////////////////////////////////////////////
@@ -54,7 +125,7 @@ trait StringConvertTrait
     /**
      * @param string $string
      * @param string $delimiter
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -66,7 +137,7 @@ trait StringConvertTrait
     /**
      * @param string $str
      * @param string $delimiter
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -91,7 +162,7 @@ trait StringConvertTrait
      *
      * @param string $str
      * @param string $separator
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -106,7 +177,7 @@ trait StringConvertTrait
      *
      * @param string $str
      * @param string $sep
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -134,7 +205,7 @@ trait StringConvertTrait
      *
      * @param string $str
      * @param string $delimiter
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -171,7 +242,7 @@ trait StringConvertTrait
     /**
      * @param string $str
      * @param string $sep
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -199,7 +270,7 @@ trait StringConvertTrait
      *
      * @param string $str
      * @param string $delimiter
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -218,43 +289,44 @@ trait StringConvertTrait
     /**
      * @param string $str
      * @param string $delimiter
+     * @param int $intMaxLen
      *
      * @return array
      */
-    public static function toTypedArray(string $str, string $delimiter = ','): array
+    public static function toTypedArray(string $str, string $delimiter = ',', int $intMaxLen = 11): array
     {
-        return self::splitTypedList($str, $delimiter);
+        return self::toTypedList($str, $delimiter, $intMaxLen);
     }
 
     /**
      * @param string $str
      * @param string $delimiter
+     * @param int $intMaxLen
      *
      * @return array
      */
-    public static function toTypedList(string $str, string $delimiter = ','): array
+    public static function splitTypedList(string $str, string $delimiter = ',', int $intMaxLen = 11): array
     {
-        return self::splitTypedList($str, $delimiter);
+        return self::toTypedList($str, $delimiter, $intMaxLen);
     }
 
     /**
      * @param string $str
-     * @param string $delimiter
+     * @param string $sep
+     * @param int $intMaxLen
      *
      * @return array
      */
-    public static function splitTypedList(string $str, string $delimiter = ','): array
+    public static function toTypedList(string $str, string $sep = ',', int $intMaxLen = 11): array
     {
         if (!$str) {
             return [];
         }
 
         // $arr = self::splitTrimFiltered($str, $delimiter);
-        $arr = self::toNoEmptyArray($str, $delimiter);
+        $arr = self::toNoEmptyArray($str, $sep);
         foreach ($arr as &$val) {
-            if (is_numeric($val) && strlen($val) < 11) {
-                $val = str_contains($val, '.') ? (float)$val : (int)$val;
-            }
+            $val = self::toTyped($val, true, $intMaxLen);
         }
 
         return $arr;
@@ -265,7 +337,7 @@ trait StringConvertTrait
      *
      * @param string $str
      * @param string $delimiter
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array
      */
@@ -280,13 +352,12 @@ trait StringConvertTrait
         }
 
         $list = $limit < 1 ? explode($delimiter, $str) : explode($delimiter, $str, $limit);
-
         return array_values(array_filter(array_map('trim', $list), 'strlen'));
     }
 
     /**
      * @param string $string
-     * @param int    $width
+     * @param int $width
      *
      * @return array
      */
@@ -320,20 +391,19 @@ trait StringConvertTrait
         }
 
         mb_convert_variables($encoding, 'utf8', $lines);
-
         return $lines;
     }
 
     /**
      * @param string $str
-     * @param int    $length
+     * @param int $length
      *
-     * @return array|string[]
+     * @return string[]
      * @link https://www.php.net/manual/zh/function.str-split.php
      */
     public static function splitUnicode(string $str, int $length = 1): array
     {
-        if ($length > 0) {
+        if ($length > 1) {
             $ret = [];
             $len = mb_strlen($str, 'UTF-8');
             for ($i = 0; $i < $len; $i += $length) {
@@ -344,5 +414,27 @@ trait StringConvertTrait
         }
 
         return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * @param string $str
+     * @param int $length
+     *
+     * @return string[]
+     * @link https://www.php.net/manual/zh/function.str-split.php
+     */
+    public static function splitUnicode2(string $str, int $length = 1): array
+    {
+        $tmp = preg_split('~~u', $str, -1, PREG_SPLIT_NO_EMPTY);
+
+        if ($length > 1) {
+            $chunks = array_chunk($tmp, $length);
+            foreach ($chunks as $i => $chunk) {
+                $chunks[$i] = implode('', (array)$chunk);
+            }
+            $tmp = $chunks;
+        }
+
+        return $tmp;
     }
 }
