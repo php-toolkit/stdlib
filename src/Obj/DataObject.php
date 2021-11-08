@@ -32,6 +32,30 @@ class DataObject extends ArrayObject  implements JsonSerializable
     }
 
     /**
+     * @param array $data
+     * @param bool  $override
+     */
+    public function load(array $data, bool $override = false): void
+    {
+        if ($override) {
+            $this->override($data);
+            return;
+        }
+
+        foreach ($data as $key => $val) {
+            $this->offsetSet($key, $val);
+        }
+    }
+
+    /**
+     * @param array $data
+     */
+    public function override(array $data): void
+    {
+        $this->exchangeArray($data);
+    }
+
+    /**
      * @param string $key
      * @param mixed  $default
      *

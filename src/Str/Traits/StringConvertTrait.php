@@ -129,9 +129,9 @@ trait StringConvertTrait
      *
      * @return array
      */
-    public static function toInts(string $string, string $delimiter = ',', int $limit = 0): array
+    public static function str2ints(string $string, string $delimiter = ',', int $limit = 0): array
     {
-        return self::str2ints($string, $delimiter, $limit);
+        return self::toInts($string, $delimiter, $limit);
     }
 
     /**
@@ -141,7 +141,7 @@ trait StringConvertTrait
      *
      * @return array
      */
-    public static function str2ints(string $str, string $delimiter = ',', int $limit = 0): array
+    public static function toInts(string $str, string $delimiter = ',', int $limit = 0): array
     {
         $intArr = [];
         // $values = self::splitTrimFiltered($str, $delimiter, $limit);
@@ -396,6 +396,16 @@ trait StringConvertTrait
 
     /**
      * @param string $str
+     *
+     * @return array
+     */
+    public static function splitUtf8(string $str): array
+    {
+        return preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * @param string $str
      * @param int $length
      *
      * @return string[]
@@ -425,7 +435,7 @@ trait StringConvertTrait
      */
     public static function splitUnicode2(string $str, int $length = 1): array
     {
-        $tmp = preg_split('~~u', $str, -1, PREG_SPLIT_NO_EMPTY);
+        $tmp = preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
 
         if ($length > 1) {
             $chunks = array_chunk($tmp, $length);
