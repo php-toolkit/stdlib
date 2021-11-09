@@ -104,6 +104,21 @@ class StringHelperTest extends TestCase
         self::assertFalse(Str::notContains('abc', 'b'));
     }
 
+    public function testToNoEmptyArray(): void
+    {
+        $tests = [
+            ['ab, cd', ',', ['ab', 'cd']],
+            ['ab / cd', '/', ['ab', 'cd']],
+            ['ab | cd', '|', ['ab', 'cd']],
+            [' fieldName   some  desc', ' ', ['fieldName', 'some', 'desc']],
+            [' ab   0  cd ', ' ', ['ab', '0', 'cd']],
+        ];
+
+        foreach ($tests as [$given, $sep, $want]) {
+            $this->assertEquals($want, Str::toNoEmptyArray($given, $sep));
+        }
+    }
+
     public function testToArray_no_limit(): void
     {
         $tests = [

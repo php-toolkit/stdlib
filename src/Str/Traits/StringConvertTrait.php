@@ -22,6 +22,7 @@ use function mb_convert_encoding;
 use function mb_convert_variables;
 use function mb_detect_encoding;
 use function mb_strwidth;
+use function preg_quote;
 use function preg_split;
 use function str_contains;
 use function str_pad;
@@ -30,6 +31,7 @@ use function stripos;
 use function strlen;
 use function strpos;
 use function trim;
+use function vdump;
 use const PREG_SPLIT_NO_EMPTY;
 
 /**
@@ -235,7 +237,12 @@ trait StringConvertTrait
             return [];
         }
 
-        $pattern = $sep === ' ' ? '/\s+/' : "/\s*$sep\s*/";
+        if ($sep === ' ') {
+            $pattern = '/\s+/';
+        } else {
+            $pattern = '/\s*' . preg_quote($sep, '/') . '\s*/';
+        }
+
         return preg_split($pattern, $str, $limit, PREG_SPLIT_NO_EMPTY);
     }
 
