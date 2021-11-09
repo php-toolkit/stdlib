@@ -101,11 +101,11 @@ class UrlHelper
 
     /**
      * @param string $baseUri
-     * @param string[] ...$paths
+     * @param string ...$paths
      *
      * @return string
      */
-    public static function joinPath(string $baseUri, ...$paths): string
+    public static function joinPath(string $baseUri, string ...$paths): string
     {
         return $baseUri . ($paths ? '/' . implode('/', $paths) : '');
     }
@@ -166,7 +166,7 @@ class UrlHelper
     }
 
     // Build arrays of values we need to decode before parsing
-    protected static array $entities = [
+    protected static $entities = [
         '%21',
         '%2A',
         '%27',
@@ -186,7 +186,7 @@ class UrlHelper
         '%5D'
     ];
 
-    protected static array $replacements = [
+    protected static $replacements = [
         '!',
         '*',
         "'",
