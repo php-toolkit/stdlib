@@ -41,7 +41,6 @@ use function is_string;
 use function mb_strlen;
 use function method_exists;
 use function strlen;
-use function strpos;
 use function strtolower;
 use function trim;
 

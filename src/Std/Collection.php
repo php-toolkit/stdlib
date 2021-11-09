@@ -354,13 +354,11 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
     /**
      * Remove item from collection
      *
-     * @param string $key The data key
-     *
-     * @return mixed|null
+     * @param string $offset The data key
      */
-    public function offsetUnset($key): void
+    public function offsetUnset($offset): void
     {
-        $this->remove($key);
+        $this->remove($offset);
     }
 
     /********************************************************************************

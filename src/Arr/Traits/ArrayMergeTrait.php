@@ -10,7 +10,6 @@
 namespace Toolkit\Stdlib\Arr\Traits;
 
 use RuntimeException;
-use function array_key_exists;
 use function array_merge;
 use function array_shift;
 use function is_array;
@@ -71,16 +70,18 @@ trait ArrayMergeTrait
     }
 
     /**
+     * Recursion merge new array to src array.
      * 递归合并两个多维数组,后面的值将会递归覆盖原来的值
      *
-     * @param array|null $src
-     * @param array      $new
+     * @param array $src
+     * @param array $new
+     * @param int $depth max merge depth
      *
      * @return array
      */
-    public static function merge($src, array $new): array
+    public static function merge(array $src, array $new, int $depth = 10): array
     {
-        if (!$src || !is_array($src)) {
+        if (!$src) {
             return $new;
         }
 
@@ -95,8 +96,8 @@ trait ArrayMergeTrait
                 } else {
                     $src[$key] = $value;
                 }
-            } elseif (array_key_exists($key, $src) && is_array($value)) {
-                $src[$key] = self::merge($src[$key], $new[$key]);
+            } elseif ($depth > 0 && isset($src[$key]) && is_array($value)) {
+                $src[$key] = self::merge($src[$key], $value, --$depth);
             } else {
                 $src[$key] = $value;
             }

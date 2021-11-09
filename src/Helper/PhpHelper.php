@@ -174,7 +174,7 @@ class PhpHelper
     {
         if (is_string($cb)) {
             // function
-            if (strpos($cb, '::') === false) {
+            if (!str_contains($cb, '::')) {
                 return $cb(...$args);
             }
 

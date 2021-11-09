@@ -20,7 +20,6 @@ use function is_array;
 use function is_int;
 use function is_object;
 use function is_string;
-use function strpos;
 use function trim;
 
 /**
@@ -203,7 +202,7 @@ trait ArrayValueGetSetTrait
     }
 
     /**
-     * findValueByNodes
+     * find Value By Nodes
      *
      * @param array $data
      * @param array $nodes
@@ -237,7 +236,7 @@ trait ArrayValueGetSetTrait
      */
     public static function setByPath(&$data, string $path, $value, string $separator = '.'): void
     {
-        if (false === strpos($path, $separator)) {
+        if (!str_contains($path, $separator)) {
             $data[$path] = $value;
             return;
         }
@@ -247,7 +246,6 @@ trait ArrayValueGetSetTrait
         }
 
         $dataTmp = &$data;
-
         foreach ($nodes as $node) {
             if (is_array($dataTmp)) {
                 if (empty($dataTmp[$node])) {
