@@ -4,14 +4,14 @@ on: [push]
 
 jobs:
   test:
-    name: Test on php ${{ matrix.php}} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Test on php ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: true
       matrix:
         php: [7.1, 7.2, 7.3, 7.4, 8.0] #
-        os: [ubuntu-latest, macOS-latest] # windows-latest,
+#        os: [ubuntu-latest, macOS-latest] # windows-latest,
 
     steps:
       - name: Checkout
