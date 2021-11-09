@@ -9,15 +9,20 @@
 
 namespace Toolkit\Stdlib;
 
+use InvalidArgumentException;
 use RuntimeException;
 use function defined;
+use function dirname;
 use function explode;
+use function file_get_contents;
+use function file_put_contents;
 use function function_exists;
 use function getcwd;
 use function getenv;
 use function getmyuid;
 use function in_array;
 use function is_dir;
+use function is_file;
 use function is_writable;
 use function mkdir;
 use function php_uname;
@@ -371,6 +376,36 @@ class OS
     public static function isInteractive($fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
+    }
+
+    /**
+     * @param string $filepath
+     *
+     * @return string
+     */
+    public static function readFile(string $filepath): string
+    {
+        if (!is_file($filepath)) {
+            throw new InvalidArgumentException('no such file: ' . $filepath);
+        }
+
+        return file_get_contents($filepath);
+    }
+
+    /**
+     * @param string $filepath
+     * @param string $contents
+     * @param int $flags
+     *
+     * @return int
+     */
+    public static function writeFile(string $filepath, string $contents, int $flags = 0): int
+    {
+        // if (!is_dir($dir = dirname($filepath))) {
+        //     self::mkdir($dir);
+        // }
+
+        return (int)file_put_contents($filepath, $contents, $flags);
     }
 
     /**

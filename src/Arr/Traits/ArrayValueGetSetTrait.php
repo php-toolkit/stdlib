@@ -11,6 +11,7 @@ namespace Toolkit\Stdlib\Arr\Traits;
 
 use ArrayAccess;
 use Toolkit\Stdlib\Php;
+use Traversable;
 use function array_filter;
 use function array_shift;
 use function count;
@@ -168,8 +169,8 @@ trait ArrayValueGetSetTrait
      * Get data from array or object by path.
      * Example: `DataCollector::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
      *
-     * @param array|ArrayAccess $data      An array or object to get value.
-     * @param mixed             $path      The key path.
+     * @param array|Traversable $data      An array or object to get value.
+     * @param string            $path      The key path.
      * @param mixed             $default
      * @param string            $separator Separator of paths.
      *
@@ -188,12 +189,11 @@ trait ArrayValueGetSetTrait
         }
 
         $dataTmp = $data;
-
         foreach ($nodes as $arg) {
-            if (is_object($dataTmp) && isset($dataTmp->$arg)) {
-                $dataTmp = $dataTmp->$arg;
-            } elseif ((is_array($dataTmp) || $dataTmp instanceof ArrayAccess) && isset($dataTmp[$arg])) {
+            if ((is_array($dataTmp) || $dataTmp instanceof ArrayAccess) && isset($dataTmp[$arg])) {
                 $dataTmp = $dataTmp[$arg];
+            } elseif (is_object($dataTmp) && isset($dataTmp->$arg)) {
+                $dataTmp = $dataTmp->$arg;
             } else {
                 return $default;
             }
