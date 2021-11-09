@@ -101,11 +101,11 @@ class UrlHelper
 
     /**
      * @param string $baseUri
-     * @param string ...$paths
+     * @param string[] ...$paths
      *
      * @return string
      */
-    public static function joinPath(string $baseUri, string ...$paths): string
+    public static function joinPath(string $baseUri, ...$paths): string
     {
         return $baseUri . ($paths ? '/' . implode('/', $paths) : '');
     }
