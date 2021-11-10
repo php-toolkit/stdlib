@@ -227,7 +227,7 @@ trait StringCaseHelperTrait
             $str = self::ucfirst($str);
         }
 
-        return preg_replace_callback('/_+([a-z])/', static function ($c) {
+        return preg_replace_callback('/[_-]+([a-z])/', static function ($c) {
             return strtoupper($c[1]);
         }, $str);
     }

@@ -35,6 +35,7 @@ use function preg_match;
 use function preg_split;
 use function random_bytes;
 use function random_int;
+use function sprintf;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
@@ -275,14 +276,33 @@ abstract class StringHelper
     }
 
     /**
-     * @param string $template
+     * @param string $tplCode
      * @param array  $vars
      *
      * @return string
      */
-    public static function replaces(string $template, array $vars): string
+    public static function replaces(string $tplCode, array $vars): string
     {
-        return strtr($template, $vars);
+        return strtr($tplCode, $vars);
+    }
+
+    /**
+     * @param string $tplCode
+     * @param array $vars
+     * @param string $format
+     *
+     * @return string
+     */
+    public static function renderTemplate(string $tplCode, array $vars, string $format = '{{%s}}'): string
+    {
+        $fmtVars = [];
+        foreach ($vars as $name => $var) {
+            $name = sprintf($format, (string)$name);
+            // add
+            $fmtVars[$name] = $var;
+        }
+
+        return strtr($tplCode, $fmtVars);
     }
 
     ////////////////////////////////////////////////////////////
@@ -336,6 +356,30 @@ abstract class StringHelper
     }
 
     /**
+     * @param string $str
+     * @param bool $quoteAll
+     *
+     * @return string
+     */
+    public static function paramQuotes(string $str, bool $quoteAll = false): string
+    {
+        if ($str === '') {
+            return "''";
+        }
+
+        if (
+            !$quoteAll &&
+            (preg_match("/^\".*\"$/", $str) || preg_match("/^'.*'$/", $str))
+        ) {
+            return $str;
+        }
+
+        $quote = str_contains($str, "'") ? '"' : "'";
+
+        return $quote . $str . $quote;
+    }
+
+    /**
      * @param array $list
      * @param string $wrapChar
      *
@@ -377,7 +421,7 @@ abstract class StringHelper
         $quote = '';
         if (str_contains($arg, '"')) {
             $quote = "'";
-        } elseif ($arg === '' || strpos($arg, "'") !== false || strpos($arg, ' ') !== false) {
+        } elseif ($arg === '' || str_contains($arg, "'") || str_contains($arg, ' ')) {
             $quote = '"';
         }
 

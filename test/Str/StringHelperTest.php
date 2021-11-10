@@ -51,6 +51,20 @@ class StringHelperTest extends TestCase
         $this->assertEquals('true', Str::toTyped('true'));
     }
 
+    public function testParamQuotes(): void
+    {
+        $tests = [
+            ['', "''"],
+            ['abc', "'abc'"],
+            ["'abc'", "'abc'"],
+            ['ab" c', "'ab\" c'"],
+            ["ab' c", '"ab\' c"'],
+        ];
+        foreach ($tests as [$given, $want]) {
+            self::assertSame($want, Str::paramQuotes($given));
+        }
+    }
+
     public function testShellQuote(): void
     {
         $tests = [
