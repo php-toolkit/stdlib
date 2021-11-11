@@ -68,6 +68,15 @@ class DataObject extends ArrayObject  implements JsonSerializable
 
     /**
      * @param string $key
+     * @param mixed $value
+     */
+    public function set(string $key, $value): void
+    {
+        $this->offsetSet($key, $value);
+    }
+
+    /**
+     * @param string $key
      * @param mixed  $default
      *
      * @return mixed|null

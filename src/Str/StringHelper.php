@@ -24,6 +24,7 @@ use function base64_encode;
 use function count;
 use function crc32;
 use function escapeshellarg;
+use function explode;
 use function gethostname;
 use function hash;
 use function hex2bin;
@@ -36,12 +37,12 @@ use function preg_split;
 use function random_bytes;
 use function random_int;
 use function sprintf;
+use function str_contains;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
 use function str_word_count;
 use function strlen;
-use function strpos;
 use function strtr;
 use function substr;
 use function trim;
@@ -295,6 +296,12 @@ abstract class StringHelper
      */
     public static function renderTemplate(string $tplCode, array $vars, string $format = '{{%s}}'): string
     {
+        // get left chars
+        [$left, ] = explode('%s', $format);
+        if (!$vars || !str_contains($tplCode, $left)) {
+            return $tplCode;
+        }
+
         $fmtVars = [];
         foreach ($vars as $name => $var) {
             $name = sprintf($format, (string)$name);
