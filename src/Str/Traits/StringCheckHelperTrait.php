@@ -19,6 +19,7 @@ use function preg_match;
 use function str_ends_with;
 use function str_starts_with;
 use function stripos;
+use function strlen;
 use function strpos;
 use function strrpos;
 use function strtolower;
@@ -276,7 +277,64 @@ trait StringCheckHelperTrait
     }
 
     /**
-     * Assert is start withs one
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function startWith(string $str, string $needle): bool
+    {
+        return self::hasPrefix($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function hasPrefix(string $str, string $needle): bool
+    {
+        return str_starts_with($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function isStartWithIC(string $str, string $needle): bool
+    {
+        return self::hasPrefixIC($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function startWithIC(string $str, string $needle): bool
+    {
+        return self::hasPrefixIC($str, $needle);
+    }
+
+    /**
+     * ignore case, the passed $str ends with the $needle string
+     *
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function hasPrefixIC(string $str, string $needle): bool
+    {
+        return stripos($str, $needle) === 0;
+    }
+
+    /**
+     * check $str is start withs one of $needle
      *
      * @param string $str
      * @param string|array $needle
@@ -299,13 +357,13 @@ trait StringCheckHelperTrait
 
     /**
      * @param string $str
-     * @param string $needle
+     * @param string|array $needle
      *
      * @return bool
      */
-    public static function hasPrefix(string $str, string $needle): bool
+    public static function startWiths(string $str, $needle): bool
     {
-        return str_starts_with($str, $needle);
+        return self::isStartWiths($str, $needle);
     }
 
     /**
@@ -320,17 +378,8 @@ trait StringCheckHelperTrait
     }
 
     /**
-     * @param string $str
-     * @param string $needle
+     * the passed $str ends with the $needle string
      *
-     * @return bool
-     */
-    public static function isEndWiths(string $str, string $needle): bool
-    {
-        return self::hasSuffix($str, $needle);
-    }
-
-    /**
      * @param string $str
      * @param string $needle
      *
@@ -339,6 +388,76 @@ trait StringCheckHelperTrait
     public static function hasSuffix(string $str, string $needle): bool
     {
         return str_ends_with($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function endWithIC(string $str, string $needle): bool
+    {
+        return self::hasSuffixIC($str, $needle);
+    }
+
+    /**
+     * ignore case, check $str is ends with the $needle string
+     *
+     * @param string $str
+     * @param string $needle
+     *
+     * @return bool
+     */
+    public static function hasSuffixIC(string $str, string $needle): bool
+    {
+        $pos = stripos($str, $needle);
+
+        return $pos !== false && $pos + strlen($needle) === strlen($str);
+    }
+
+    /**
+     * @param string $str
+     * @param string|array $needle
+     *
+     * @return bool
+     */
+    public static function endWiths(string $str, $needle): bool
+    {
+        return self::hasSuffixes($str, $needle);
+    }
+
+    /**
+     * @param string $str
+     * @param string|array $needle
+     *
+     * @return bool
+     */
+    public static function isEndWiths(string $str, $needle): bool
+    {
+        return self::hasSuffixes($str, $needle);
+    }
+
+    /**
+     * Assert is start withs one
+     *
+     * @param string $str
+     * @param string|array $needles
+     *
+     * @return bool
+     */
+    public static function hasSuffixes(string $str, $needles): bool
+    {
+        if (is_array($needles)) {
+            foreach ($needles as $needle) {
+                if (str_ends_with($str, $needle)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        return str_ends_with($str, $needles);
     }
 
     /**

@@ -95,9 +95,37 @@ class StringHelperTest extends TestCase
     {
         self::assertTrue(Str::hasPrefix('abc', 'a'));
         self::assertFalse(Str::hasPrefix('abc', 'c'));
-        self::assertTrue(Str::hasSuffix('abc', 'c'));
+        self::assertTrue(Str::endWiths('abc', 'c'));
         self::assertTrue(Str::hasSuffix('abc', 'bc'));
         self::assertFalse(Str::hasSuffix('abc', 'b'));
+    }
+
+    public function testIEndWiths(): void
+    {
+        self::assertTrue(Str::endWithIC('abC', 'C'));
+        self::assertTrue(Str::endWithIC('abC', 'c'));
+        self::assertFalse(Str::endWithIC('abc', 'b'));
+        self::assertFalse(Str::hasPrefixIC('abc', 'a'));
+
+        self::assertFalse(Str::hasPrefixIC('abc', 'a'));
+    }
+
+    public function testHasPrefixIC(): void
+    {
+        $tests = [
+            ['abc', 'a', true],
+            ['23ab', 'a', false],
+        ];
+
+        foreach ($tests as [$case, $want, $yes]) {
+            if ($yes) {
+                $this->assertTrue(Str::hasPrefixIC($case, $want));
+                $this->assertTrue(Str::startWithIC($case, $want));
+                $this->assertTrue(Str::isStartWithIC($case, $want));
+            } else {
+                $this->assertFalse(Str::hasPrefixIC($case, $want));
+            }
+        }
     }
 
     public function testStrpos(): void
