@@ -7,7 +7,7 @@
  * @license  MIT
  */
 
-namespace Toolkit\Stdlib\Util;
+namespace Toolkit\Stdlib\Util\Contract;
 
 /**
  * Interface PipelineInterface

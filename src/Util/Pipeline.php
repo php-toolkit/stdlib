@@ -10,6 +10,7 @@
 namespace Toolkit\Stdlib\Util;
 
 use SplObjectStorage;
+use Toolkit\Stdlib\Util\Contract\PipelineInterface;
 use function is_callable;
 
 /**
