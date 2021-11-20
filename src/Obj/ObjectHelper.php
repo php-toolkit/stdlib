@@ -19,6 +19,7 @@ use ReflectionNamedType;
 use RuntimeException;
 use Toolkit\Stdlib\Helper\PhpHelper;
 use Traversable;
+use UnexpectedValueException;
 use function base64_decode;
 use function base64_encode;
 use function basename;
@@ -397,7 +398,7 @@ class ObjectHelper
     /**
      * Get class name without namespace.
      *
-     * @param null|string $fullClass
+     * @param string $fullClass
      *
      * @return string
      */
@@ -408,4 +409,18 @@ class ObjectHelper
         return basename($fullClass);
     }
 
+    /**
+     * @param object $obj
+     * @param string $errMsg
+     *
+     * @return object
+     */
+    public static function requireNotNull($obj, string $errMsg = '')
+    {
+        if ($obj === null) {
+            throw new UnexpectedValueException($errMsg ?: 'object must not be null');
+        }
+
+        return $obj;
+    }
 }

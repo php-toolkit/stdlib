@@ -372,6 +372,16 @@ class PhpHelper
     }
 
     /**
+     * @param $anyData
+     *
+     * @return string
+     */
+    public static function toString($anyData): string
+    {
+        return DataHelper::toString($anyData);
+    }
+
+    /**
      * @param string     $pathname
      * @param int|string $projectId This must be a one character
      * @return int|string
