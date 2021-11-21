@@ -20,19 +20,20 @@ use function gettype;
 final class Optional
 {
     /**
-     * @var self
+     * @var self|null
      */
-    private static $empty;
+    private static ?Optional $empty;
 
     /**
      * Returns an Optional with the specified present non-null value.
      *
      * @template S
+     *
      * @param S $value
      *
      * @return static
      */
-    public static function of($value): self
+    public static function of(mixed $value): self
     {
         return new self(Obj::requireNotNull($value));
     }
@@ -54,12 +55,12 @@ final class Optional
      *
      * @template S
      *
-     * @param S $value     The actual return value.
-     * @param S $nullValue The value which should be considered "None"; null by default.
+     * @param S      $value     The actual return value.
+     * @param S|null $nullValue The value which should be considered "None"; null by default.
      *
      * @return static
      */
-    public static function nullable($value, $nullValue = null): self
+    public static function nullable(mixed $value, mixed $nullValue = null): self
     {
         return $value === $nullValue ? self::empty() : self::of($value);
     }
@@ -67,12 +68,12 @@ final class Optional
     /**
      * @template S
      *
-     * @param S $value
-     * @param S $nullValue
+     * @param S      $value
+     * @param S|null $nullValue
      *
      * @return static
      */
-    public static function ofNullable($value, $nullValue = null): self
+    public static function ofNullable(mixed $value, mixed $nullValue = null): self
     {
         return self::nullable($value, $nullValue);
     }
@@ -80,12 +81,12 @@ final class Optional
     /**
      * @template S
      *
-     * @param array|ArrayAccess $array
-     * @param string|int $key
+     * @param ArrayAccess|array $array
+     * @param int|string        $key
      *
      * @return static
      */
-    public static function ofArrayKey($array, $key): self
+    public static function ofArrayKey(ArrayAccess|array $array, int|string $key): self
     {
         if (!(is_array($array) || $array instanceof ArrayAccess) || !isset($array[$key])) {
             return self::empty();
@@ -102,14 +103,14 @@ final class Optional
     /**
      * @var T
      */
-    private $value;
+    private mixed $value;
 
     /**
      * Class constructor.
      *
      * @param T $value
      */
-    private function __construct($value)
+    private function __construct(mixed $value)
     {
         $this->value = $value;
     }
