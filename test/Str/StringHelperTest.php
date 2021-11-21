@@ -105,9 +105,10 @@ class StringHelperTest extends TestCase
         self::assertTrue(Str::endWithIC('abC', 'C'));
         self::assertTrue(Str::endWithIC('abC', 'c'));
         self::assertFalse(Str::endWithIC('abc', 'b'));
-        self::assertTrue(Str::hasPrefixIC('abc', 'a'));
 
-        self::assertFalse(Str::hasPrefixIC('abc', 'a'));
+        self::assertTrue(Str::hasPrefixIC('abc', 'a'));
+        self::assertTrue(Str::hasPrefixIC('abc', 'A'));
+        self::assertFalse(Str::hasPrefixIC('abc', 'b'));
     }
 
     public function testHasPrefixIC(): void
