@@ -16,13 +16,12 @@
     {
       "name": "inhere",
       "email": "in.798@qq.com",
-      "homepage": "http://www.yzone.net/"
+      "homepage": "https://github.com/inhere/"
     }
   ],
   "require": {
-    "php": ">7.1.0",
-    "ext-mbstring": "*",
-    "symfony/polyfill-php80": "~1.0"
+    "php": ">=8.0",
+    "ext-mbstring": "*"
   },
   "autoload": {
     "psr-4": {
