@@ -16,6 +16,6 @@ class IntStreamTest extends BaseLibTestCase
     {
         $int = IntStream::of([23, 34]);
 
-        $this->assertEquals(['23', '34'], $int->mapToString()->toArray());
+        $this->assertEquals(['23', '34'], $int->mapToString('strval')->toArray());
     }
 }
