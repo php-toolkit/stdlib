@@ -5,18 +5,19 @@
 [![Latest Stable Version](http://img.shields.io/packagist/v/toolkit/stdlib.svg)](https://packagist.org/packages/toolkit/stdlib)
 [![Github Actions Status](https://github.com/php-toolkit/stdlib/workflows/Unit-Tests/badge.svg)](https://github.com/php-toolkit/stdlib/actions)
 
-Some useful basic tools for php.
+Stdlib - useful basic tools for php develop.
 
-Contains:
+**Contains**:
 
-- array helper
-- object helper
-- string helper
-- common php helper
-- OS env information
-- dotenv load `.env`
-- simple autoloader
-- simple object container
+- array, string, number, object helper
+- common php, OS env information
+
+**More Utils**
+
+- Dotenv load `.env`
+- Simple autoloader
+- `ObjectBox` simple object container
+- `Optional` like java `java.util.Optional`
 - and more ...
 
 ## Install
@@ -27,10 +28,16 @@ composer require toolkit/stdlib
 
 ## Usage
 
-### Object Box
+### String helper
+
+### Object box
+
+`ObjectBox` - Simple object container.
 
 ```php
-$box = \Toolkit\Stdlib\Obj\ObjectBox::global();
+use Toolkit\Stdlib\Obj\ObjectBox;
+
+$box = ObjectBox::global();
 
 // set
 $box->set('router', function () {
@@ -42,11 +49,36 @@ $box->set('renderer', [
     'tplDir' => 'path/to/dir',
 ]);
 
+// with options for create
+$box->set('somObj', [
+    'class' => MyObject::class,
+    '__opt' => [
+        // will always create new object.
+        'objType' => ObjectBox::TYPE_PROTOTYPE,
+    ],
+]);
+
 // get
 /** @var MyRouter $router */
 $router = $box->get('router');
 /** @var MyRenderer $renderer */
 $renderer = $box->get('renderer');
+```
+
+## Util classes
+
+### Optional
+
+```php
+
+```
+
+### DataStream
+
+```php
+use Toolkit\Stdlib\Util\Stream\DataStream;
+
+$stream = DataStream::of($data);
 ```
 
 ## License

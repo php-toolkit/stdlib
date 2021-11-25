@@ -24,7 +24,7 @@ abstract class AbstractMap implements JsonSerializable
      *
      * @return static
      */
-    public static function new(array $data = [])
+    public static function new(array $data = []): static
     {
         return new static($data);
     }

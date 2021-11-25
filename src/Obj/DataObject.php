@@ -12,7 +12,9 @@ namespace Toolkit\Stdlib\Obj;
 use ArrayObject;
 use JsonSerializable;
 use Toolkit\Stdlib\Helper\JsonHelper;
+use Toolkit\Stdlib\Obj;
 use UnexpectedValueException;
+use function in_array;
 
 /**
  * Class ConfigObject
@@ -57,20 +59,24 @@ class DataObject extends ArrayObject  implements JsonSerializable
 
     /**
      * @param string $key
-     * @param mixed  $default
+     * @param mixed|null $default
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
-        return $this[$key] ?? $default;
+        if ($this->offsetExists($key)) {
+            return $this->offsetGet($key);
+        }
+
+        return $default;
     }
 
     /**
      * @param string $key
      * @param mixed $value
      */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->offsetSet($key, $value);
     }
@@ -79,11 +85,15 @@ class DataObject extends ArrayObject  implements JsonSerializable
      * @param string $key
      * @param mixed  $default
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function getValue(string $key, $default = null)
+    public function getValue(string $key, mixed $default = null): mixed
     {
-        return $this[$key] ?? $default;
+        if ($this->offsetExists($key)) {
+            return $this->offsetGet($key);
+        }
+
+        return $default;
     }
 
     /**
@@ -174,12 +184,39 @@ class DataObject extends ArrayObject  implements JsonSerializable
 
     /**
      * @param string $key
+     * @param string $dataClass
      *
      * @return self
      */
-    public function getSubObject(string $key): self
+    public function getSubObject(string $key, string $dataClass = ''): self
     {
-        return new self($this->getArray($key));
+        if ($dataClass) {
+            $dataObj = new $dataClass;
+            Obj::init($dataObj, $this->getArray($key));
+
+            return $dataObj;
+        }
+
+        return new static($this->getArray($key));
+    }
+
+    /**
+     * @param array $fields Restrict to return only these fields, and return all of them if it is empty
+     *
+     * @return array
+     */
+    public function getSome(array $fields = []): array
+    {
+        $data = [];
+        foreach ($this->getArrayCopy() as $key => $value) {
+            if ($fields && !in_array($key, $fields, true)) {
+                continue;
+            }
+
+            $data[$key] = $value;
+        }
+
+        return $data;
     }
 
     /**

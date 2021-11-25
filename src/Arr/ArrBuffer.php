@@ -19,12 +19,12 @@ final class ArrBuffer
     /**
      * @var string[]
      */
-    private $body = [];
+    private array $body = [];
 
     /**
      * @var string
      */
-    private $delimiter = ''; // '/' ':'
+    private string $delimiter = ''; // '/' ':'
 
     /**
      * @param string $first

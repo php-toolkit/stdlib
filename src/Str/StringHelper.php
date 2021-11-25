@@ -11,6 +11,7 @@ namespace Toolkit\Stdlib\Str;
 
 use DateTime;
 use Exception;
+use Stringable;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
@@ -45,7 +46,6 @@ use function str_word_count;
 use function strlen;
 use function strtr;
 use function substr;
-use function trim;
 use function uniqid;
 use const STR_PAD_LEFT;
 use const STR_PAD_RIGHT;
@@ -102,20 +102,20 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function padRight($str, $padLen, string $padStr = ' '): string
+    public static function padRight(string|int|float|Stringable $str, int|float $padLen, string $padStr = ' '): string
     {
         return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr) : (string)$str;
     }
 
     /**
-     * @param string|mixed $str
-     * @param int|float    $padLen
+     * @param string|int|float|Stringable $str
+     * @param numeric $padLen
      * @param string $padStr
      * @param int    $padType
      *
      * @return string
      */
-    public static function padByWidth($str, $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
+    public static function padByWidth(string|int|float|Stringable $str, int|float|string $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
     {
         $stringWidth = mb_strwidth((string)$str, self::$defaultEncoding);
         if ($stringWidth >= $padLen) {
@@ -129,12 +129,12 @@ abstract class StringHelper
     }
 
     /**
-     * @param string|int $str
-     * @param string|int $times
+     * @param string|mixed $str
+     * @param numeric $times
      *
      * @return string
      */
-    public static function repeat($str, $times): string
+    public static function repeat(string|int|float|Stringable $str, int|float|string $times): string
     {
         return str_repeat((string)$str, (int)$times);
     }
@@ -146,12 +146,11 @@ abstract class StringHelper
     /**
      * ********************** 生成一定长度的随机字符串函数 **********************
      *
-     * @param int          $length - 随机字符串长度
-     * @param array|string $param  -
+     * @param int   $length - 随机字符串长度
+     * @param array $param
      *
      * @return string
      * @throws Exception
-     * @internal param string $chars
      */
     public static function random(int $length, array $param = []): string
     {
@@ -253,19 +252,20 @@ abstract class StringHelper
     /**
      * Generate order number v2
      *
-     * @param string|int $prefix
+     * @param string|int|Stringable $prefix
+     * @param array{int, int} $randomRange [min, max]
      *
      * @return string If no prefix, default length is 26
      * @throws Exception
      */
-    public static function genNOV2($prefix = '', array $randomRange = []): string
+    public static function genNOV2(string|int|Stringable $prefix = '', array $randomRange = []): string
     {
         $host = gethostname();
         // u - 可以打印微妙，但是使用 date 函数时无效
         // $date = date('YmdHisu');
         $date = (new DateTime())->format('YmdHisu');
 
-        $id = (string)abs(crc32($host) % 100);
+        $id = (string)abs(crc32($host) % 99);
         $id = str_pad($id, 2, '0', STR_PAD_LEFT);
 
         $randomRange = $randomRange ?: [100, 999];
