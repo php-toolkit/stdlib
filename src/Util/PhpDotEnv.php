@@ -28,9 +28,7 @@ use function putenv;
 /**
  * Class PhpDotEnv - local env read
  *
- * @package Toolkit\Stdlib\Util
- *
- * in local config file `.env` (must is 'ini' format):
+ * The env config file `.env` (must is 'ini' format):
  *
  * ```ini
  * APP_ENV=dev
@@ -45,6 +43,8 @@ use function putenv;
  * env('DEBUG', false);
  * env('APP_ENV', 'pdt');
  * ```
+ *
+ * @package Toolkit\Stdlib\Util
  */
 class PhpDotEnv
 {

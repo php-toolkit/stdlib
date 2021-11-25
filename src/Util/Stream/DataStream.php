@@ -238,16 +238,18 @@ class DataStream extends ArrayIterator
     }
 
     /**
-     * @param callable(array|mixed): array{string,mixed} $func
+     * Mapping values to MapStream
+     *
+     * @param callable(array|mixed): array{string,mixed} $mapper
      * @param MapStream|null $new
      *
      * @return MapStream
      */
-    public function mapToMap(callable $func, MapStream $new = null): MapStream
+    public function mapToMap(callable $mapper, MapStream $new = null): MapStream
     {
         $new = $new ?: new MapStream();
         foreach ($this as $item) {
-            [$key, $val] = $func($item);
+            [$key, $val] = $mapper($item);
             $new->offsetSet($key, $val);
         }
 
@@ -255,13 +257,36 @@ class DataStream extends ArrayIterator
     }
 
     /**
+     * Mapping values to IntStream
+     *
+     * @param callable(T):int $mapper
+     * @param IntStream|null $new
+     *
+     * @return IntStream
+     */
+    public function mapToInt(callable $mapper, IntStream $new = null): IntStream
+    {
+        $new = $new ?: new IntStream;
+        foreach ($this as $val) {
+            $new->append($mapper($val));
+        }
+
+        return $new;
+    }
+
+    /**
+     * Mapping values to StringStream
+     *
+     * @param callable(T):string $mapper
+     * @param StringStream|null $new
+     *
      * @return StringStream
      */
-    public function mapToString(): StringStream
+    public function mapToString(callable $mapper, StringStream $new = null): StringStream
     {
-        $new = new StringStream;
+        $new = $new ?: new StringStream;
         foreach ($this as $val) {
-            $new->append($val);
+            $new->append($mapper($val));
         }
 
         return $new;
@@ -534,6 +559,12 @@ class DataStream extends ArrayIterator
         return $map;
     }
 
+    /**
+     * @param callable $handler
+     * @param ...$args
+     *
+     * @return mixed
+     */
     public function collect(callable $handler, ...$args): mixed
     {
         // TODO

@@ -83,6 +83,25 @@ $renderer = $box->get('renderer');
 
 ## Util classes
 
+### AutoLoader
+
+`AutoLoader` - an simple psr4 loader, can use for tests.
+
+```php
+AutoLoader::addFiles([
+    // alone files
+]);
+
+$loader = AutoLoader::getLoader();
+$loader->addPsr4Map([
+    'namespace' => 'path'
+]);
+
+$loader->addClassMap([
+ 'name' => 'class file'
+]);
+```
+
 ### Optional
 
 Not use Optional:
@@ -109,12 +128,48 @@ $username = Optional::ofNullable($userModel)->map(function ($userModel) {
 })->orElse('unknown');
 ```
 
-### DataStream
+### PhpDotEnv
+
+`PhpDotEnv` - a simple dont env file loader.
+
+The env config file `.env` (must is 'ini' format):
+
+```ini
+APP_ENV=dev
+DEBUG=true
+; ... ...
+```
+
+Usage:
+
+```php
+PhpDotEnv::load(__DIR__, '.env');
+
+env('DEBUG', false);
+env('APP_ENV', 'prod');
+```
+
+### Stream
 
 ```php
 use Toolkit\Stdlib\Util\Stream\DataStream;
+use Toolkit\Stdlib\Util\Stream\ListStream;
 
-$stream = DataStream::of($data);
+$userList = ListStream::of($userModels)
+    ->filter(function ($userModel) {
+        // only need age > 20
+        return $userModel->age > 20;
+    })
+    ->map(function ($userModel) {
+        // only need field: age, name
+        return [
+            'age'  => $userModel->age,
+            'name' => $userModel->name,
+        ];
+    })
+    ->toArray();
+
+vdump($userList);
 ```
 
 ## License

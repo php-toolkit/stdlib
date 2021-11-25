@@ -2,34 +2,19 @@
 
 namespace Toolkit\Stdlib\Util\Stream;
 
-use function implode;
-
 /**
  * class ListStream
+ *
+ * @author inhere
  */
 class ListStream extends DataStream
 {
     /**
-     * @param string $sep
+     * @param mixed $value
      *
-     * @return string
+     * @return $this
      */
-    public function join(string $sep = ','): string
-    {
-        return $this->implode($sep);
-    }
-
-    /**
-     * @param string $sep
-     *
-     * @return string
-     */
-    public function implode(string $sep = ','): string
-    {
-        return implode($sep, $this->getArrayCopy());
-    }
-
-    public function append($value): static
+    public function append(mixed $value): static
     {
         parent::append($value);
         return $this;

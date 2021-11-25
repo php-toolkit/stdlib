@@ -19,5 +19,4 @@ class IntStream extends ListStream
         parent::append((int)$value);
         return $this;
     }
-
 }

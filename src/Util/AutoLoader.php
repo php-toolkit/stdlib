@@ -16,14 +16,11 @@ use function spl_autoload_register;
 use function spl_autoload_unregister;
 use function str_replace;
 use function strlen;
-use function strpos;
 use function substr;
 use const DIRECTORY_SEPARATOR;
 
 /**
  * Class AutoLoader - an simple class loader
- *
- * @package Toolkit\Stdlib\Util
  *
  * ```php
  * AutoLoader::addFiles([
@@ -37,44 +34,48 @@ use const DIRECTORY_SEPARATOR;
  *  'name' => 'file'
  * ]);
  * ```
+ *
+ * @package Toolkit\Stdlib\Util
  */
 class AutoLoader
 {
     /**
-     * @var self
+     * @var self|null
      */
-    private static $loader;
+    private static ?AutoLoader $loader = null;
 
     /**
      * @var array
      */
-    private static $files = [];
+    private static array $files = [];
 
     /**
-     * @var array
      * array (
      *  'prefix' => 'dir path'
      * )
+     *
+     * @var array
      */
-    private $psr0Map = [];
+    private array $psr0Map = [];
 
     /**
-     * @var array
      * array (
      *  'prefix' => 'dir path'
      * )
+     *
+     * @var array
      */
-    private $psr4Map = [];
+    private array $psr4Map = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private array $classMap = [];
 
     /**
      * @var array
      */
-    private $classMap = [];
-
-    /**
-     * @var array
-     */
-    private $missingClasses = [];
+    private array $missingClasses = [];
 
     /**
      * @param array $files
@@ -92,7 +93,6 @@ class AutoLoader
         }
 
         self::$loader = $loader = new self();
-
         $loader->register(true);
 
         foreach (self::$files as $fileIdentifier => $file) {
@@ -275,11 +275,11 @@ class AutoLoader
      *
      * @return string|false The path if found, false otherwise
      */
-    public function findFile(string $class)
+    public function findFile(string $class): bool|string
     {
         // work around for PHP 5.3.0 - 5.3.2 https://bugs.php.net/50731
         if ('\\' === $class[0]) {
-            $class = (string)substr($class, 1);
+            $class = substr($class, 1);
         }
 
         // class map lookup
