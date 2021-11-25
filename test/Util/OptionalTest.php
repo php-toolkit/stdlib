@@ -21,6 +21,7 @@ class OptionalTest extends BaseLibTestCase
         $val = $o->filter(static function ($val) {
             return $val > 25;
         })->orElse(25);
+
         $this->assertEquals(25, $val);
     }
 
@@ -33,7 +34,7 @@ class OptionalTest extends BaseLibTestCase
         });
 
         $val = $o->or(function () {
-            return 23;
+            return Optional::of(23);
         })->get();
 
         $this->assertEquals(23, $val);

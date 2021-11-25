@@ -2,7 +2,7 @@
 
 namespace Toolkit\StdlibTest;
 
-use Toolkit\Stdlib\Util\BasePhpTestCase;
+use Toolkit\Stdlib\Helper\BasePhpTestCase;
 
 /**
  * class BaseLibTestCase

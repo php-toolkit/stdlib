@@ -10,13 +10,13 @@
 namespace Toolkit\StdlibTest\Str;
 
 use PHPUnit\Framework\TestCase;
-use Toolkit\Stdlib\Str\StrObject;
+use Toolkit\Stdlib\Str\StrValue;
 
-class StrObjectTest extends TestCase
+class StrValueTest extends TestCase
 {
     public function testStrObjectBasic(): void
     {
-        $s = StrObject::new('abc ');
+        $s = StrValue::new('abc ');
 
         self::assertEquals(4, $s->length());
         self::assertEquals('abc', $s->trimmed());
