@@ -166,7 +166,7 @@ class UrlHelper
     }
 
     // Build arrays of values we need to decode before parsing
-    protected static $entities = [
+    protected static array $entities = [
         '%21',
         '%2A',
         '%27',
@@ -186,7 +186,7 @@ class UrlHelper
         '%5D'
     ];
 
-    protected static $replacements = [
+    protected static array $replacements = [
         '!',
         '*',
         "'",

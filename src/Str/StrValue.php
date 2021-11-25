@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Toolkit\Stdlib\Std;
+namespace Toolkit\Stdlib\Str;
 
 use Toolkit\Stdlib\Str;
 use function in_array;
@@ -14,7 +14,7 @@ class StrValue
     /**
      * @var string
      */
-    protected $value;
+    protected string $value = '';
 
     /**
      * @param string $str

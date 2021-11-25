@@ -1,11 +1,11 @@
 # StdLib
 
 [![License](https://img.shields.io/github/license/php-toolkit/stdlib)](LICENSE)
-[![Php Version](https://img.shields.io/badge/php-%3E7.1.0-brightgreen.svg?maxAge=2592000)](https://packagist.org/packages/toolkit/stdlib)
+[![Php Version](https://img.shields.io/badge/php-%3E8.0-brightgreen.svg?maxAge=2592000)](https://packagist.org/packages/toolkit/stdlib)
 [![Latest Stable Version](http://img.shields.io/packagist/v/toolkit/stdlib.svg)](https://packagist.org/packages/toolkit/stdlib)
 [![Github Actions Status](https://github.com/php-toolkit/stdlib/workflows/Unit-Tests/badge.svg)](https://github.com/php-toolkit/stdlib/actions)
 
-Stdlib - useful basic tools for php develop.
+🧰 Stdlib - Useful basic tools library for PHP development.
 
 **Contains**:
 
@@ -26,9 +26,25 @@ Stdlib - useful basic tools for php develop.
 composer require toolkit/stdlib
 ```
 
-## Usage
+## String helper
 
-### String helper
+### StrBuffer
+
+```php
+use Toolkit\Stdlib\Str\StrBuffer;
+
+$buf = StrBuffer::new("c");
+$buf->prepend('ab')
+$buf->append('de')
+
+$str = (string)$buf; // "abcde"
+$str = $buf->toString(); // "abcde"
+// get and clean.
+$str = $buf->fetch(); // "abcde"
+$str = $buf->join(','); // "ab,c,de"
+```
+
+## Object helper
 
 ### Object box
 
@@ -69,8 +85,28 @@ $renderer = $box->get('renderer');
 
 ### Optional
 
-```php
+Not use Optional:
 
+```php
+use Toolkit\Stdlib\Util\Optional;
+
+$userModel = UserModel::findOne(23);
+
+if ($userModel) {
+    $username = $userModel->name;
+} else {
+    $username = 'unknown';
+}
+```
+
+Use Optional:
+
+```php
+use Toolkit\Stdlib\Util\Optional;
+
+$username = Optional::ofNullable($userModel)->map(function ($userModel) {
+    return $userModel->name;
+})->orElse('unknown');
 ```
 
 ### DataStream

@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Str;
 
+use Stringable;
 use function array_unshift;
 use function implode;
 use function sprintf;
@@ -18,17 +19,17 @@ use function sprintf;
  *
  * @package Toolkit\Stdlib\Str
  */
-class StrBuffer
+class StrBuffer implements Stringable
 {
     /**
-     * @var self
+     * @var self|null
      */
-    private static $global;
+    private static ?StrBuffer $global = null;
 
     /**
      * @var string[]
      */
-    private $parts = [];
+    private array $parts = [];
 
     /**
      * @param string $str
@@ -160,7 +161,7 @@ class StrBuffer
         // clear
         $this->parts = [];
 
-        return implode($strings);
+        return implode('', $strings);
     }
 
     /**

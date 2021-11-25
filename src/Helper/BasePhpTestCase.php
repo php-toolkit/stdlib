@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Toolkit\Stdlib\Util;
+namespace Toolkit\Stdlib\Helper;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionException;

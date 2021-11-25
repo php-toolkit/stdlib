@@ -16,7 +16,7 @@ class Std
      *
      * @return string
      */
-    public static function toString($data): string
+    public static function toString(mixed $data): string
     {
         return  DataHelper::toString($data);
     }

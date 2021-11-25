@@ -84,7 +84,7 @@ class Format
      *
      * @return string
      */
-    public static function microTime($mTime = null): string
+    public static function microTime(string|float $mTime = null): string
     {
         if (!$mTime) {
             $mTime = microtime(true);
@@ -92,7 +92,7 @@ class Format
 
         [$ts, $ms] = explode('.', sprintf('%.4f', $mTime));
 
-        return date('Y/m/d H:i:s', $ts) . '.' . $ms;
+        return date('Y/m/d H:i:s', (int)$ts) . '.' . $ms;
     }
 
     /**
@@ -106,7 +106,7 @@ class Format
      *
      * @return string
      */
-    public static function memory($memory): string
+    public static function memory(int|float $memory): string
     {
         if ($memory >= 1024 * 1024 * 1024) {
             return sprintf('%.1f GiB', $memory / 1024 / 1024 / 1024);
@@ -134,7 +134,7 @@ class Format
      *
      * @return string
      */
-    public static function size($size): string
+    public static function size(int|float $size): string
     {
         if ($size >= 1024 * 1024 * 1024) {
             return sprintf('%.1f Gb', $size / 1024 / 1024 / 1024);
@@ -160,7 +160,7 @@ class Format
      *
      * @return string
      */
-    public static function bytes($size, int $precision = 2): string
+    public static function bytes(int|float $size, int $precision = 2): string
     {
         if ($size < 1) {
             return '0b';
@@ -180,7 +180,7 @@ class Format
      *
      * @return int
      */
-    public static function convertBytes($value): int
+    public static function convertBytes(int|float|string $value): int
     {
         if (is_numeric($value)) {
             return $value;
