@@ -6,11 +6,12 @@ use ArrayAccess;
 use RuntimeException;
 use Throwable;
 use Toolkit\Stdlib\Obj;
+use Toolkit\Stdlib\Util\Stream\DataStream;
 use UnexpectedValueException;
 use function gettype;
 
 /**
- * class Optional
+ * class Optional - like java: java.util.Optional
  *
  * @template T
  *
@@ -22,7 +23,7 @@ final class Optional
     /**
      * @var self|null
      */
-    private static ?Optional $empty;
+    private static ?Optional $empty = null;
 
     /**
      * Returns an Optional with the specified present non-null value.
@@ -136,7 +137,15 @@ final class Optional
      */
     public function isNull(): bool
     {
-        return $this->value !== null;
+        return $this->value === null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->value === null;
     }
 
     /**
@@ -179,7 +188,7 @@ final class Optional
     /**
      * If a value is present, apply the provided mapping function to it,
      * and if the result is non-null, return an Optional describing the result.
-     * Otherwise return an empty Optional
+     * Otherwise, return an empty Optional
      *
      * ```php
      *  Optional::of("foo")->map('strtoupper')->get(); // "FOO"
@@ -228,11 +237,45 @@ final class Optional
     }
 
     /**
+     * @param callable():Optional<T> $supplier
+     *
+     * @return $this
+     */
+    public function or(callable $supplier): self
+    {
+        if ($this->isPresent()) {
+            return $this;
+        }
+
+        $new = $supplier();
+        if (!$new instanceof self) {
+            throw new UnexpectedValueException('must return an object and instance of ' . self::class);
+        }
+
+        return $new;
+    }
+
+    /**
+     * If a value is present, returns a sequential Stream containing only that value,
+     * otherwise returns an empty Stream.
+     *
+     * @return DataStream<T>
+     */
+    public function stream(): DataStream
+    {
+        if (!$this->isPresent()) {
+            return DataStream::empty();
+        }
+
+        return DataStream::of($this->value);
+    }
+
+    /**
      * @param T $other
      *
      * @return T
      */
-    public function orElse($other)
+    public function orElse(mixed $other)
     {
         return $this->value ?? $other;
     }
@@ -248,17 +291,21 @@ final class Optional
     }
 
     /**
-     * @param callable(): Throwable $errCreator
+     * @param null|callable():Throwable $errCreator
      *
      * @return T
      */
-    public function orElseThrow(callable $errCreator)
+    public function orElseThrow(callable $errCreator = null)
     {
         if ($this->value !== null) {
             return $this->value;
         }
 
-        throw $errCreator();
+        if ($errCreator) {
+            throw $errCreator();
+        }
+
+        throw new UnexpectedValueException('No value present');
     }
 
     /**

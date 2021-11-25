@@ -2,12 +2,12 @@
 
 namespace Toolkit\StdlibTest;
 
-use PHPUnit\Framework\TestCase;
+use Toolkit\Stdlib\Util\BasePhpTestCase;
 
 /**
  * class BaseLibTestCase
  */
-abstract class BaseLibTestCase extends TestCase
+abstract class BaseLibTestCase extends BasePhpTestCase
 {
 
 }

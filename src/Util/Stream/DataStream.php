@@ -5,6 +5,7 @@ namespace Toolkit\Stdlib\Util\Stream;
 use ArrayIterator;
 use Closure;
 use Toolkit\Stdlib\Util\Optional;
+use Traversable;
 use function array_rand;
 use function array_unique;
 use const SORT_STRING;
@@ -17,14 +18,38 @@ use const SORT_STRING;
  */
 class DataStream extends ArrayIterator
 {
+    private static ?DataStream $emptyObj = null;
+
     /**
-     * @param array $data
+     * @param array|Traversable $data
      *
-     * @return self
+     * @return static
      */
-    public static function of(array $data): self
+    public static function of(array|Traversable $data): static
     {
         return new static($data);
+    }
+
+    /**
+     * @param array|Traversable $data
+     *
+     * @return static
+     */
+    public static function new(array|Traversable $data): static
+    {
+        return new static($data);
+    }
+
+    /**
+     * @return self
+     */
+    public static function empty(): self
+    {
+        if (!self::$emptyObj) {
+            self::$emptyObj = new self();
+        }
+
+        return self::$emptyObj;
     }
 
     /**
@@ -152,6 +177,8 @@ class DataStream extends ArrayIterator
     }
 
     /**
+     * Distinct all values
+     *
      * @return $this
      */
     public function distinct(int $flags = SORT_STRING): self
@@ -160,17 +187,15 @@ class DataStream extends ArrayIterator
     }
 
     /**
-     * @template T
      * @template U
      *
      * @param callable(T):U $mapper
      *
-     * @return $this
+     * @return static
      */
-    public function map(callable $mapper): self
+    public function map(callable $mapper): static
     {
         $new = new static();
-
         foreach ($this as $item) {
             $new->append($mapper($item));
         }
@@ -179,14 +204,77 @@ class DataStream extends ArrayIterator
     }
 
     /**
+     * @template U
+     *
+     * @param callable(T):U $mapper
+     * @param bool $boolExpr
+     *
+     * @return static
+     */
+    public function mapIf(callable $mapper, bool $boolExpr): static
+    {
+        if ($boolExpr) {
+            return $this->map($mapper);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @template U
+     *
+     * @param callable(T):U $mapper
+     * @param DataStream $stream
+     *
+     * @return static
+     */
+    public function mapTo(callable $mapper, self $stream): static
+    {
+        foreach ($this as $item) {
+            $stream->append($mapper($item));
+        }
+
+        return $stream;
+    }
+
+    /**
+     * @param callable(array|mixed): array{string,mixed} $func
+     * @param MapStream|null $new
+     *
+     * @return MapStream
+     */
+    public function mapToMap(callable $func, MapStream $new = null): MapStream
+    {
+        $new = $new ?: new MapStream();
+        foreach ($this as $item) {
+            [$key, $val] = $func($item);
+            $new->offsetSet($key, $val);
+        }
+
+        return $new;
+    }
+
+    /**
+     * @return StringStream
+     */
+    public function mapToString(): StringStream
+    {
+        $new = new StringStream;
+        foreach ($this as $val) {
+            $new->append($val);
+        }
+
+        return $new;
+    }
+
+    /**
      * @param callable(mixed):array $flatMapper
      *
-     * @return $this
+     * @return static
      */
-    public function flatMap(callable $flatMapper): self
+    public function flatMap(callable $flatMapper): static
     {
         $new = new static();
-
         foreach ($this as $item) {
             foreach ($flatMapper($item) as $sub) {
                 $new->append($sub);
@@ -208,9 +296,9 @@ class DataStream extends ArrayIterator
      *
      * @param callable|null $comparer User defined sort compare function
      *
-     * @return $this
+     * @return static
      */
-    public function sorted(callable $comparer = null): self
+    public function sorted(callable $comparer = null): static
     {
         $new = self::of($this->getArrayCopy());
 
@@ -224,9 +312,9 @@ class DataStream extends ArrayIterator
      *
      * @param callable|null $comparer User defined sort compare function
      *
-     * @return $this
+     * @return static
      */
-    public function keySorted(callable $comparer = null): self
+    public function keySorted(callable $comparer = null): static
     {
         $new = self::of($this->getArrayCopy());
 
@@ -320,6 +408,7 @@ class DataStream extends ArrayIterator
             if ($idx === 0) {
                 return Optional::ofNullable($item);
             }
+            $idx++;
         }
 
         return Optional::empty();
@@ -332,7 +421,7 @@ class DataStream extends ArrayIterator
     public function findLast(): Optional
     {
         $number = 1;
-        $count = $this->count();
+        $count  = $this->count();
 
         foreach ($this as $item) {
             if ($number === $count) {
@@ -351,6 +440,25 @@ class DataStream extends ArrayIterator
     public function findAny(): Optional
     {
         return $this->findRandom();
+    }
+
+    /**
+     * Find one item by given matcher
+     *
+     * @template T
+     * @param callable(mixed): bool $matcher
+     *
+     * @return Optional<T>
+     */
+    public function findOne(callable $matcher): Optional
+    {
+        foreach ($this as $item) {
+            if ($matcher($item)) {
+                return Optional::ofNullable($item);
+            }
+        }
+
+        return Optional::empty();
     }
 
     /**
@@ -396,6 +504,36 @@ class DataStream extends ArrayIterator
         }
     }
 
+    /**
+     * @param callable(array|mixed, int|string): array $func
+     * @param array $arr
+     *
+     * @return array
+     */
+    public function eachToArray(callable $func, array $arr = []): array
+    {
+        foreach ($this as $idx => $item) {
+            $arr[] = $func($item, $idx);
+        }
+        return $arr;
+    }
+
+    /**
+     * @param callable(array|mixed): array{string, mixed} $func
+     * @param array $map
+     *
+     * @return array<string, mixed>
+     */
+    public function eachToMap(callable $func, array $map = []): array
+    {
+        foreach ($this as $item) {
+            [$key, $val] = $func($item);
+            $map[$key] = $val;
+        }
+
+        return $map;
+    }
+
     public function collect(callable $handler, ...$args): mixed
     {
         // TODO
@@ -403,9 +541,21 @@ class DataStream extends ArrayIterator
     }
 
     /**
+     * Alias of the method: getArrayCopy()
+     *
      * @return array
      */
     public function toArray(): array
+    {
+        return $this->getArrayCopy();
+    }
+
+    /**
+     * Alias of the method: getArrayCopy()
+     *
+     * @return array
+     */
+    public function getArray(): array
     {
         return $this->getArrayCopy();
     }

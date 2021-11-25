@@ -2,6 +2,7 @@
 
 namespace Toolkit\Stdlib\Util\Stream;
 
+use InvalidArgumentException;
 use function implode;
 
 /**
@@ -10,68 +11,25 @@ use function implode;
 class MapStream extends DataStream
 {
     /**
-     * @param array<string, mixed> $data
-     *
-     * @return static
-     */
-    public static function new(array $data): self
-    {
-        return new self($data);
-    }
-
-    /**
-     * @param array $data
+     * @param mixed $value
      *
      * @return $this
      */
-    public function load(array $data): self
+    public function append(mixed $value): self
     {
-        foreach ($data as $key => $value) {
-            $this->offsetSet($key, $value);
-        }
-
-        return $this;
+        throw new InvalidArgumentException('not all call append on MapStream');
     }
 
     /**
-     * @param callable(array): string $func
-     * @param bool|mixed $apply
+     * @param callable(mixed, string): mixed $mapper
      *
      * @return $this
      */
-    public function eachIf(callable $func, mixed $apply): self
+    public function map(callable $mapper): static
     {
-        if (!$apply) {
-            return $this;
-        }
-
-        return $this->each($func);
-    }
-
-    /**
-     * @param callable(mixed): mixed $func
-     *
-     * @return $this
-     */
-    public function each(callable $func): self
-    {
-        $new = new self();
+        $new = new static();
         foreach ($this as $key => $item) {
-            $new->offsetSet($key, $func($item));
-        }
-
-        return $new;
-    }
-
-    /**
-     * @param callable(mixed): mixed $func
-     *
-     * @return $this
-     */
-    public function eachTo(callable $func, DataStream $new): DataStream
-    {
-        foreach ($this as $key => $item) {
-            $item = $func($item, $key);
+            $item = $mapper($item, $key);
             $new->offsetSet($key, $item);
         }
 
@@ -83,9 +41,8 @@ class MapStream extends DataStream
      *
      * @return array<string, mixed>
      */
-    public function eachToMap(callable $func): array
+    public function eachToMap(callable $func, array $map = []): array
     {
-        $map = [];
         foreach ($this as $key => $item) {
             $map[$key] = $func($item);
         }
@@ -103,7 +60,7 @@ class MapStream extends DataStream
         $new = new static();
         foreach ($this as $key => $item) {
             if ($filterFn($item)) {
-                $new->offsetSet($key, $filterFn($item));
+                $new->offsetSet($key, $item);
             }
         }
 
