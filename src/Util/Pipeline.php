@@ -24,7 +24,7 @@ class Pipeline implements PipelineInterface
     /**
      * @var SplObjectStorage
      */
-    private $stages;
+    private SplObjectStorage $stages;
 
     public function __construct()
     {
@@ -49,7 +49,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function run($payload)
+    public function run(mixed $payload)
     {
         $this->stages->rewind();
 
@@ -59,7 +59,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke($payload)
+    public function __invoke(mixed $payload)
     {
         return $this->run($payload);
     }

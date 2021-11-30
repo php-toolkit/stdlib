@@ -48,7 +48,7 @@ class IntHelper
      *
      * @return false|mixed|string
      */
-    public static function int8($i)
+    public static function int8($i): mixed
     {
         return is_int($i) ? pack('c', $i) : unpack('c', $i)[1];
     }

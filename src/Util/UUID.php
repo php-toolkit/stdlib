@@ -249,9 +249,10 @@ class UUID
      *
      * @param string|self $str
      * @param integer     $len
+     *
      * @return string|null
      */
-    protected static function makeBin($str, int$len): ?string
+    protected static function makeBin(UUID|string $str, int$len): ?string
     {
         if ($str instanceof self) {
             return $str->bytes;
@@ -279,13 +280,14 @@ class UUID
      * Generates a Version 3 or Version 5 UUID.
      * These are derived from a hash of a name and its namespace, in binary form.
      *
-     * @param int         $ver
-     * @param string      $node
+     * @param int $ver
+     * @param string $node
      * @param string|null $ns
+     *
      * @return string
      * @throws InvalidArgumentException
      */
-    protected static function mintName($ver, $node, $ns): string
+    protected static function mintName(int $ver, string $node, ?string $ns): string
     {
         if (empty($node)) {
             throw new InvalidArgumentException('A name-string is required for Version 3 or 5 UUIDs.');

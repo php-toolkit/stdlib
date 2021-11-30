@@ -27,7 +27,7 @@ class DateHelper
      *
      * @return bool
      */
-    public static function isTimestamp($timestamp): bool
+    public static function isTimestamp(int|string $timestamp): bool
     {
         if (!is_numeric($timestamp) || 10 !== strlen($timestamp)) {
             return false;
@@ -89,7 +89,7 @@ class DateHelper
     /**
      * @return false|int
      */
-    public static function tomorrowBegin()
+    public static function tomorrowBegin(): bool|int
     {
         return mktime(0, 0, 0, date('m'), date('d') + 1, date('Y'));
     }
@@ -194,21 +194,14 @@ class DateHelper
         $nowTime  = time();
         $diffTime = $nowTime - $time;
 
-        switch (true) {
-            case $time < ($nowTime - 31536000):
-                return floor($diffTime / 31536000) . $unit[0];
-            case $time < ($nowTime - 2592000):
-                return floor($diffTime / 2592000) . $unit[1];
-            case $time < ($nowTime - 604800):
-                return floor($diffTime / 604800) . $unit[2];
-            case $time < ($nowTime - 86400):
-                return floor($diffTime / 86400) . $unit[3];
-            case $time < ($nowTime - 3600):
-                return floor($diffTime / 3600) . $unit[4];
-            case $time < ($nowTime - 60):
-                return floor($diffTime / 60) . $unit[5];
-            default:
-                return floor($diffTime) . $unit[6];
-        }
+        return match (true) {
+            $time < ($nowTime - 31536000) => floor($diffTime / 31536000) . $unit[0],
+            $time < ($nowTime - 2592000) => floor($diffTime / 2592000) . $unit[1],
+            $time < ($nowTime - 604800) => floor($diffTime / 604800) . $unit[2],
+            $time < ($nowTime - 86400) => floor($diffTime / 86400) . $unit[3],
+            $time < ($nowTime - 3600) => floor($diffTime / 3600) . $unit[4],
+            $time < ($nowTime - 60) => floor($diffTime / 60) . $unit[5],
+            default => floor($diffTime) . $unit[6],
+        };
     }
 }

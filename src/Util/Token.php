@@ -46,7 +46,7 @@ class Token
      *
      * @var string
      */
-    private static $algo = '$2y';
+    private static string $algo = '$2y';
 
     /**
      * cost parameter 就是成本参数
@@ -54,7 +54,7 @@ class Token
      *
      * @var string
      */
-    private static $cost = '$10';
+    private static string $cost = '$10';
 
     /**
      * *******生成唯一序列号*******
@@ -63,7 +63,7 @@ class Token
      *
      * @return string
      */
-    public static function md5($var): string
+    public static function md5(mixed $var): string
     {
         //serialize()序列化，串行化
         return md5(md5(serialize($var)));
@@ -74,7 +74,7 @@ class Token
      */
     public static function uniqueSalt(): string
     {
-        return (string)substr(sha1((string)mt_rand()), 0, 22);
+        return substr(sha1((string)mt_rand()), 0, 22);
     }
 
     /**
@@ -90,7 +90,7 @@ class Token
             'cost' => 9
         ], $opts);
 
-        return (string)password_hash($pwd, $algo, $opts);
+        return password_hash($pwd, $algo, $opts);
     }
 
     /**

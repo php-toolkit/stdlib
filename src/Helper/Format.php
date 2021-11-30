@@ -80,7 +80,7 @@ class Format
     }
 
     /**
-     * @param string|float $mTime value is microtime(1)
+     * @param string|float|null $mTime value is microtime(1)
      *
      * @return string
      */
@@ -189,17 +189,11 @@ class Format
         $len  = strlen($value);
         $qty  = (int)substr($value, 0, $len - 1);
         $unit = strtolower(substr($value, $len - 1));
-        switch ($unit) {
-            case 'k':
-                $qty *= 1024;
-                break;
-            case 'm':
-                $qty *= 1048576;
-                break;
-            case 'g':
-                $qty *= 1073741824;
-                break;
-        }
+        $qty  *= match ($unit) {
+            'k' => 1024,
+            'm' => 1048576,
+            'g' => 1073741824,
+        };
 
         return $qty;
     }

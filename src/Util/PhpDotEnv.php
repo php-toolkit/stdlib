@@ -52,14 +52,14 @@ class PhpDotEnv
     public const DEFAULT_NAME = '.env';
 
     /**
-     * @var self
+     * @var self|null
      */
-    private static $global;
+    private static ?self $global = null;
 
     /**
      * @var array
      */
-    private $loadedFiles = [];
+    private array $loadedFiles = [];
 
     /**
      * @return static

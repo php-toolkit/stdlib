@@ -302,7 +302,7 @@ class AutoLoader
      *
      * @return bool|string
      */
-    private function findFileWithExtension(string $class)
+    private function findFileWithExtension(string $class): bool|string
     {
         // PSR-4 lookup
         $logicalPathPsr4 = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';

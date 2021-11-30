@@ -14,7 +14,6 @@ use RuntimeException;
 use stdClass;
 use function array_merge;
 use function basename;
-use function defined;
 use function dirname;
 use function file_exists;
 use function file_get_contents;
@@ -27,14 +26,9 @@ use function json_last_error_msg;
 use function preg_replace;
 use function trim;
 use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
-
-// Compatible with lower versions
-if (!defined('JSON_THROW_ON_ERROR')) {
-    define('JSON_THROW_ON_ERROR', 4194304); // since php 7.3
-    // class JsonException extends RuntimeException {}
-}
 
 /**
  * Class JsonHelper
@@ -53,7 +47,7 @@ class JsonHelper
      * @return string
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function enc($data, int $flags = 0, int $depth = 512): string
+    public static function enc(mixed $data, int $flags = 0, int $depth = 512): string
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         return self::encode($data, $flags, $depth);
@@ -69,10 +63,10 @@ class JsonHelper
      * @return string
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function encode($data, int $options = 0, int $depth = 512): string
+    public static function encode(mixed $data, int $options = 0, int $depth = 512): string
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return (string)json_encode($data, \JSON_THROW_ON_ERROR | $options, $depth);
+        return (string)json_encode($data, JSON_THROW_ON_ERROR | $options, $depth);
     }
 
     /**
@@ -86,7 +80,7 @@ class JsonHelper
      * @noinspection PhpDocMissingThrowsInspection
      */
     public static function encodeCN(
-        $data,
+        mixed $data,
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
         int $depth = 512
     ): string {
@@ -114,7 +108,7 @@ class JsonHelper
      * @noinspection PhpDocMissingThrowsInspection
      */
     public static function prettyJSON(
-        $data,
+        mixed $data,
         int $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
     ): string {
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -161,13 +155,12 @@ class JsonHelper
 
     /**
      * @param string $json
-     *
      * @param bool   $assoc
      *
-     * @return array|mixed
+     * @return array|stdClass
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function dec(string $json, bool $assoc = true)
+    public static function dec(string $json, bool $assoc = true): array|stdClass
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $data = json_decode($json, $assoc, 512, JSON_THROW_ON_ERROR);
@@ -190,7 +183,7 @@ class JsonHelper
      * @return array|object
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0)
+    public static function decode(string $json, bool $assoc = false, int $depth = 512, int $options = 0): object|array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $data = json_decode($json, $assoc, $depth, JSON_THROW_ON_ERROR | $options);
@@ -214,7 +207,7 @@ class JsonHelper
      * @return array|object
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function decodeFile(string $jsonFile, bool $assoc = false, int $depth = 512, int $options = 0)
+    public static function decodeFile(string $jsonFile, bool $assoc = false, int $depth = 512, int $options = 0): object|array
     {
         if (!is_file($jsonFile)) {
             throw new InvalidArgumentException("json file not found: $jsonFile");
@@ -232,7 +225,7 @@ class JsonHelper
      *
      * @return array|stdClass
      */
-    public static function parse(string $data, bool $toArray = true)
+    public static function parse(string $data, bool $toArray = true): array|stdClass
     {
         if (is_file($data)) {
             return self::parseFile($data, $toArray);
@@ -247,7 +240,7 @@ class JsonHelper
      *
      * @return array|stdClass
      */
-    public static function parseFile(string $jsonFile, bool $toArray = true)
+    public static function parseFile(string $jsonFile, bool $toArray = true): array|stdClass
     {
         if (!is_file($jsonFile)) {
             throw new InvalidArgumentException("File not found: $jsonFile");
@@ -264,7 +257,7 @@ class JsonHelper
      * @return array|stdClass
      * @noinspection PhpDocMissingThrowsInspection
      */
-    public static function parseString(string $json, bool $toArray = true)
+    public static function parseString(string $json, bool $toArray = true): array|stdClass
     {
         if (!$json = trim($json)) {
             return $toArray ? [] : new stdClass();

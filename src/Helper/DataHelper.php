@@ -38,7 +38,7 @@ class DataHelper
      *
      * @return bool
      */
-    public static function boolean($val, bool $nullAsFalse = false): bool
+    public static function boolean(int|string $val, bool $nullAsFalse = false): bool
     {
         if ($val !== null && !is_scalar($val)) {
             return (bool)$val;
@@ -55,7 +55,7 @@ class DataHelper
      *
      * @return bool
      */
-    public static function toBool($val, bool $nullAsFalse = false): bool
+    public static function toBool(mixed $val, bool $nullAsFalse = false): bool
     {
         return self::boolean($val, $nullAsFalse);
     }
@@ -65,7 +65,7 @@ class DataHelper
      *
      * @return string
      */
-    public static function toString($val): string
+    public static function toString(mixed $val): string
     {
         if (is_scalar($val)) {
             if (is_bool($val)) {

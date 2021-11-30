@@ -32,7 +32,7 @@ interface PipelineInterface
      *
      * @return mixed
      */
-    public function run($payload);
+    public function run(mixed $payload): mixed;
 
     /**
      * Makes pipeline callable. Does same as {@see run()}
@@ -41,5 +41,5 @@ interface PipelineInterface
      *
      * @return mixed
      */
-    public function __invoke($payload);
+    public function __invoke(mixed $payload): mixed;
 }
