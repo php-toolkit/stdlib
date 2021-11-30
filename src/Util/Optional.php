@@ -5,6 +5,7 @@ namespace Toolkit\Stdlib\Util;
 use ArrayAccess;
 use RuntimeException;
 use Throwable;
+use Toolkit\Stdlib\Helper\Valid;
 use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Util\Stream\DataStream;
 use UnexpectedValueException;
@@ -36,7 +37,7 @@ final class Optional
      */
     public static function of(mixed $value): self
     {
-        return new self(Obj::requireNotNull($value));
+        return new self(Valid::notNull($value));
     }
 
     /**
