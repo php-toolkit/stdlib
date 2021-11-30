@@ -14,7 +14,7 @@ trait QuickInitTrait
      *
      * @return static
      */
-    public static function new(array $config = [])
+    public static function new(array $config = []): static
     {
         return new static($config);
     }
