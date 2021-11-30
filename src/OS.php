@@ -48,7 +48,7 @@ class OS
      *************************************************************************/
 
     /** @var string|null */
-    private static $homeDir;
+    private static ?string $homeDir = null;
 
     /**
      * @param bool $refresh
@@ -291,7 +291,7 @@ class OS
      *
      * @return mixed
      */
-    public static function getEnvVal(string $key, string $default = '')
+    public static function getEnvVal(string $key, string $default = ''): mixed
     {
         return getenv($key) ?: ($_SERVER[$key] ?? $default);
     }
@@ -309,11 +309,11 @@ class OS
 
     /**
      * @param string $key
-     * @param string|int $value
+     * @param int|string $value
      *
      * @return bool
      */
-    public static function setEnvVar(string $key, $value): bool
+    public static function setEnvVar(string $key, int|string $value): bool
     {
         $_ENV[$key] = $value;
         $_SERVER[$key] = $value;
@@ -369,11 +369,11 @@ class OS
     /**
      * Returns if the file descriptor is an interactive terminal or not.
      *
-     * @param int|resource $fileDescriptor
+     * @param int $fileDescriptor
      *
      * @return boolean
      */
-    public static function isInteractive($fileDescriptor): bool
+    public static function isInteractive(int $fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }

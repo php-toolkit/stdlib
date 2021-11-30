@@ -61,7 +61,7 @@ class ArrayHelper
      *
      * @return bool
      */
-    public static function accessible($value): bool
+    public static function accessible(mixed $value): bool
     {
         return is_array($value) || $value instanceof ArrayAccess;
     }
@@ -86,7 +86,7 @@ class ArrayHelper
      *
      * @return Traversable
      */
-    public static function toIterator($array): Traversable
+    public static function toIterator(mixed $array): Traversable
     {
         if (!$array instanceof Traversable) {
             $array = new ArrayObject((array)$array);
@@ -98,12 +98,12 @@ class ArrayHelper
     /**
      * array data to object
      *
-     * @param array|Traversable $array
+     * @param Traversable|array $array
      * @param string            $class
      *
      * @return mixed
      */
-    public static function toObject($array, string $class = stdClass::class)
+    public static function toObject(Traversable|array $array, string $class = stdClass::class): mixed
     {
         $object = new $class;
 
@@ -127,7 +127,7 @@ class ArrayHelper
      *
      * @return array|string
      */
-    public static function valueTrim(array $data)
+    public static function valueTrim(array $data): array|string
     {
         if (is_scalar($data)) {
             return trim($data);
@@ -148,7 +148,7 @@ class ArrayHelper
      *
      * @return bool
      */
-    public static function keyExists($key, array $arr): bool
+    public static function keyExists(int|string $key, array $arr): bool
     {
         return array_key_exists(strtolower($key), array_change_key_case($arr));
     }
@@ -176,12 +176,12 @@ class ArrayHelper
     /**
      * 将数组中的值全部转为大写或小写
      *
-     * @param array|iterable $arr
+     * @param Traversable|array $arr
      * @param bool           $toUpper
      *
      * @return array
      */
-    public static function changeValueCase($arr, bool $toUpper = true): array
+    public static function changeValueCase(Traversable|array $arr, bool $toUpper = true): array
     {
         $function = $toUpper ? 'strtoupper' : 'strtolower';
         $newArr   = []; //格式化后的数组
@@ -202,13 +202,13 @@ class ArrayHelper
      * ******* 检查 一个或多个值是否全部存在数组中 *******
      * 有一个不存在即返回 false
      *
-     * @param string|array $check
+     * @param array|string $check
      * @param array        $sampleArr 只能检查一维数组
      *                                注： 不分类型， 区分大小写  2 == '2' ‘a' != 'A'
      *
      * @return bool
      */
-    public static function valueExistsAll($check, array $sampleArr): bool
+    public static function valueExistsAll(array|string $check, array $sampleArr): bool
     {
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
@@ -223,12 +223,12 @@ class ArrayHelper
      * ******* 检查 一个或多个值是否存在数组中 *******
      * 有一个存在就返回 true 都不存在 return false
      *
-     * @param string|array $check
+     * @param array|string $check
      * @param array        $sampleArr 只能检查一维数组
      *
      * @return bool
      */
-    public static function valueExistsOne($check, array $sampleArr): bool
+    public static function valueExistsOne(array|string $check, array $sampleArr): bool
     {
         // 以逗号分隔的会被拆开，组成数组
         if (is_string($check)) {
@@ -243,13 +243,13 @@ class ArrayHelper
      * ******* 不区分大小写，检查 一个或多个值是否 全存在数组中 *******
      * 有一个不存在即返回 false
      *
-     * @param string|array   $need
-     * @param array|iterable $arr  只能检查一维数组
+     * @param array|string $need
+     * @param Traversable|array $arr  只能检查一维数组
      * @param bool           $type 是否同时验证类型
      *
      * @return bool | string 不存在的会返回 检查到的 字段，判断时 请使用 ArrHelper::existsAll($need,$arr)===true 来验证是否全存在
      */
-    public static function existsAll($need, $arr, bool $type = false)
+    public static function existsAll(array|string $need, Traversable|array $arr, bool $type = false): bool|string
     {
         if (is_array($need)) {
             foreach ((array)$need as $v) {
@@ -274,13 +274,13 @@ class ArrayHelper
      * ******* 不区分大小写，检查 一个或多个值是否存在数组中 *******
      * 有一个存在就返回 true 都不存在 return false
      *
-     * @param string|array   $need
-     * @param array|iterable $arr  只能检查一维数组
+     * @param array|string $need
+     * @param Traversable|array $arr  只能检查一维数组
      * @param bool           $type 是否同时验证类型
      *
      * @return bool
      */
-    public static function existsOne($need, $arr, bool $type = false): bool
+    public static function existsOne(array|string $need, Traversable|array $arr, bool $type = false): bool
     {
         if (is_array($need)) {
             foreach ((array)$need as $v) {
@@ -456,7 +456,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function except(array $array, $keys): array
+    public static function except(array $array, array|string $keys): array
     {
         static::forget($array, $keys);
 
@@ -467,11 +467,11 @@ class ArrayHelper
      * Determine if the given key exists in the provided array.
      *
      * @param ArrayAccess|array $array
-     * @param string|int        $key
+     * @param int|string $key
      *
      * @return bool
      */
-    public static function exists(array $array, $key): bool
+    public static function exists(array $array, int|string $key): bool
     {
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
@@ -515,7 +515,7 @@ class ArrayHelper
      *
      * @return void
      */
-    public static function forget(array &$array, $keys): void
+    public static function forget(array &$array, array|string $keys): void
     {
         $original = &$array;
         $keys     = (array)$keys;
@@ -554,12 +554,12 @@ class ArrayHelper
     /**
      * Check if an item or items exist in an array using "dot" notation.
      *
-     * @param ArrayAccess|array $array
-     * @param string|array      $keys
+     * @param Traversable|array $array
+     * @param array|string $keys
      *
      * @return bool
      */
-    public static function has($array, $keys): bool
+    public static function has(Traversable|array $array, array|string $keys): bool
     {
         if (null === $keys) {
             return false;
@@ -577,7 +577,6 @@ class ArrayHelper
 
         foreach ($keys as $key) {
             $subKeyArray = $array;
-
             if (static::exists($array, $key)) {
                 continue;
             }
@@ -599,11 +598,11 @@ class ArrayHelper
      *
      * @param array $array
      * @param mixed $value
-     * @param mixed $key
+     * @param mixed|null $key
      *
      * @return array
      */
-    public static function prepend(array $array, $value, $key = null): array
+    public static function prepend(array $array, mixed $value, mixed $key = null): array
     {
         if (null === $key) {
             array_unshift($array, $value);
@@ -617,13 +616,13 @@ class ArrayHelper
     /**
      * remove the $key of the $arr, and return value.
      *
-     * @param string|int $key
+     * @param int|string $key
      * @param array      $arr
-     * @param mixed      $default
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public static function remove(array &$arr, $key, $default = null)
+    public static function remove(array &$arr, int|string $key, mixed $default = null): mixed
     {
         if (isset($arr[$key])) {
             $value = $arr[$key];
@@ -638,13 +637,13 @@ class ArrayHelper
     /**
      * Get a value from the array, and remove it.
      *
-     * @param array|ArrayAccess $array
-     * @param string|int        $key
-     * @param mixed             $default
+     * @param ArrayAccess|array $array
+     * @param int|string $key
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public static function pull(&$array, $key, $default = null)
+    public static function pull(ArrayAccess|array $array, int|string $key, mixed $default = null): mixed
     {
         $value = static::get($array, $key, $default);
 
@@ -661,7 +660,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function only(array $array, $keys): array
+    public static function only(array $array, array|string $keys): array
     {
         return array_intersect_key($array, array_flip((array)$keys));
     }
@@ -700,7 +699,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function wrap($value): array
+    public static function wrap(mixed $value): array
     {
         return !is_array($value) ? (array)$value : $value;
     }
@@ -712,7 +711,7 @@ class ArrayHelper
     /**
      * array 递归 转换成 字符串
      *
-     * @param array  $array
+     * @param array $array
      * @param int    $length
      * @param int    $cycles 至多循环六次 $num >= 6
      * @param bool   $showKey
@@ -723,7 +722,7 @@ class ArrayHelper
      * @return string
      */
     public static function toString(
-        $array,
+        array $array,
         int $length = 800,
         int $cycles = 6,
         bool $showKey = true,
@@ -741,7 +740,7 @@ class ArrayHelper
         foreach ($array as $key => $value) {
             $num++;
 
-            if ($num >= $cycles || strlen($string) > (int)$length) {
+            if ($num >= $cycles || strlen($string) > $length) {
                 $string .= '... ...';
                 break;
             }

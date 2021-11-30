@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.0] #
+        php: [8.0, 8.1] #
 #        os: [ubuntu-latest, macOS-latest] # windows-latest,
 
     steps:

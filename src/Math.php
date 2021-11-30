@@ -24,53 +24,53 @@ use const PHP_ROUND_HALF_UP;
 class Math extends IntHelper
 {
     /**
-     * @param int|float $value
+     * @param float|int $value
      *
      * @return int
      */
-    public static function floor($value): int
+    public static function floor(float|int $value): int
     {
         return (int)floor((float)$value);
     }
 
     /**
-     * @param int|float $value
+     * @param float|int $value
      *
      * @return int
      */
-    public static function ceil($value): int
+    public static function ceil(float|int $value): int
     {
         return (int)ceil((float)$value);
     }
 
     /**
-     * @param int|float $value
+     * @param float|int $value
      *
      * @return int
      */
-    public static function abs($value): int
+    public static function abs(float|int $value): int
     {
         return (int)abs($value);
     }
 
     /**
-     * @param int|float $value
+     * @param float|int $value
      * @param int $precision
      * @param int $mode
      *
      * @return float
      */
-    public static function round($value, int $precision = 0, int $mode = PHP_ROUND_HALF_UP): float
+    public static function round(float|int $value, int $precision = 0, int $mode = PHP_ROUND_HALF_UP): float
     {
         return round((float)$value, $precision, $mode);
     }
 
     /**
-     * @param int|float $value
+     * @param float|int $value
      *
      * @return int
      */
-    public static function roundInt($value): int
+    public static function roundInt(float|int $value): int
     {
         return (int)round((float)$value);
     }

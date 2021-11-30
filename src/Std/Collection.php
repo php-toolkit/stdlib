@@ -23,7 +23,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      *
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @param array $data
@@ -62,7 +62,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      *
      * @return $this
      */
-    public function set(string $key, $value): self
+    public function set(string $key, mixed $value): self
     {
         $this->data[$key] = $value;
         return $this;
@@ -87,11 +87,11 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      * Get collection item for key
      *
      * @param string $key     The data key
-     * @param mixed  $default The default value to return if data key does not exist
+     * @param mixed|null $default The default value to return if data key does not exist
      *
      * @return mixed The key's value, or the default value
      */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         return $this->has($key) ? $this->data[$key] : $default;
     }
@@ -157,7 +157,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      *
      * @param array $items Key-value array of data to append to this collection
      */
-    public function replace(array $items)
+    public function replace(array $items): void
     {
         foreach ($items as $key => $value) {
             $this->set($key, $value);
@@ -286,9 +286,9 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      *
      * @param string $key The data key
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function remove(string $key)
+    public function remove(string $key): mixed
     {
         $value = null;
         if ($this->has($key)) {
@@ -319,36 +319,36 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
     /**
      * Does this collection have a given key?
      *
-     * @param string $key The data key
+     * @param string $offset The data key
      *
      * @return bool
      */
-    public function offsetExists($key): bool
+    public function offsetExists($offset): bool
     {
-        return $this->has($key);
+        return $this->has($offset);
     }
 
     /**
      * Get collection item for key
      *
-     * @param string $key The data key
+     * @param string $offset The data key
      *
      * @return mixed The key's value, or the default value
      */
-    public function offsetGet($key)
+    public function offsetGet($offset): mixed
     {
-        return $this->get($key);
+        return $this->get($offset);
     }
 
     /**
      * Set collection item
      *
-     * @param string $key   The data key
+     * @param string $offset   The data key
      * @param mixed  $value The data value
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($offset, $value): void
     {
-        $this->set($key, $value);
+        $this->set($offset, $value);
     }
 
     /**
@@ -400,12 +400,11 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
     }
 
     /**
-     * @param string     $serialized
-     * @param bool|array $allowedClasses
+     * @param string $data
      */
-    public function unserialize($serialized, $allowedClasses = false)
+    public function unserialize($data): void
     {
-        $this->data = unserialize($serialized, ['allowed_classes' => $allowedClasses]);
+        $this->data = unserialize($data, ['allowed_classes' => null]);
     }
 
     /********************************************************************************

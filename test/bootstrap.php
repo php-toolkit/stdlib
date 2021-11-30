@@ -13,13 +13,13 @@ date_default_timezone_set('Asia/Shanghai');
 spl_autoload_register(static function ($class): void {
     $file = '';
 
-    if (0 === strpos($class, 'Toolkit\Stdlib\Example\\')) {
+    if (str_starts_with($class, 'Toolkit\Stdlib\Example\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\Example\\')));
         $file = dirname(__DIR__) . "/example/$path.php";
-    } elseif (0 === strpos($class, 'Toolkit\StdlibTest\\')) {
+    } elseif (str_starts_with($class, 'Toolkit\StdlibTest\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\StdlibTest\\')));
-        $file = __DIR__ . "/{$path}.php";
-    } elseif (0 === strpos($class, 'Toolkit\Stdlib\\')) {
+        $file = __DIR__ . "/$path.php";
+    } elseif (str_starts_with($class, 'Toolkit\Stdlib\\')) {
         $path = str_replace('\\', '/', substr($class, strlen('Toolkit\Stdlib\\')));
         $file = dirname(__DIR__) . "/src/$path.php";
     }

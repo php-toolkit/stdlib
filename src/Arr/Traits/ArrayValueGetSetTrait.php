@@ -38,7 +38,7 @@ trait ArrayValueGetSetTrait
      *
      * @return array
      */
-    public static function add(array $array, $key, $value): array
+    public static function add(array $array, string $key, mixed $value): array
     {
         if (static::has($array, $key)) {
             static::set($array, $key, $value);
@@ -51,19 +51,15 @@ trait ArrayValueGetSetTrait
      * Get an item from an array using "dot" notation.
      *
      * @param ArrayAccess|array $array
-     * @param string            $key
-     * @param mixed             $default
+     * @param string $key
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public static function get($array, $key, $default = null)
+    public static function get(ArrayAccess|array $array, string $key, mixed $default = null): mixed
     {
         if (!static::accessible($array)) {
             return Php::value($default);
-        }
-
-        if (null === $key) {
-            return $array;
         }
 
         if (static::exists($array, $key)) {
@@ -91,16 +87,15 @@ trait ArrayValueGetSetTrait
      *
      * @return array
      */
-    public static function set(array &$array, $key, $value): array
+    public static function set(array &$array, string $key, mixed $value): array
     {
-        if (null === $key) {
-            return ($array = $value);
-        }
+        // if (null === $key) {
+        //     return ($array = $value);
+        // }
 
         $keys = explode('.', $key);
-
         while (count($keys) > 1) {
-            $key = array_shift($keys);
+            $key = (string)array_shift($keys);
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
@@ -168,14 +163,14 @@ trait ArrayValueGetSetTrait
      * Get data from array or object by path.
      * Example: `DataCollector::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
      *
-     * @param array|Traversable $data      An array or object to get value.
+     * @param Traversable|array $data      An array or object to get value.
      * @param string            $path      The key path.
-     * @param mixed             $default
+     * @param mixed|null $default
      * @param string            $separator Separator of paths.
      *
      * @return mixed Found value, null if not exists.
      */
-    public static function getByPath($data, string $path, $default = null, string $separator = '.')
+    public static function getByPath(Traversable|array $data, string $path, mixed $default = null, string $separator = '.'): mixed
     {
         if (isset($data[$path])) {
             return $data[$path];
@@ -206,11 +201,11 @@ trait ArrayValueGetSetTrait
      *
      * @param array $data
      * @param array $nodes
-     * @param mixed $default
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public static function getValueByNodes(array $data, array $nodes, $default = null)
+    public static function getValueByNodes(array $data, array $nodes, mixed $default = null): mixed
     {
         $temp = $data;
 
@@ -229,12 +224,12 @@ trait ArrayValueGetSetTrait
     /**
      * setByPath
      *
-     * @param array|ArrayAccess &$data
+     * @param ArrayAccess|array &$data
      * @param string             $path
      * @param mixed              $value
      * @param string             $separator
      */
-    public static function setByPath(&$data, string $path, $value, string $separator = '.'): void
+    public static function setByPath(ArrayAccess|array &$data, string $path, mixed $value, string $separator = '.'): void
     {
         if (!str_contains($path, $separator)) {
             $data[$path] = $value;
