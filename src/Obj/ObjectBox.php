@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Obj\Exception\ContainerException;
 use Toolkit\Stdlib\Obj\Exception\NotFoundException;
+use Toolkit\Stdlib\Obj\Traits\AutoConfigTrait;
 use function array_keys;
 use function count;
 use function is_array;
@@ -25,6 +26,8 @@ use function method_exists;
  */
 class ObjectBox implements ContainerInterface
 {
+    use AutoConfigTrait;
+
     /**
      * only create object on first fetch.
      */
@@ -67,16 +70,6 @@ class ObjectBox implements ContainerInterface
     private array $definitions = [];
 
     /**
-     * Class constructor.
-     *
-     * @param array $options
-     */
-    public function __construct(array $options = [])
-    {
-        Obj::init($this, $options);
-    }
-
-    /**
      * @return static
      */
     public static function global(): self
@@ -113,11 +106,11 @@ class ObjectBox implements ContainerInterface
                 if ($callInit && method_exists($obj, $this->initMethod)) {
                     $obj->init();
                 }
-            }
 
-            // storage it on type is TYPE_SINGLETON
-            if ($opt['objType'] ?? self::TYPE_SINGLETON) {
-                $this->objects[$id] = $obj;
+                // storage it on type is TYPE_SINGLETON
+                if ($opt['objType'] ?? self::TYPE_SINGLETON) {
+                    $this->objects[$id] = $obj;
+                }
             }
 
             // type TYPE_PROTOTYPE always create new object.

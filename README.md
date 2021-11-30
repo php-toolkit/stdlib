@@ -4,6 +4,7 @@
 [![Php Version](https://img.shields.io/badge/php-%3E8.0-brightgreen.svg?maxAge=2592000)](https://packagist.org/packages/toolkit/stdlib)
 [![Latest Stable Version](http://img.shields.io/packagist/v/toolkit/stdlib.svg)](https://packagist.org/packages/toolkit/stdlib)
 [![Github Actions Status](https://github.com/php-toolkit/stdlib/workflows/Unit-Tests/badge.svg)](https://github.com/php-toolkit/stdlib/actions)
+[![Docs on pages](https://img.shields.io/badge/DocsOn-GhPages-brightgreen.svg?maxAge=2592000)](https://php-toolkit.github.io/stdlib/)
 
 🧰 Stdlib - Useful basic tools library for PHP development.
 

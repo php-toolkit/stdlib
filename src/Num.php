@@ -12,11 +12,11 @@ namespace Toolkit\Stdlib;
 use Toolkit\Stdlib\Helper\NumHelper;
 
 /**
- * Class Math
+ * Class Num
  *
  * @package Toolkit\Stdlib
  */
-class Math extends NumHelper
+class Num extends NumHelper
 {
 
 }

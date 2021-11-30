@@ -7,6 +7,8 @@
  * @license  MIT
  */
 
+use JetBrains\PhpStorm\NoReturn;
+
 if (!function_exists('vdump')) {
     /**
      * Dump data like var_dump
@@ -34,6 +36,7 @@ if (!function_exists('edump')) {
      *
      * @param mixed ...$vars
      */
+    #[NoReturn]
     function edump(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -56,6 +59,7 @@ if (!function_exists('ddump')) {
      *
      * @param mixed ...$vars
      */
+    #[NoReturn]
     function ddump(...$vars): void
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
