@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-    name: Test on php ${{ matrix.os }}
+    name: Test on php ${{ matrix.php }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
