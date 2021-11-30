@@ -93,7 +93,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->has($key) ? $this->data[$key] : $default;
+        return $this->data[$key] ?? $default;
     }
 
     /**
