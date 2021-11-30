@@ -49,7 +49,7 @@ trait StringTruncateHelperTrait
      *
      * @return bool|string
      */
-    public static function substr(string $str, int $start, int $length = null, string $encoding = 'utf-8')
+    public static function substr(string $str, int $start, int $length = null, string $encoding = 'utf-8'): bool|string
     {
         if (function_exists('mb_substr')) {
             return mb_substr($str, $start, $length ?? self::strlen($str), $encoding);
@@ -106,7 +106,7 @@ trait StringTruncateHelperTrait
      *
      * @return string
      */
-    public static function zhSubStr($str, int $start = 0, int $length = 0, string $charset = 'utf-8', bool $suffix = true): string
+    public static function zhSubStr(string $str, int $start = 0, int $length = 0, string $charset = 'utf-8', bool $suffix = true): string
     {
         if (function_exists('mb_substr')) {
             if (mb_strlen($str, $charset) <= $length) {
@@ -128,7 +128,7 @@ trait StringTruncateHelperTrait
             $slice = implode('', array_slice($match[0], $start, $length));
         }
 
-        return (bool)$suffix ? $slice . '…' : $slice;
+        return $suffix ? $slice . '…' : $slice;
     }
 
     /**
@@ -191,7 +191,7 @@ trait StringTruncateHelperTrait
      *
      * @return string
      */
-    public static function truncate3(string $text, int $length = 120, array $options = [])
+    public static function truncate3(string $text, int $length = 120, array $options = []): string
     {
         $default = [
             'ellipsis' => '...',

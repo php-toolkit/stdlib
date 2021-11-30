@@ -74,30 +74,33 @@ trait StringCheckHelperTrait
 
     /**
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function notContains(string $string, $needle): bool
+    public static function notContains(string $string, array|string $needle): bool
     {
         return !self::has($string, $needle);
     }
 
     /**
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function contains(string $string, $needle): bool
+    public static function contains(string $string, array|string $needle): bool
     {
         return self::has($string, $needle);
     }
 
     /**
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function has(string $string, $needle): bool
+    public static function has(string $string, array|string $needle): bool
     {
         if (is_string($needle)) {
             return str_contains($string, $needle);
@@ -115,20 +118,22 @@ trait StringCheckHelperTrait
 
     /**
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function containsAll(string $string, $needle): bool
+    public static function containsAll(string $string, array|string $needle): bool
     {
         return self::hasAll($string, $needle);
     }
 
     /**
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function hasAll(string $string, $needle): bool
+    public static function hasAll(string $string, array|string $needle): bool
     {
         if (is_string($needle)) {
             return str_contains($string, $needle);
@@ -148,10 +153,11 @@ trait StringCheckHelperTrait
      * Alias of the `ihas()`
      *
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function icontains(string $string, $needle): bool
+    public static function icontains(string $string, array|string $needle): bool
     {
         return self::ihas($string, $needle);
     }
@@ -160,10 +166,11 @@ trait StringCheckHelperTrait
      * Like `has` but will ignore case
      *
      * @param string       $string
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function ihas(string $string, $needle): bool
+    public static function ihas(string $string, array|string $needle): bool
     {
         if (is_string($needle)) {
             return stripos($string, $needle) !== false;
@@ -183,10 +190,11 @@ trait StringCheckHelperTrait
      * Check all substr must in the haystack, will ignore case
      *
      * @param string       $haystack
-     * @param string|array $needle
+     * @param array|string $needle
+     *
      * @return bool
      */
-    public static function iHasAll(string $haystack, $needle): bool
+    public static function iHasAll(string $haystack, array|string $needle): bool
     {
         if (is_string($needle)) {
             return stripos($haystack, $needle) !== false;
@@ -212,7 +220,7 @@ trait StringCheckHelperTrait
      *
      * @return false|int
      */
-    public static function pos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8')
+    public static function pos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8'): bool|int
     {
         return self::strpos($str, $find, $offset, $encoding);
     }
@@ -225,7 +233,7 @@ trait StringCheckHelperTrait
      *
      * @return false|int
      */
-    public static function strpos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8')
+    public static function strpos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8'): bool|int
     {
         return function_exists('mb_strpos') ?
             mb_strpos($str, $find, $offset, $encoding) :
@@ -242,7 +250,7 @@ trait StringCheckHelperTrait
      *
      * @return false|int
      */
-    public static function ipos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8')
+    public static function ipos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8'): bool|int
     {
         return self::strpos($str, $find, $offset, $encoding);
     }
@@ -255,7 +263,7 @@ trait StringCheckHelperTrait
      *
      * @return false|int
      */
-    public static function stripos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8')
+    public static function stripos(string $str, string $find, int $offset = 0, string $encoding = 'UTF-8'): bool|int
     {
         return function_exists('mb_stripos') ?
             mb_stripos($str, $find, $offset, $encoding) :
@@ -269,7 +277,7 @@ trait StringCheckHelperTrait
      * @param string $encoding
      * @return bool|int
      */
-    public static function strrpos(string $str, string $find, int $offset = 0, string $encoding = 'utf-8')
+    public static function strrpos(string $str, string $find, int $offset = 0, string $encoding = 'utf-8'): bool|int
     {
         return function_exists('mb_strrpos') ?
             mb_strrpos($str, $find, $offset, $encoding) :
@@ -337,11 +345,11 @@ trait StringCheckHelperTrait
      * check $str is start withs one of $needle
      *
      * @param string $str
-     * @param string|array $needle
+     * @param array|string $needle
      *
      * @return bool
      */
-    public static function isStartWiths(string $str, $needle): bool
+    public static function isStartWiths(string $str, array|string $needle): bool
     {
         if (is_array($needle)) {
             foreach ($needle as $sub) {
@@ -357,11 +365,11 @@ trait StringCheckHelperTrait
 
     /**
      * @param string $str
-     * @param string|array $needle
+     * @param array|string $needle
      *
      * @return bool
      */
-    public static function startWiths(string $str, $needle): bool
+    public static function startWiths(string $str, array|string $needle): bool
     {
         return self::isStartWiths($str, $needle);
     }
@@ -418,22 +426,22 @@ trait StringCheckHelperTrait
 
     /**
      * @param string $str
-     * @param string|array $needle
+     * @param array|string $needle
      *
      * @return bool
      */
-    public static function endWiths(string $str, $needle): bool
+    public static function endWiths(string $str, array|string $needle): bool
     {
         return self::hasSuffixes($str, $needle);
     }
 
     /**
      * @param string $str
-     * @param string|array $needle
+     * @param array|string $needle
      *
      * @return bool
      */
-    public static function isEndWiths(string $str, $needle): bool
+    public static function isEndWiths(string $str, array|string $needle): bool
     {
         return self::hasSuffixes($str, $needle);
     }
@@ -442,11 +450,11 @@ trait StringCheckHelperTrait
      * Assert is start withs one
      *
      * @param string $str
-     * @param string|array $needles
+     * @param array|string $needles
      *
      * @return bool
      */
-    public static function hasSuffixes(string $str, $needles): bool
+    public static function hasSuffixes(string $str, array|string $needles): bool
     {
         if (is_array($needles)) {
             foreach ($needles as $needle) {

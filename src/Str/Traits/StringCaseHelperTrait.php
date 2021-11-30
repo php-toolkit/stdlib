@@ -44,11 +44,11 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtolower()`
      *
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function lower($str): string
+    public static function lower(int|string $str): string
     {
         return static::strtolower($str);
     }
@@ -56,11 +56,11 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtolower()`
      *
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function toLower($str): string
+    public static function toLower(int|string $str): string
     {
         return static::strtolower($str);
     }
@@ -86,11 +86,11 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtoupper()`
      *
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function upper($str): string
+    public static function upper(int|string $str): string
     {
         return static::toUpper($str);
     }
@@ -98,11 +98,11 @@ trait StringCaseHelperTrait
     /**
      * Alias of the `strtoupper()`
      *
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function toUpper($str): string
+    public static function toUpper(int|string $str): string
     {
         if (!$str || !is_scalar($str)) {
             return '';
@@ -116,21 +116,21 @@ trait StringCaseHelperTrait
     }
 
     /**
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function strtoupper($str): string
+    public static function strtoupper(int|string $str): string
     {
        return self::toUpper($str);
     }
 
     /**
-     * @param string|int $str
+     * @param int|string $str
      *
      * @return string
      */
-    public static function upFirst($str): string
+    public static function upFirst(int|string $str): string
     {
         if (!$str || !is_scalar($str)) {
             return '';

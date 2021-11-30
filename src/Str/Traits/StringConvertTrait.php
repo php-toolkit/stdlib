@@ -46,7 +46,7 @@ trait StringConvertTrait
      *
      * @return bool|string
      */
-    public static function tryToBool(string $val)
+    public static function tryToBool(string $val): bool|string
     {
         // check it is a bool value.
         if (false !== stripos(StringHelper::TRUE_WORDS, "|$val|")) {
@@ -100,7 +100,7 @@ trait StringConvertTrait
      *
      * @return float|int|string|bool
      */
-    public static function toTyped(string $str, bool $parseBool = false, int $intMaxLen = 11)
+    public static function toTyped(string $str, bool $parseBool = false, int $intMaxLen = 11): float|bool|int|string
     {
         if (is_numeric($str) && strlen($str) <= $intMaxLen) {
             if (str_contains($str, '.')) {

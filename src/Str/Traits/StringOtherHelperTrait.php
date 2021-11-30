@@ -94,7 +94,7 @@ trait StringOtherHelperTrait
      *
      * @return mixed
      */
-    public static function deleteStripSpace($fileName, $type = 0)
+    public static function deleteStripSpace(string $fileName, int $type = 0): mixed
     {
         $data = trim(file_get_contents($fileName));
         $data = str_starts_with($data, '<?php') ? substr($data, 5) : $data;

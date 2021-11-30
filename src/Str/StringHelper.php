@@ -61,7 +61,7 @@ abstract class StringHelper
     public const TRUE_WORDS  = '|on|yes|true|';
     public const FALSE_WORDS = '|off|no|false|';
 
-    public static $defaultEncoding = 'UTF-8';
+    public static string $defaultEncoding = 'UTF-8';
 
     use StringCaseHelperTrait;
     use StringCheckHelperTrait;
@@ -72,25 +72,25 @@ abstract class StringHelper
 
     /**
      * @param string|mixed $str
-     * @param int|float    $padLen
+     * @param float|int $padLen
      * @param string       $padStr
      * @param int          $padType
      *
      * @return string
      */
-    public static function pad($str, $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
+    public static function pad(mixed $str, float|int $padLen, string $padStr = ' ', int $padType = STR_PAD_RIGHT): string
     {
         return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr, $padType) : (string)$str;
     }
 
     /**
      * @param string|mixed $str
-     * @param int|float    $padLen
+     * @param float|int $padLen
      * @param string       $padStr
      *
      * @return string
      */
-    public static function padLeft($str, $padLen, string $padStr = ' '): string
+    public static function padLeft(mixed $str, float|int $padLen, string $padStr = ' '): string
     {
         return $padLen > 0 ? str_pad((string)$str, (int)$padLen, $padStr, STR_PAD_LEFT) : (string)$str;
     }
@@ -228,12 +228,12 @@ abstract class StringHelper
     /**
      * Generate order number
      *
-     * @param string|int $prefix
+     * @param int|string $prefix
      *
      * @return string If no prefix, default length is 20
      * @throws Exception
      */
-    public static function genNOV1($prefix = '', array $randomRange = []): string
+    public static function genNOV1(int|string $prefix = '', array $randomRange = []): string
     {
         $host = gethostname();
         $time = microtime(true) * 10000;
@@ -408,7 +408,7 @@ abstract class StringHelper
      *
      * @return string
      */
-    public static function wrap($str, string $wrapChar): string
+    public static function wrap(mixed $str, string $wrapChar): string
     {
         $str = (string)$str;
         if ($str === '') {

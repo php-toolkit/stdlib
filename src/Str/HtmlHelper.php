@@ -59,13 +59,13 @@ class HtmlHelper
     /**
      * @form yii1
      *
-     * @param array  $data data to be encoded
+     * @param array $data data to be encoded
      * @param string $charset
      *
      * @return array the encoded data
      * @see  http://www.php.net/manual/en/function.htmlspecialchars.php
      */
-    public static function encodeArray($data, string $charset = 'utf-8'): array
+    public static function encodeArray(array $data, string $charset = 'utf-8'): array
     {
         $d = [];
 
@@ -101,7 +101,7 @@ class HtmlHelper
      *
      * @return array|string
      */
-    public static function escape($data, int $type = 0, string $encoding = 'UTF-8')
+    public static function escape($data, int $type = 0, string $encoding = 'UTF-8'): array|string
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
@@ -129,13 +129,13 @@ class HtmlHelper
     /**
      * 去掉html转义
      *
-     * @param string|array $data
-     * @param int          $type
+     * @param array|string $data
+     * @param int $type
      * @param string       $encoding
      *
      * @return array|string
      */
-    public static function unescap($data, $type = 0, string $encoding = 'UTF-8')
+    public static function unescap(array|string $data, int $type = 0, string $encoding = 'UTF-8'): array|string
     {
         if (is_array($data)) {
             foreach ($data as $k => $v) {
@@ -245,7 +245,7 @@ class HtmlHelper
      * @param mixed  $object Object to display
      * @param string $type
      */
-    public static function fd($object, $type = 'log'): void
+    public static function fd(mixed $object, string $type = 'log'): void
     {
         $types = ['log', 'debug', 'info', 'warn', 'error', 'assert'];
 
