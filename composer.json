@@ -23,6 +23,9 @@
     "php": ">=8.0",
     "ext-mbstring": "*"
   },
+  "require-dev": {
+    "psr/container": "^2.0"
+  },
   "autoload": {
     "psr-4": {
       "Toolkit\\Stdlib\\": "src/"
