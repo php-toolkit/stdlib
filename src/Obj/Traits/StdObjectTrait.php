@@ -97,21 +97,21 @@ trait StdObjectTrait
         //     return call_user_func_array( array($this, $method), (array) $args);
         // }
 
-        throw new InvalidArgumentException('Called a Unknown method! ' . get_class($this) . "->{$method}()");
+        throw new InvalidArgumentException('Called a Unknown method: ' . get_class($this) . "->$method()");
     }
 
     /**
      * @param string $method
-     * @param array  $args
+     * @param array $args
      *
      * @return mixed
      */
-    public static function __callStatic(string $method, $args)
+    public static function __callStatic(string $method, array $args)
     {
         if (method_exists(self::class, $method)) {
-            return call_user_func_array([self::class, $method], (array)$args);
+            return call_user_func_array([self::class, $method], $args);
         }
 
-        throw new InvalidArgumentException('Called a Unknown static method! [ ' . self::class . "::{$method}()]");
+        throw new InvalidArgumentException('Called a Unknown static method:  ' . self::class . "::$method()");
     }
 }

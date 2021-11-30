@@ -27,14 +27,14 @@ trait ObjectPoolTrait
     /**
      * @var SplStack[] [class => \SplStack]
      */
-    private static $pool = [];
+    private static array $pool = [];
 
     /**
      * @param string $class
      *
      * @return mixed
      */
-    public static function get(string $class)
+    public static function get(string $class): mixed
     {
         $stack = self::getStack($class);
 
@@ -46,9 +46,9 @@ trait ObjectPoolTrait
     }
 
     /**
-     * @param stdClass|string $object
+     * @param string|stdClass $object
      */
-    public static function put($object): void
+    public static function put(string|stdClass $object): void
     {
         if (is_string($object)) {
             $object = new $object;
@@ -63,7 +63,7 @@ trait ObjectPoolTrait
      *
      * @return mixed
      */
-    public static function use(string $class, Closure $handler)
+    public static function use(string $class, Closure $handler): mixed
     {
         $obj = self::get($class);
         $ret = $handler($obj);
@@ -77,7 +77,7 @@ trait ObjectPoolTrait
      *
      * @return SplStack
      */
-    public static function getStack($class): SplStack
+    public static function getStack(string|stdClass $class): SplStack
     {
         $class = is_string($class) ? $class : get_class($class);
 

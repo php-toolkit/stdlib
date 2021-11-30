@@ -31,7 +31,7 @@ trait ArrayAccessByPropertyTrait
      *
      * @return  boolean  True if the offset exists, false otherwise.
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return property_exists($this, $offset);
     }
@@ -43,7 +43,7 @@ trait ArrayAccessByPropertyTrait
      *
      * @return  mixed  The array value if it exists, null otherwise.
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->$offset;
     }
@@ -56,7 +56,7 @@ trait ArrayAccessByPropertyTrait
      *
      * @return  void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->$offset = $value;
     }
@@ -68,7 +68,7 @@ trait ArrayAccessByPropertyTrait
      *
      * @return  void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         // unset($this->$offset);
     }

@@ -44,9 +44,9 @@ trait PropertyAccessByGetterSetterTrait
         if (method_exists($this, $setter)) {
             $this->$setter($value);
         } elseif (method_exists($this, 'get' . ucfirst($name))) {
-            throw new SetPropertyException('Setting a Read-only property! ' . get_class($this) . "::{$name}");
+            throw new SetPropertyException('Setting a Read-only property! ' . get_class($this) . "::$name");
         } else {
-            throw new SetPropertyException('Setting a Unknown property! ' . get_class($this) . "::{$name}");
+            throw new SetPropertyException('Setting a Unknown property! ' . get_class($this) . "::$name");
         }
     }
 
@@ -67,10 +67,10 @@ trait PropertyAccessByGetterSetterTrait
         }
 
         if (method_exists($this, 'set' . ucfirst($name))) {
-            throw new GetPropertyException('Getting a Write-only property! ' . get_class($this) . "::{$name}");
+            throw new GetPropertyException('Getting a Write-only property! ' . get_class($this) . "::$name");
         }
 
-        throw new GetPropertyException('Getting a Unknown property! ' . get_class($this) . "::{$name}");
+        throw new GetPropertyException('Getting a Unknown property! ' . get_class($this) . "::$name");
     }
 
     /**

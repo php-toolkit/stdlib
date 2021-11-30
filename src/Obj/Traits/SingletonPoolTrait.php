@@ -19,14 +19,14 @@ trait SingletonPoolTrait
     /**
      * @var array
      */
-    private static $singletons = [];
+    private static array $singletons = [];
 
     /**
      * @param string $class
      *
      * @return mixed
      */
-    public static function singleton(string $class)
+    public static function singleton(string $class): mixed
     {
         if (!isset(self::$singletons[$class])) {
             self::$singletons[$class] = new $class;
@@ -40,7 +40,7 @@ trait SingletonPoolTrait
      *
      * @return mixed
      */
-    public static function factory(string $class)
+    public static function factory(string $class): mixed
     {
         if (!isset(self::$singletons[$class])) {
             self::$singletons[$class] = new $class;

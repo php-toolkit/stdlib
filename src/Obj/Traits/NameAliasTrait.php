@@ -13,16 +13,16 @@ trait NameAliasTrait
     /**
      * @var array
      */
-    private $aliases = [];
+    private array $aliases = [];
 
     /**
      * set name alias(es)
      *
      * @param string       $name
-     * @param string|array $alias
+     * @param array|string $alias
      * @param bool         $validate
      */
-    public function setAlias(string $name, $alias, bool $validate = false): void
+    public function setAlias(string $name, array|string $alias, bool $validate = false): void
     {
         foreach ((array)$alias as $aliasName) {
             if (!isset($this->aliases[$aliasName])) {

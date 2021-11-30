@@ -55,7 +55,7 @@ abstract class AbstractMap implements JsonSerializable
      * @param string $key
      * @param mixed  $value
      */
-    public function setValue(string $key, $value): void
+    public function setValue(string $key, mixed $value): void
     {
         ObjectHelper::init($this, [$key => $value]);
     }

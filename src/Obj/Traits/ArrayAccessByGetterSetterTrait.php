@@ -47,7 +47,7 @@ trait ArrayAccessByGetterSetterTrait
      *
      * @return  mixed  The array value if it exists, null otherwise.
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         $getter = 'get' . ucfirst($offset);
 

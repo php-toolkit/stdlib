@@ -283,7 +283,7 @@ class ObjectHelper
      * @return mixed
      * @throws ReflectionException
      */
-    public static function create(string $class)
+    public static function create(string $class): mixed
     {
         try {
             $reflection = new ReflectionClass($class);

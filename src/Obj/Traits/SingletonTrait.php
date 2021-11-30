@@ -21,7 +21,7 @@ trait SingletonTrait
     /**
      * @return mixed
      */
-    public static function new()
+    public static function new(): mixed
     {
         return Obj::singleton(static::class);
     }
