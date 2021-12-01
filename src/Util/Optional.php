@@ -6,7 +6,6 @@ use ArrayAccess;
 use RuntimeException;
 use Throwable;
 use Toolkit\Stdlib\Helper\Valid;
-use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Util\Stream\DataStream;
 use UnexpectedValueException;
 use function gettype;

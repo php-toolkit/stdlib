@@ -37,9 +37,7 @@ class Pipeline implements PipelineInterface
     public function add(callable $stage): PipelineInterface
     {
         if ($stage instanceof $this) {
-            $stage->add(function ($payload) {
-                return $this->invokeStage($payload);
-            });
+            $stage->add(fn($payload) => $this->invokeStage($payload));
         }
 
         $this->stages->attach($stage);
@@ -49,7 +47,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function run(mixed $payload)
+    public function run(mixed $payload): mixed
     {
         $this->stages->rewind();
 
@@ -59,12 +57,17 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function __invoke(mixed $payload)
+    public function __invoke(mixed $payload): mixed
     {
         return $this->run($payload);
     }
 
-    private function invokeStage($payload)
+    /**
+     * @param mixed $payload
+     *
+     * @return mixed
+     */
+    private function invokeStage(mixed $payload): mixed
     {
         $stage = $this->stages->current();
         $this->stages->next();

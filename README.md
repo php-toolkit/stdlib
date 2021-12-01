@@ -105,6 +105,8 @@ $loader->addClassMap([
 
 ### Optional
 
+它旨在消除过多的if判断
+
 Not use Optional:
 
 ```php
@@ -124,9 +126,20 @@ Use Optional:
 ```php
 use Toolkit\Stdlib\Util\Optional;
 
-$username = Optional::ofNullable($userModel)->map(function ($userModel) {
-    return $userModel->name;
-})->orElse('unknown');
+$username = Optional::ofNullable($userModel)
+    ->map(function ($userModel) {
+        return $userModel->name;
+    })->orElse('unknown');
+```
+
+Use arrow syntax:
+
+```php
+use Toolkit\Stdlib\Util\Optional;
+
+$username = Optional::ofNullable($userModel)
+    ->map(fn($userModel) => $userModel->name)
+    ->orElse('unknown');
 ```
 
 ### PhpDotEnv

@@ -23,6 +23,10 @@ class OptionalTest extends BaseLibTestCase
         })->orElse(25);
 
         $this->assertEquals(25, $val);
+
+        // use arrow syntax:
+        $val = $o->filter(fn($val) => $val > 25)->orElse(25);
+        $this->assertEquals(25, $val);
     }
 
     public function testOptional_or(): void
@@ -36,7 +40,10 @@ class OptionalTest extends BaseLibTestCase
         $val = $o->or(function () {
             return Optional::of(23);
         })->get();
+        $this->assertEquals(23, $val);
 
+        // use arrow syntax:
+        $val = $o->or(fn() => Optional::of(23))->get();
         $this->assertEquals(23, $val);
     }
 }
