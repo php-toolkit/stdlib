@@ -40,7 +40,7 @@ jobs:
         run: |
           tag1=${GITHUB_REF#refs/*/}
           echo "release tag: ${tag1}"
-          composer install --no-progress --no-suggest
+          composer install --no-progress
 
       # more see https://github.com/inhere/kite
       - name: Generate changelog file

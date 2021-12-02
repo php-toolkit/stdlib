@@ -42,25 +42,6 @@ use const PREG_SPLIT_NO_EMPTY;
 trait StringConvertTrait
 {
     /**
-     * @param string $val
-     *
-     * @return bool|string
-     */
-    public static function tryToBool(string $val): bool|string
-    {
-        // check it is a bool value.
-        if (false !== stripos(StringHelper::TRUE_WORDS, "|$val|")) {
-            return true;
-        }
-
-        if (false !== stripos(StringHelper::FALSE_WORDS, "|$val|")) {
-            return false;
-        }
-
-        return $val;
-    }
-
-    /**
      * @param string $str
      *
      * @return bool
@@ -79,6 +60,25 @@ trait StringConvertTrait
     {
         // check it is a bool value.
         return false !== stripos(StringHelper::TRUE_WORDS, "|$val|");
+    }
+
+    /**
+     * @param string $val
+     *
+     * @return bool|string
+     */
+    public static function tryToBool(string $val): bool|string
+    {
+        // check it is a bool value.
+        if (false !== stripos(StringHelper::TRUE_WORDS, "|$val|")) {
+            return true;
+        }
+
+        if (false !== stripos(StringHelper::FALSE_WORDS, "|$val|")) {
+            return false;
+        }
+
+        return $val;
     }
 
     /**

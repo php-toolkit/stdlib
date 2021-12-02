@@ -9,7 +9,6 @@
 
 namespace Toolkit\Stdlib;
 
-use Toolkit\Cli\Helper\FlagHelper;
 use function gettype;
 use function is_string;
 
@@ -109,7 +108,7 @@ final class Type
      * @param string $type
      * @param mixed  $value
      *
-     * @return array|bool|float|int|mixed|string
+     * @return mixed
      */
     public static function fmtValue(string $type, mixed $value): mixed
     {
@@ -121,7 +120,7 @@ final class Type
             case self::BOOL:
             case self::BOOLEAN:
                 if (is_string($value)) {
-                    $value = FlagHelper::str2bool($value);
+                    $value = Str::toBool2($value);
                 } else {
                     $value = (bool)$value;
                 }

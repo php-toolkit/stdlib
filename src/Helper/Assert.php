@@ -140,6 +140,32 @@ class Assert
     }
 
     /**
+     * Positive integer. should > 0
+     *
+     * @param int $value
+     * @param string $errMsg
+     */
+    public static function intShouldGt0(int $value, string $errMsg = ''): void
+    {
+        if ($value < 1) {
+            throw static::createEx($errMsg ?: 'Expected a integer value and should > 0');
+        }
+    }
+
+    /**
+     * Positive integer. should >= 0
+     *
+     * @param int $value
+     * @param string $errMsg
+     */
+    public static function intShouldGte0(int $value, string $errMsg = ''): void
+    {
+        if ($value < 0) {
+            throw static::createEx($errMsg ?: 'Expected a integer value and should >= 0');
+        }
+    }
+
+    /**
      * Positive integer. > 0
      *
      * @param int $value

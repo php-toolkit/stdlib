@@ -12,7 +12,6 @@ namespace Toolkit\Stdlib;
 use InvalidArgumentException;
 use RuntimeException;
 use function defined;
-use function dirname;
 use function explode;
 use function file_get_contents;
 use function file_put_contents;
@@ -369,11 +368,11 @@ class OS
     /**
      * Returns if the file descriptor is an interactive terminal or not.
      *
-     * @param int $fileDescriptor
+     * @param int|resource|mixed $fileDescriptor
      *
      * @return boolean
      */
-    public static function isInteractive(int $fileDescriptor): bool
+    public static function isInteractive(mixed $fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }
