@@ -7,6 +7,31 @@ use Toolkit\Stdlib\Obj;
 /**
  * trait AutoConfigTrait
  *
+ * ## Usage:
+ *
+ * ```php
+ * class MyClass {
+ *  use AutoConfigTrait;
+ * }
+ * ```
+ *
+ * - Want call __construct:
+ *
+ * ```php
+ * class MyClass {
+ *  use AutoConfigTrait{
+ *      __construct as supper;
+ *  }
+ *
+ *  public function __construct(array $config = [])
+ *  {
+ *      $this->supper($config);
+ *
+ *      // do something
+ *  }
+ * }
+ * ```
+ *
  * @author inhere
  */
 trait AutoConfigTrait

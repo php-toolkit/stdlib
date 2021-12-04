@@ -7,7 +7,6 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
-use Serializable;
 use Traversable;
 use function count;
 
@@ -16,7 +15,7 @@ use function count;
  *
  * @author inhere
  */
-class Collection implements IteratorAggregate, ArrayAccess, Serializable, Countable, JsonSerializable
+class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSerializable
 {
     /**
      * The data
@@ -392,19 +391,19 @@ class Collection implements IteratorAggregate, ArrayAccess, Serializable, Counta
      *******************************************************************************/
 
     /**
-     * @return string
+     * @return array
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize($this->data);
+        return $this->data;
     }
 
     /**
-     * @param string $data
+     * @param array $data
      */
-    public function unserialize($data): void
+    public function __unserialize(array $data): void
     {
-        $this->data = unserialize($data, ['allowed_classes' => null]);
+        $this->data = $data;
     }
 
     /********************************************************************************
