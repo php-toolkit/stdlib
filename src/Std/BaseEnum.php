@@ -74,8 +74,6 @@ abstract class BaseEnum implements JsonSerializable
     /**
      * Returns all possible values as an array
      *
-     * @psalm-suppress ImpureStaticProperty
-     *
      * @return array<string, mixed> Constant name in key, constant value in value
      */
     public static function toArray(): array
@@ -199,15 +197,13 @@ abstract class BaseEnum implements JsonSerializable
         }
 
         /** @psalm-suppress ImplicitToStringCast assertValidValueReturningKey returns always a string but psalm has currently an issue here */
-        $this->key = static::assertValidValueReturningKey($value);
+        $this->key = static::mustGetKeyByValue($value);
 
         /** @psalm-var T */
         $this->value = $value;
     }
 
     /**
-     * @psalm-pure
-     * @psalm-suppress InvalidCast
      * @return string
      */
     public function __toString()

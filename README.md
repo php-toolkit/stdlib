@@ -105,7 +105,7 @@ $loader->addClassMap([
 
 ### Optional
 
-它旨在消除过多的if判断
+It aims to eliminate excessive if judgments.
 
 Not use Optional:
 
