@@ -253,6 +253,14 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     /**
      * @return array
      */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->all();

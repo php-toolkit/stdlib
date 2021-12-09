@@ -46,7 +46,7 @@ class DataStream extends ArrayIterator
     public static function empty(): self
     {
         if (!self::$emptyObj) {
-            self::$emptyObj = new self();
+            self::$emptyObj = new static();
         }
 
         return self::$emptyObj;
@@ -589,6 +589,14 @@ class DataStream extends ArrayIterator
     public function getArray(): array
     {
         return $this->getArrayCopy();
+    }
+
+    /**
+     * close and clear data.
+     */
+    public function close(): void
+    {
+        // clear all data.
     }
 
     /**

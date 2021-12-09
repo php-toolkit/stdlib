@@ -112,34 +112,15 @@ final class Type
      */
     public static function fmtValue(string $type, mixed $value): mixed
     {
-        switch ($type) {
-            case self::INT:
-            case self::INTEGER:
-                $value = (int)$value;
-                break;
-            case self::BOOL:
-            case self::BOOLEAN:
-                if (is_string($value)) {
-                    $value = Str::toBool2($value);
-                } else {
-                    $value = (bool)$value;
-                }
-                break;
-            case self::FLOAT:
-                $value = (float)$value;
-                break;
-            case self::DOUBLE:
-                $value = (double)$value;
-                break;
-            case self::STRING:
-                $value = (string)$value;
-                break;
-            case self::ARRAY:
-                $value = (array)$value;
-                break;
-        }
-
-        return $value;
+        return match ($type) {
+            self::INT, self::INTEGER => (int)$value,
+            self::BOOL, self::BOOLEAN => is_string($value) ? Str::toBool2($value) : (bool)$value,
+            self::FLOAT => (float)$value,
+            self::DOUBLE => (double)$value,
+            self::STRING => (string)$value,
+            self::ARRAY => (array)$value,
+            default => $value
+        };
     }
 
     /**

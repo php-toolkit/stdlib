@@ -13,11 +13,12 @@ use ArrayObject;
 use JsonSerializable;
 use Toolkit\Stdlib\Helper\JsonHelper;
 use Toolkit\Stdlib\Obj;
+use Toolkit\Stdlib\Str;
 use UnexpectedValueException;
 use function in_array;
 
 /**
- * Class ConfigObject
+ * Class DataObject
  *
  * @package Toolkit\Stdlib\Obj
  */
@@ -28,7 +29,7 @@ class DataObject extends ArrayObject  implements JsonSerializable
      *
      * @return static
      */
-    public static function new(array $data = []): self
+    public static function new(array $data = []): static
     {
         return new static($data);
     }
@@ -150,6 +151,20 @@ class DataObject extends ArrayObject  implements JsonSerializable
         }
 
         return $default;
+    }
+
+    /**
+     * @param string $key
+     * @param array $default
+     * @param string $sep
+     *
+     * @return array
+     */
+    public function getStrings(string $key, array $default = [], string $sep = ','): array
+    {
+        $str = $this->getString($key);
+
+        return $str ? Str::toArray($str, $sep) : $default;
     }
 
     /**
