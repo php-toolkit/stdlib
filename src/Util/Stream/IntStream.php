@@ -11,12 +11,9 @@ class IntStream extends ListStream
 {
     /**
      * @param numeric $value
-     *
-     * @return $this
      */
-    public function append(mixed $value): static
+    public function append(mixed $value): void
     {
         parent::append((int)$value);
-        return $this;
     }
 }

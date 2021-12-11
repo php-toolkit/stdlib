@@ -9,14 +9,5 @@ namespace Toolkit\Stdlib\Util\Stream;
  */
 class ListStream extends DataStream
 {
-    /**
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function append(mixed $value): static
-    {
-        parent::append($value);
-        return $this;
-    }
+
 }

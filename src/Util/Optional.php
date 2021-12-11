@@ -89,13 +89,14 @@ final class Optional
      */
     public static function ofArrayKey(ArrayAccess|array $array, int|string $key): self
     {
-        if (!(is_array($array) || $array instanceof ArrayAccess) || !isset($array[$key])) {
-            return self::empty();
-        }
-
-        return self::of($array[$key]);
+        return isset($array[$key]) ? self::of($array[$key]) : self::empty();
     }
 
+    /**
+     * @param callable(): mixed $fn
+     *
+     * @return static
+     */
     public static function ofReturn(callable $fn): self
     {
         return self::ofNullable($fn());
@@ -259,15 +260,18 @@ final class Optional
      * If a value is present, returns a sequential Stream containing only that value,
      * otherwise returns an empty Stream.
      *
+     * @param class-string $streamClass
+     *
      * @return DataStream<T>
      */
-    public function stream(): DataStream
+    public function stream(string $streamClass = DataStream::class): DataStream
     {
+        /** @var $streamClass DataStream */
         if (!$this->isPresent()) {
-            return DataStream::empty();
+            return $streamClass::empty();
         }
 
-        return DataStream::of($this->value);
+        return $streamClass::of($this->value);
     }
 
     /**

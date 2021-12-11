@@ -11,13 +11,10 @@ class StringStream extends ListStream
 {
     /**
      * @param mixed $value
-     *
-     * @return $this
      */
-    public function append(mixed $value): static
+    public function append(mixed $value): void
     {
         parent::append((string)$value);
-        return $this;
     }
 
     /**
