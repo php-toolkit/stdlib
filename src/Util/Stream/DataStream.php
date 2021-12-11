@@ -4,6 +4,7 @@ namespace Toolkit\Stdlib\Util\Stream;
 
 use ArrayIterator;
 use Closure;
+use JsonSerializable;
 use Toolkit\Stdlib\Util\Optional;
 use Traversable;
 use function array_rand;
@@ -16,7 +17,7 @@ use const SORT_STRING;
  * @template T
  * @var $this T[]
  */
-class DataStream extends ArrayIterator
+class DataStream extends ArrayIterator implements JsonSerializable
 {
     private static ?DataStream $emptyObj = null;
 
@@ -621,5 +622,13 @@ class DataStream extends ArrayIterator
     public function isNotEmpty(): bool
     {
         return $this->count() > 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return $this->getArrayCopy();
     }
 }
