@@ -3,7 +3,7 @@
 namespace Toolkit\Stdlib\Helper;
 
 use InvalidArgumentException;
-use RuntimeException;
+use LogicException;
 use function in_array;
 
 /**
@@ -21,11 +21,18 @@ class Assert
     /**
      * @param mixed $value
      * @param string $errMsg
+     * @param bool $isPrefix
      */
-    public static function notEmpty(mixed $value, string $errMsg = ''): void
+    public static function notEmpty(mixed $value, string $errMsg = '', bool $isPrefix = false): void
     {
         if (empty($value)) {
-            throw static::createEx($errMsg ?: 'Expected a non-empty value');
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg cannot be empty" : $errMsg;
+            } else {
+                $errMsg = 'Expected a non-empty value';
+            }
+
+            throw static::createEx($errMsg);
         }
     }
 
@@ -43,11 +50,18 @@ class Assert
     /**
      * @param string $value
      * @param string $errMsg
+     * @param bool $isPrefix
      */
-    public static function notBlank(string $value, string $errMsg = ''): void
+    public static function notBlank(string $value, string $errMsg = '', bool $isPrefix = false): void
     {
         if ('' === $value) {
-            throw static::createEx($errMsg ?: 'Expected a non-blank string value');
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg cannot be empty string" : $errMsg;
+            } else {
+                $errMsg = 'Expected a non-blank string value';
+            }
+
+            throw static::createEx($errMsg);
         }
     }
 
@@ -127,28 +141,22 @@ class Assert
     }
 
     /**
-     * Natural number. >= 0
-     *
-     * @param int $value
-     * @param string $errMsg
-     */
-    public static function naturalInt(int $value, string $errMsg = ''): void
-    {
-        if ($value < 0) {
-            throw static::createEx($errMsg ?: 'Expected a natural number value(>=0)');
-        }
-    }
-
-    /**
      * Positive integer. should > 0
      *
      * @param int $value
      * @param string $errMsg
+     * @param bool $isPrefix
      */
-    public static function intShouldGt0(int $value, string $errMsg = ''): void
+    public static function intShouldGt0(int $value, string $errMsg = '', bool $isPrefix = false): void
     {
         if ($value < 1) {
-            throw static::createEx($errMsg ?: 'Expected a integer value and should > 0');
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg should > 0" : $errMsg;
+            } else {
+                $errMsg = 'Expected a integer value and should > 0';
+            }
+
+            throw static::createEx($errMsg);
         }
     }
 
@@ -157,24 +165,58 @@ class Assert
      *
      * @param int $value
      * @param string $errMsg
+     * @param bool $isPrefix
      */
-    public static function intShouldGte0(int $value, string $errMsg = ''): void
+    public static function intShouldGte0(int $value, string $errMsg = '', bool $isPrefix = false): void
     {
         if ($value < 0) {
-            throw static::createEx($errMsg ?: 'Expected a integer value and should >= 0');
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg should >= 0" : $errMsg;
+            } else {
+                $errMsg = 'Expected a integer value and should >= 0';
+            }
+
+            throw static::createEx($errMsg);
         }
     }
 
     /**
-     * Positive integer. > 0
+     * Positive integer. should > 0
      *
      * @param int $value
      * @param string $errMsg
+     * @param bool $isPrefix
      */
-    public static function positiveInt(int $value, string $errMsg = ''): void
+    public static function positiveInt(int $value, string $errMsg = '', bool $isPrefix = false): void
     {
         if ($value < 1) {
-            throw static::createEx($errMsg ?: 'Expected a positive integer value(>0)');
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg should > 0" : $errMsg;
+            } else {
+                $errMsg = 'Expected a positive integer value(>0)';
+            }
+
+            throw static::createEx($errMsg);
+        }
+    }
+
+    /**
+     * Natural number. should >= 0
+     *
+     * @param int $value
+     * @param string $errMsg
+     * @param bool $isPrefix
+     */
+    public static function naturalInt(int $value, string $errMsg = '', bool $isPrefix = false): void
+    {
+        if ($value < 0) {
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg should >= 0" : $errMsg;
+            } else {
+                $errMsg = 'Expected a natural number value(>=0)';
+            }
+
+            throw static::createEx($errMsg);
         }
     }
 
@@ -211,7 +253,7 @@ class Assert
      */
     public static function arrayHasNoEmptyKey(array $data, string $key, string $errMsg = ''): void
     {
-        if (!isset($data[$key]) || empty($data[$key])) {
+        if (empty($data[$key])) {
             throw static::createEx($errMsg ?: "Data must contains key '$key' and value non-empty");
         }
     }
@@ -221,9 +263,9 @@ class Assert
     /**
      * @param string $errMsg
      *
-     * @return RuntimeException
+     * @return LogicException
      */
-    public static function createEx(string $errMsg): RuntimeException
+    public static function createEx(string $errMsg): LogicException
     {
         return new self::$exClass($errMsg);
     }

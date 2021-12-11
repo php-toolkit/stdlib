@@ -8,6 +8,36 @@
  */
 
 use JetBrains\PhpStorm\NoReturn;
+use Toolkit\Stdlib\Helper\DataHelper;
+
+if (!function_exists('println')) {
+    /**
+     * @param mixed ...$vars
+     *
+     * @return void
+     */
+    function println(...$vars): void
+    {
+        $eleNum = count($vars);
+        if ($eleNum === 1) {
+            echo DataHelper::toString($vars[0]) . PHP_EOL;
+            return;
+        }
+
+        if ($eleNum === 0) {
+            echo PHP_EOL;
+            return;
+        }
+
+        // eleNum > 1
+        $ss = [];
+        foreach ($vars as $var) {
+            $ss[] = DataHelper::toString($var);
+        }
+
+        echo implode(' ', $ss) . PHP_EOL;
+    }
+}
 
 if (!function_exists('vdump')) {
     /**

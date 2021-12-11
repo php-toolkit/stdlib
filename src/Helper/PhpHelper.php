@@ -19,7 +19,9 @@ use Throwable;
 use Toolkit\Stdlib\Obj\ObjectHelper;
 use Toolkit\Stdlib\Util\PhpError;
 use Toolkit\Stdlib\Util\PhpException;
+use function array_shift;
 use function array_sum;
+use function basename;
 use function error_get_last;
 use function explode;
 use function fopen;
@@ -147,6 +149,29 @@ class PhpHelper
         }
 
         return $handle;
+    }
+
+    private static ?string $scriptName = null;
+
+    /**
+     * @param bool $refresh
+     *
+     * @return string
+     */
+    public static function getBinName(bool $refresh = false): string
+    {
+        if (!$refresh && self::$scriptName !== null) {
+            return self::$scriptName;
+        }
+
+        $scriptName = '';
+        if (isset($_SERVER['argv']) && ($argv = $_SERVER['argv'])) {
+            $scriptFile = array_shift($argv);
+            $scriptName = basename($scriptFile);
+        }
+
+        self::$scriptName = $scriptName;
+        return self::$scriptName;
     }
 
     /**

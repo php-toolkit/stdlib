@@ -15,6 +15,7 @@ use function is_array;
 use function is_bool;
 use function is_object;
 use function is_scalar;
+use function is_string;
 use function json_encode;
 use function method_exists;
 use const FILTER_NULL_ON_FAILURE;
@@ -34,17 +35,13 @@ class DataHelper
      * 注意： NULL 不是标量类型
      *
      * @param int|string $val
-     * @param bool|mixed  $nullAsFalse
+     * @param bool  $nullAsFalse
      *
      * @return bool
      */
     public static function boolean(int|string $val, bool $nullAsFalse = false): bool
     {
-        if ($val !== null && !is_scalar($val)) {
-            return (bool)$val;
-        }
-
-        return filter_var($val, FILTER_VALIDATE_BOOLEAN, [
+        return (bool)filter_var($val, FILTER_VALIDATE_BOOLEAN, [
             'flags' => $nullAsFalse ? FILTER_NULL_ON_FAILURE : 0
         ]);
     }
@@ -72,7 +69,7 @@ class DataHelper
                 return $val ? 'bool(TRUE)' : 'bool(FALSE)';
             }
 
-            return (string)$val;
+            return is_string($val) ? $val : (string)$val;
         }
 
         // TIP: null is not scalar type.
