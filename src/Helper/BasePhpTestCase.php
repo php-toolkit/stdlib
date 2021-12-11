@@ -48,8 +48,19 @@ abstract class BasePhpTestCase extends TestCase
      * @param callable $cb
      *
      * @return Throwable
+     * @deprecated please use tryCatchRun()
      */
     protected function runAndGetException(callable $cb): Throwable
+    {
+        return $this->tryCatchRun($cb);
+    }
+
+    /**
+     * @param callable $cb
+     *
+     * @return Throwable
+     */
+    protected function tryCatchRun(callable $cb): Throwable
     {
         try {
             $cb();
@@ -58,5 +69,21 @@ abstract class BasePhpTestCase extends TestCase
         }
 
         return new RuntimeException('NO ERROR', -1);
+    }
+
+    /**
+     * @param Throwable $e
+     * @param string $msg
+     * @param int|null $code
+     *
+     * @return void
+     */
+    public function assertException(Throwable $e, string $msg, int $code = null): void
+    {
+        $this->assertEquals($msg, $e->getMessage());
+
+        if ($code !== null) {
+            $this->assertEquals($code, $e->getCode());
+        }
     }
 }
