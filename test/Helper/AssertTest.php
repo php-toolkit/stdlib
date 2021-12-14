@@ -55,4 +55,19 @@ class AssertTest extends BaseLibTestCase
         $e = $this->tryCatchRun(fn() => Assert::isTrue(false, 'custom error'));
         $this->assertException($e, 'custom error');
     }
+
+    public function testAssert_FS(): void
+    {
+        $e = $this->tryCatchRun(fn() => Assert::isFile(__DIR__ . '/AssertTest.php'));
+        $this->assertException($e, 'NO ERROR', -1);
+
+        $e = $this->tryCatchRun(fn() => Assert::isFile('./not-exists.file'));
+        $this->assertException($e, 'No such file: ./not-exists.file');
+
+        $e = $this->tryCatchRun(fn() => Assert::isDir(__DIR__));
+        $this->assertException($e, 'NO ERROR', -1);
+
+        $e = $this->tryCatchRun(fn() => Assert::isDir('./not-exists'));
+        $this->assertException($e, 'No such dir: ./not-exists');
+    }
 }

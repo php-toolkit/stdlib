@@ -3,7 +3,7 @@
 namespace Toolkit\Stdlib\Helper;
 
 use InvalidArgumentException;
-use RuntimeException;
+use LogicException;
 use function in_array;
 
 /**
@@ -111,7 +111,7 @@ class Valid
             throw static::createEx($errMsg ?: 'Expected a true value');
         }
 
-        return $value;
+        return true;
     }
 
     /**
@@ -126,7 +126,7 @@ class Valid
             throw static::createEx($errMsg ?: 'Expected a false value');
         }
 
-        return $value;
+        return true;
     }
 
     /**
@@ -242,7 +242,7 @@ class Valid
      */
     public static function arrayHasNoEmptyKey(array $data, string $key, string $errMsg = ''): mixed
     {
-        if (!isset($data[$key]) || empty($data[$key])) {
+        if (empty($data[$key])) {
             throw static::createEx($errMsg ?: "Data must contains key '$key' and value non-empty");
         }
 
@@ -254,9 +254,9 @@ class Valid
     /**
      * @param string $errMsg
      *
-     * @return RuntimeException
+     * @return LogicException
      */
-    public static function createEx(string $errMsg): RuntimeException
+    public static function createEx(string $errMsg): LogicException
     {
         return new self::$exClass($errMsg);
     }

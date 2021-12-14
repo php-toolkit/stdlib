@@ -5,6 +5,7 @@ namespace Toolkit\Stdlib\Helper;
 use InvalidArgumentException;
 use LogicException;
 use function in_array;
+use function is_dir;
 
 /**
  * class Assert
@@ -255,6 +256,32 @@ class Assert
     {
         if (empty($data[$key])) {
             throw static::createEx($errMsg ?: "Data must contains key '$key' and value non-empty");
+        }
+    }
+
+    /**
+     * @param string $path
+     * @param string $errMsg
+     *
+     * @return void
+     */
+    public static function isDir(string $path, string $errMsg = ''): void
+    {
+        if (!$path || !is_dir($path)) {
+            throw static::createEx($errMsg ?: "No such dir: $path");
+        }
+    }
+
+    /**
+     * @param string $path
+     * @param string $errMsg
+     *
+     * @return void
+     */
+    public static function isFile(string $path, string $errMsg = ''): void
+    {
+        if (!$path || !is_file($path)) {
+            throw static::createEx($errMsg ?: "No such file: $path");
         }
     }
 
