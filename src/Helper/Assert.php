@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use LogicException;
 use function in_array;
 use function is_dir;
+use function is_file;
+use function is_resource;
 
 /**
  * class Assert
@@ -282,6 +284,19 @@ class Assert
     {
         if (!$path || !is_file($path)) {
             throw static::createEx($errMsg ?: "No such file: $path");
+        }
+    }
+
+    /**
+     * @param mixed|resource $res
+     * @param string $errMsg
+     *
+     * @return void
+     */
+    public static function isResource($res, string $errMsg = ''): void
+    {
+        if (!is_resource($res)) {
+            throw static::createEx($errMsg ?: "Excepted an resource");
         }
     }
 

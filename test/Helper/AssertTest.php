@@ -4,6 +4,7 @@ namespace Toolkit\StdlibTest\Str;
 
 use Toolkit\Stdlib\Helper\Assert;
 use Toolkit\StdlibTest\BaseLibTestCase;
+use const STDOUT;
 
 /**
  * class AssertTest
@@ -69,5 +70,11 @@ class AssertTest extends BaseLibTestCase
 
         $e = $this->tryCatchRun(fn() => Assert::isDir('./not-exists'));
         $this->assertException($e, 'No such dir: ./not-exists');
+
+        $e = $this->tryCatchRun(fn() => Assert::isResource('invalid'));
+        $this->assertException($e, 'Excepted an resource');
+
+        $e = $this->tryCatchRun(fn() => Assert::isResource(STDOUT));
+        $this->assertException($e, 'NO ERROR', -1);
     }
 }
