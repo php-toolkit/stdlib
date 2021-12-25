@@ -27,6 +27,16 @@ class StrValue
     }
 
     /**
+     * @param string $str
+     *
+     * @return self
+     */
+    public static function newTrim(string $str): self
+    {
+        return new self(trim($str));
+    }
+
+    /**
      * Class constructor.
      *
      * @param string $str

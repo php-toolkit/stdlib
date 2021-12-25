@@ -53,6 +53,21 @@ final class Optional
 
     /**
      * Creates an nullable Optional given a return value.
+     * - value assert by `empty` function.
+     *
+     * @template S
+     *
+     * @param S $value
+     *
+     * @return static
+     */
+    public static function ofEmptyAble(mixed $value): self
+    {
+        return empty($value) ? self::empty() : self::of($value);
+    }
+
+    /**
+     * Creates an nullable Optional given a return value.
      *
      * @template S
      *
