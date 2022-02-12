@@ -167,24 +167,24 @@ trait StringCaseHelperTrait
 
     /**
      * @param string $str
-     * @param bool   $upperFirstChar
+     * @param bool   $upperFirst
      *
-     * @return mixed
+     * @return string
      */
-    public static function camel(string $str, bool $upperFirstChar = false): string
+    public static function camel(string $str, bool $upperFirst = false): string
     {
-        return self::toCamelCase($str, $upperFirstChar);
+        return self::toCamelCase($str, $upperFirst);
     }
 
     /**
      * @param string $str
-     * @param bool   $upperFirstChar
+     * @param bool   $upperFirst
      *
-     * @return mixed
+     * @return string
      */
-    public static function toCamel(string $str, bool $upperFirstChar = false): string
+    public static function toCamel(string $str, bool $upperFirst = false): string
     {
-        return self::toCamelCase($str, $upperFirstChar);
+        return self::toCamelCase($str, $upperFirst);
     }
 
     /**

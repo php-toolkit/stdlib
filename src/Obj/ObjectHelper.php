@@ -18,6 +18,7 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use RuntimeException;
 use Toolkit\Stdlib\Helper\PhpHelper;
+use Toolkit\Stdlib\Str\StringHelper;
 use Traversable;
 use UnexpectedValueException;
 use function base64_decode;
@@ -57,16 +58,22 @@ class ObjectHelper
      * - 会先尝试用 setter 方法设置属性
      * - 再尝试直接设置属性
      *
-     * @param object $object An object instance
-     * @param array $options
+     * @template T object
+     * @param T $object An object instance
+     * @param array $config
+     * @param bool $toCaml
      *
-     * @return object
+     * @return T
      */
-    public static function init(object $object, array $options): object
+    public static function init(object $object, array $config, bool $toCaml = false): object
     {
-        foreach ($options as $property => $value) {
+        foreach ($config as $property => $value) {
             if (is_numeric($property)) {
                 continue;
+            }
+
+            if ($toCaml) {
+                $property = StringHelper::camelCase($property, false, '_');
             }
 
             $setter = 'set' . ucfirst($property);
