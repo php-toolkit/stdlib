@@ -61,18 +61,18 @@ class ObjectHelper
      * @template T object
      * @param T $object An object instance
      * @param array $config
-     * @param bool $toCaml
+     * @param bool $toCamel
      *
      * @return T
      */
-    public static function init(object $object, array $config, bool $toCaml = false): object
+    public static function init(object $object, array $config, bool $toCamel = false): object
     {
         foreach ($config as $property => $value) {
             if (is_numeric($property)) {
                 continue;
             }
 
-            if ($toCaml) {
+            if ($toCamel) {
                 $property = StringHelper::camelCase($property, false, '_');
             }
 
