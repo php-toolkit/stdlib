@@ -188,6 +188,23 @@ trait StringCaseHelperTrait
     }
 
     /**
+     * Translates a string with `\s_-` into camel case (e.g. first_name -> firstName)
+     *
+     * @param string $str
+     * @param bool   $upperFirst
+     *
+     * @return mixed
+     */
+    public static function toCamelCase(string $str, bool $upperFirst = false): string
+    {
+        if ($upperFirst) {
+            $str = self::ucfirst($str);
+        }
+
+        return preg_replace_callback('/[\s_-]+([a-z])/', static fn($c) => strtoupper($c[1]), $str);
+    }
+
+    /**
      * string to camel case
      *
      * @param string $name
@@ -209,27 +226,6 @@ trait StringCaseHelperTrait
         }
 
         return $upFirst ? ucfirst($name) : lcfirst($name);
-    }
-
-    /**
-     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
-     *
-     * @param string $str
-     * @param bool   $upperFirst
-     *
-     * @return mixed
-     */
-    public static function toCamelCase(string $str, bool $upperFirst = false): string
-    {
-        $str = self::toLower($str);
-
-        if ($upperFirst) {
-            $str = self::ucfirst($str);
-        }
-
-        return preg_replace_callback('/[_-]+([a-z])/', static function ($c) {
-            return strtoupper($c[1]);
-        }, $str);
     }
 
     /**

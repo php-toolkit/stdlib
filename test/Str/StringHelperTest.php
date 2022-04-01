@@ -147,6 +147,23 @@ class StringHelperTest extends TestCase
         self::assertFalse(Str::notContains('abc', 'b'));
     }
 
+    public function testStrCase_toCamel(): void
+    {
+        $tests = [
+            ['voicePlayTimes', 'voicePlayTimes', 'VoicePlayTimes'],
+            ['fieldName', 'fieldName', 'FieldName'],
+            ['the_fieldName', 'theFieldName', 'TheFieldName'],
+            ['the_field_name', 'theFieldName', 'TheFieldName'],
+            ['the-field-name', 'theFieldName', 'TheFieldName'],
+            ['the field name', 'theFieldName', 'TheFieldName'],
+        ];
+
+        foreach ($tests as [$case, $want, $want1]) {
+            $this->assertEquals(Str::toCamel($case), $want);
+            $this->assertEquals(Str::toCamel($case, true), $want1);
+        }
+    }
+
     public function testToNoEmptyArray(): void
     {
         $tests = [
@@ -239,5 +256,6 @@ class StringHelperTest extends TestCase
             $this->assertEquals($want, Str::toTypedArray($given));
         }
     }
+
 
 }
