@@ -12,6 +12,8 @@ use Toolkit\Stdlib\Helper\DataHelper;
 
 if (!function_exists('println')) {
     /**
+     * print multi vars with newline.
+     *
      * @param mixed ...$vars
      *
      * @return void
@@ -36,6 +38,35 @@ if (!function_exists('println')) {
         }
 
         echo implode(' ', $ss) . PHP_EOL;
+    }
+}
+
+if (!function_exists('printm')) {
+    /**
+     * print multi vars.
+     *
+     * @param mixed ...$vars
+     *
+     * @return void
+     */
+    function printm(...$vars): void
+    {
+        $eleNum = count($vars);
+        if ($eleNum === 1) {
+            echo DataHelper::toString($vars[0]);
+            return;
+        }
+
+        if ($eleNum === 0) {
+            return;
+        }
+
+        // eleNum > 1
+        $ss = [];
+        foreach ($vars as $var) {
+            $ss[] = DataHelper::toString($var);
+        }
+        echo implode('', $ss);
     }
 }
 
