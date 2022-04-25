@@ -13,9 +13,9 @@ class MapStream extends DataStream
     /**
      * @param mixed $value
      *
-     * @return $this
+     * @return void
      */
-    public function append(mixed $value): self
+    public function append(mixed $value): void
     {
         throw new InvalidArgumentException('not all call append on MapStream');
     }

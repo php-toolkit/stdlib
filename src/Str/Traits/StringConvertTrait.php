@@ -16,7 +16,6 @@ use function array_map;
 use function array_values;
 use function count;
 use function explode;
-use function is_bool;
 use function is_numeric;
 use function mb_convert_encoding;
 use function mb_convert_variables;
@@ -31,7 +30,6 @@ use function stripos;
 use function strlen;
 use function strpos;
 use function trim;
-use function vdump;
 use const PREG_SPLIT_NO_EMPTY;
 
 /**
@@ -233,7 +231,7 @@ trait StringConvertTrait
     public static function toNoEmptyArray(string $str, string $sep = ',', int $limit = -1): array
     {
         $str = trim($str, "$sep ");
-        if (!$str) {
+        if ('' === $str) {
             return [];
         }
 
