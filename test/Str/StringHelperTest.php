@@ -45,7 +45,7 @@ class StringHelperTest extends TestCase
             ['23.4', 23.4],
         ];
         foreach ($tests as [$in, $out]) {
-            $this->assertEquals($out, Str::toTyped($in,  true));
+            $this->assertEquals($out, Str::toTyped($in, true));
         }
 
         $this->assertEquals('true', Str::toTyped('true'));
@@ -256,6 +256,4 @@ class StringHelperTest extends TestCase
             $this->assertEquals($want, Str::toTypedArray($given));
         }
     }
-
-
 }

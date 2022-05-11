@@ -122,7 +122,7 @@ trait StringCaseHelperTrait
      */
     public static function strtoupper(int|string $str): string
     {
-       return self::toUpper($str);
+        return self::toUpper($str);
     }
 
     /**
@@ -201,7 +201,7 @@ trait StringCaseHelperTrait
             $str = self::ucfirst($str);
         }
 
-        return preg_replace_callback('/[\s_-]+([a-z])/', static fn($c) => strtoupper($c[1]), $str);
+        return preg_replace_callback('/[\s_-]+([a-z])/', static fn ($c) => strtoupper($c[1]), $str);
     }
 
     /**

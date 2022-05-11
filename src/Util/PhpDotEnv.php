@@ -18,7 +18,6 @@ use function getenv;
 use function is_int;
 use function is_string;
 use function strtoupper;
-use function strpos;
 use function defined;
 use function constant;
 use function implode;
@@ -49,6 +48,7 @@ use function putenv;
 class PhpDotEnv
 {
     public const FULL_ENV_KEY = 'PHP_DOTENV_VARS';
+
     public const DEFAULT_NAME = '.env';
 
     /**

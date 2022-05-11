@@ -76,10 +76,10 @@ class PhpDoc
 
         $comment = str_replace("\r\n", "\n", $comment);
         $comment = "@$default \n" . str_replace(
-                "\r",
-                '',
-                trim(preg_replace('/^\s*\**( |\t)?/m', '', $comment))
-            );
+            "\r",
+            '',
+            trim(preg_replace('/^\s*\**( |\t)?/m', '', $comment))
+        );
 
         $tags  = [];
         $parts = preg_split('/^\s*@/m', $comment, -1, PREG_SPLIT_NO_EMPTY);

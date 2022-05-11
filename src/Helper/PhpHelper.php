@@ -43,7 +43,6 @@ use function preg_replace;
 use function sprintf;
 use function stat;
 use function strlen;
-use function strpos;
 use function strtoupper;
 use function var_dump;
 use function var_export;

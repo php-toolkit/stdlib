@@ -18,5 +18,4 @@ use Toolkit\Stdlib\Helper\NumHelper;
  */
 class Num extends NumHelper
 {
-
 }

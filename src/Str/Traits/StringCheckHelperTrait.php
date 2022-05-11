@@ -140,7 +140,7 @@ trait StringCheckHelperTrait
         }
 
         if (is_array($needle)) {
-            foreach ((array)$needle as $item) {
+            foreach ($needle as $item) {
                 if (!str_contains($string, $item)) {
                     return false;
                 }

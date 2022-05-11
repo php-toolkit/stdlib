@@ -1,4 +1,11 @@
 <?php declare(strict_types=1);
+/**
+ * This file is part of toolkit/stdlib.
+ *
+ * @author   https://github.com/inhere
+ * @link     https://github.com/php-toolkit/stdlib
+ * @license  MIT
+ */
 
 namespace Toolkit\Stdlib\Std;
 
@@ -446,7 +453,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      * @param string $name
      * @param $value
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value): void
     {
         $this->set($name, $value);
     }

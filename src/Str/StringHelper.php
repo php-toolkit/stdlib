@@ -30,7 +30,6 @@ use function gethostname;
 use function hash;
 use function hex2bin;
 use function is_int;
-use function is_string;
 use function mb_strwidth;
 use function microtime;
 use function preg_match;
@@ -59,6 +58,7 @@ abstract class StringHelper
 {
     // These words will be as a Boolean value
     public const TRUE_WORDS  = '|on|yes|true|';
+
     public const FALSE_WORDS = '|off|no|false|';
 
     public static string $defaultEncoding = 'UTF-8';
@@ -355,7 +355,7 @@ abstract class StringHelper
      */
     public static function removeQuotes(string $str): string
     {
-        if (preg_match("/^\".*\"$/", $str) || preg_match("/^'.*'$/", $str)) {
+        if (preg_match('/^".*"$/', $str) || preg_match("/^'.*'$/", $str)) {
             return mb_substr($str, 1, -1);
         }
 
@@ -376,7 +376,7 @@ abstract class StringHelper
 
         if (
             !$quoteAll &&
-            (preg_match("/^\".*\"$/", $str) || preg_match("/^'.*'$/", $str))
+            (preg_match('/^".*"$/', $str) || preg_match("/^'.*'$/", $str))
         ) {
             return $str;
         }

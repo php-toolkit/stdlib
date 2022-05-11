@@ -253,7 +253,8 @@ trait StringConvertTrait
      */
     public static function splitNoEmptyArray(string $str, string $sep = ',', int $limit = 0): array
     {
-        return self::toNoEmptyArray($str, $sep, $limit);;
+        return self::toNoEmptyArray($str, $sep, $limit);
+        ;
     }
 
     /**

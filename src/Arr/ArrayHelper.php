@@ -749,14 +749,14 @@ class ArrayHelper
 
             if (is_array($value)) {
                 $string .= $keyStr . 'Array(' . self::toString(
-                        $value,
-                        $length,
-                        $cycles,
-                        $showKey,
-                        $addMark,
-                        $separator,
-                        $string
-                    ) . ')' . $separator;
+                    $value,
+                    $length,
+                    $cycles,
+                    $showKey,
+                    $addMark,
+                    $separator,
+                    $string
+                ) . ')' . $separator;
             } elseif (is_object($value)) {
                 $string .= $keyStr . 'Object(' . get_class($value) . ')' . $separator;
             } elseif (is_resource($value)) {

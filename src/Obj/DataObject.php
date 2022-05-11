@@ -22,7 +22,7 @@ use function in_array;
  *
  * @package Toolkit\Stdlib\Obj
  */
-class DataObject extends ArrayObject  implements JsonSerializable
+class DataObject extends ArrayObject implements JsonSerializable
 {
     /**
      * @param array $data
