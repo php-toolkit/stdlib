@@ -159,6 +159,19 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     }
 
     /**
+     * @param string $key
+     * @param array $default
+     *
+     * @return array
+     */
+    public function getArray(string $key, array $default = []): array
+    {
+        $data = $this->get($key);
+
+        return $data ? (array)$data : $default;
+    }
+
+    /**
      * Add item to collection
      *
      * @param array $items Key-value array of data to append to this collection
