@@ -266,6 +266,19 @@ trait StringCaseHelperTrait
     }
 
     /**
+     * @param string $str
+     *
+     * @return string
+     */
+    public static function toLowerWords(string $str): string
+    {
+        $str = str_replace(['-', '_'], ' ', $str);
+        $str = preg_replace('/([A-Z][a-z])/', ' $1', $str);
+
+        return strtolower($str);
+    }
+
+    /**
      * 驼峰式 <=> 下划线式
      *
      * @param string $str [description]
