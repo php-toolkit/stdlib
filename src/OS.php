@@ -133,12 +133,14 @@ class OS
      */
     public static function getUserName(): string
     {
-        if (isset($_SERVER['USER'])) {
-            return $_SERVER['USER'];
+        $key = self::isWindows() ? 'USERANME' : 'USER';
+
+        if (isset($_SERVER[$key])) {
+            return $_SERVER[$key];
         }
 
-        if (isset($_ENV['USER'])) {
-            return $_ENV['USER'];
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
         }
 
         $user = self::getCurrentUser();
