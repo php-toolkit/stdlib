@@ -11,7 +11,6 @@ namespace Toolkit\Stdlib\Str;
 
 use DateTime;
 use Exception;
-use JetBrains\PhpStorm\Pure;
 use Stringable;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
@@ -436,6 +435,19 @@ abstract class StringHelper
     }
 
     /**
+     * @param array  $args
+     * @param string $prefix
+     *
+     * @return string
+     */
+    public static function shellQuotesToLine(array $args, string $prefix = ''): string
+    {
+        $args = self::shellQuotes($args);
+
+        return ($prefix ? $prefix . ' ': '') .  implode(' ', $args);
+    }
+
+    /**
      * @param string $arg
      *
      * @return string
@@ -449,6 +461,6 @@ abstract class StringHelper
             $quote = '"';
         }
 
-        return $quote ? $arg : "$quote$arg$quote";
+        return $quote ? "$quote$arg$quote" : $arg;
     }
 }
