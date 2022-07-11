@@ -107,7 +107,7 @@ trait StringCheckHelperTrait
         }
 
         if (is_array($needle)) {
-            foreach ((array)$needle as $item) {
+            foreach ($needle as $item) {
                 if (str_contains($string, $item)) {
                     return true;
                 }
@@ -177,7 +177,7 @@ trait StringCheckHelperTrait
         }
 
         if (is_array($needle)) {
-            foreach ((array)$needle as $item) {
+            foreach ($needle as $item) {
                 if (stripos($string, $item) !== false) {
                     return true;
                 }
@@ -201,7 +201,7 @@ trait StringCheckHelperTrait
         }
 
         if (is_array($needle)) {
-            foreach ((array)$needle as $item) {
+            foreach ($needle as $item) {
                 if (stripos($haystack, $item) === false) {
                     return false;
                 }
@@ -476,7 +476,7 @@ trait StringCheckHelperTrait
      */
     public static function isVarName(string $string): bool
     {
-        return preg_match('@^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*@i', $string) === 1;
+        return preg_match('@^[a-zA-Z_\x7f-\xff][a-zA-Z\d_\x7f-\xff]*@i', $string) === 1;
     }
 
     /**

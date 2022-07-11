@@ -14,8 +14,8 @@ use Exception;
 use Stringable;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
-use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringConvertTrait;
+use Toolkit\Stdlib\Str\Traits\StringLengthHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringOtherHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringTruncateHelperTrait;
 use Toolkit\Stdlib\Util\UUID;
@@ -41,6 +41,7 @@ use function str_contains;
 use function str_pad;
 use function str_repeat;
 use function str_replace;
+use function str_starts_with;
 use function str_word_count;
 use function strlen;
 use function strtr;
@@ -454,6 +455,11 @@ abstract class StringHelper
      */
     public static function shellQuote(string $arg): string
     {
+        // is option name.
+        if (str_starts_with($arg, '-')) {
+            return $arg;
+        }
+
         $quote = '';
         if (str_contains($arg, '"')) {
             $quote = "'";
