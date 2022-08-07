@@ -460,13 +460,25 @@ abstract class StringHelper
             return $arg;
         }
 
+        return self::textQuote($arg);
+    }
+
+    /**
+     * Quote text on exist ', ", SPACE
+     *
+     * @param string $text
+     *
+     * @return string
+     */
+    public static function textQuote(string $text): string
+    {
         $quote = '';
-        if (str_contains($arg, '"')) {
+        if (str_contains($text, '"')) {
             $quote = "'";
-        } elseif ($arg === '' || str_contains($arg, "'") || str_contains($arg, ' ')) {
+        } elseif ($text === '' || str_contains($text, "'") || str_contains($text, ' ')) {
             $quote = '"';
         }
 
-        return $quote ? "$quote$arg$quote" : $arg;
+        return $quote ? "$quote$text$quote" : $text;
     }
 }

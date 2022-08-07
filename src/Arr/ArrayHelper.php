@@ -82,6 +82,20 @@ class ArrayHelper
     }
 
     /**
+     * check is a list array
+     *
+     * @param array $arr
+     *
+     * @return bool
+     */
+    public static function isList(array $arr): bool
+    {
+        $keys = array_keys($arr);
+
+        return array_keys($keys) === $keys;
+    }
+
+    /**
      * @param mixed $array
      *
      * @return Traversable
