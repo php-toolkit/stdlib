@@ -68,7 +68,7 @@ class StringHelperTest extends TestCase
     public function testShellQuote(): void
     {
         $tests = [
-            ['', ''],
+            ['', '""'],
             ['abc', 'abc'],
             ['ab"c', 'ab"c'],
         ];

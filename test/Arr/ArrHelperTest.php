@@ -18,6 +18,13 @@ use function array_keys;
  */
 class ArrHelperTest extends TestCase
 {
+    public function testIsList(): void
+    {
+        $this->assertTrue(Arr::isList(['a', 'b']));
+        $this->assertFalse(Arr::isList(['a' => 'v0', 'b']));
+        $this->assertTrue(Arr::isAssoc(['a' => 'v0', 'b']));
+    }
+
     public function testGetKeyMaxWidth(): void
     {
         $data = [
