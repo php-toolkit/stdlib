@@ -70,10 +70,12 @@ class StringHelperTest extends TestCase
         $tests = [
             ['', '""'],
             ['abc', 'abc'],
-            ['ab"c', 'ab"c'],
+            ['ab c', '"ab c"'],
+            ['ab"c', "'ab\"c'"],
         ];
+
         foreach ($tests as [$given, $want]) {
-            self::assertSame($want, Str::shellQuote($given));
+            $this->assertEquals($want, Str::shellQuote($given));
         }
     }
 
