@@ -180,6 +180,11 @@ class ObjectBox implements ContainerInterface
                 if ($value) {
                     Obj::init($obj, $value);
                 }
+            } elseif (isset($value['__creator']) && is_callable($value['__creator'])) {
+                $creator = $value['__creator'];
+                // create object.
+                $obj = $creator($this);
+                $opt = $value['__opt'] ?? [];
             }
         }
 
@@ -194,9 +199,9 @@ class ObjectBox implements ContainerInterface
     /**
      * Register an service definition to the box.
      *
-     * **$definition**:
+     * **For $definition**:
      *
-     * - Closure
+     * - Closure(ObjectBox): object
      * - Object and has __invoke()
      * - string: an function name
      * - array: callable array [class, method]
@@ -204,7 +209,9 @@ class ObjectBox implements ContainerInterface
      *
      * ```php
      * [
-     *  'class' => string,
+     *  'class' => class-string,
+     *  // '__creator' => callable(ObjectBox): object, // can also use creator func.
+     *
      *  // option for create object.
      *  '__opt' => [
      *      'callInit'   => true,
