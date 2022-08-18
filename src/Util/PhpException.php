@@ -74,7 +74,12 @@ class PhpException
             );
         }
 
-        return $clearHtml ? strip_tags($message) : "<div class=\"exception-box\">$message</div>";
+        if ($clearHtml) {
+            return strip_tags($message);
+        }
+
+        $style = 'padding: 5em; font-size: x-large;';
+        return "<div class=\"exception-box\" style='$style'>$message</div>";
     }
 
     /**
