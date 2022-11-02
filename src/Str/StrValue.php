@@ -136,11 +136,11 @@ class StrValue
     }
 
     /**
-     * @return string
+     * @return StrValue
      */
-    public function trimmed(): string
+    public function trimmed(): self
     {
-        return trim($this->value);
+        return self::newTrim($this->value);
     }
 
     // ------------------ check ------------------
@@ -210,6 +210,14 @@ class StrValue
     /**
      * @return int
      */
+    public function int(): int
+    {
+        return (int)$this->value;
+    }
+
+    /**
+     * @return int
+     */
     public function toInt(): int
     {
         return (int)$this->value;
@@ -242,7 +250,23 @@ class StrValue
     /**
      * @return bool
      */
+    public function bool(): bool
+    {
+        return $this->getBool();
+    }
+
+    /**
+     * @return bool
+     */
     public function toBool(): bool
+    {
+        return $this->getBool();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getBool(): bool
     {
         return Str::toBool($this->value);
     }
@@ -274,9 +298,17 @@ class StrValue
     /**
      * @return string
      */
-    public function toString(): string
+    public function value(): string
     {
         return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->getValue();
     }
 
     /**

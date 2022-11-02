@@ -19,7 +19,8 @@ class StrValueTest extends TestCase
         $s = StrValue::new('abc ');
 
         self::assertEquals(4, $s->length());
-        self::assertEquals('abc', $s->trimmed());
+        self::assertEquals('abc', $s->trimmed()->value());
+        self::assertEquals('abc', $s->trim()->toString());
         self::assertFalse($s->hasSuffix('c'));
 
         $s->trim();

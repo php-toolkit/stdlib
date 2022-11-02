@@ -10,6 +10,7 @@
 namespace Toolkit\Stdlib\Str;
 
 use Stringable;
+use Toolkit\Stdlib\Helper\DataHelper;
 use function array_unshift;
 use function implode;
 use function sprintf;
@@ -96,6 +97,17 @@ class StrBuffer implements Stringable
     public function writeln(string $content): self
     {
         $this->parts[] = $content . "\n";
+        return $this;
+    }
+
+    /**
+     * @param mixed $content
+     *
+     * @return self
+     */
+    public function writeAny(mixed $content): self
+    {
+        $this->parts[] = DataHelper::toString($content);
         return $this;
     }
 
