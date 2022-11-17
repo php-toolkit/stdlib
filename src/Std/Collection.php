@@ -14,8 +14,11 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
+use Toolkit\Stdlib\Obj\DataObject;
+use Toolkit\Stdlib\Php;
 use Traversable;
 use function count;
+use function is_string;
 
 /**
  * Class Collection
@@ -172,6 +175,39 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     }
 
     /**
+     * @param string $key
+     * @param array $default
+     *
+     * @return DataObject
+     */
+    public function getDataObject(string $key, array $default = []): DataObject
+    {
+        $data = $this->get($key);
+
+        return DataObject::new($data ? (array)$data : $default);
+    }
+
+    /**
+     * @param string $key
+     * @param class-string|object $obj
+     *
+     * @return object
+     */
+    public function mapObject(string $key, string|object $obj): object
+    {
+        // is class string
+        if (is_string($obj)) {
+            $obj = new $obj();
+        }
+
+        if ($data = $this->getArray($key)) {
+            Php::initObject($obj, $data);
+        }
+
+        return $obj;
+    }
+
+    /**
      * Add item to collection
      *
      * @param array $items Key-value array of data to append to this collection
@@ -287,6 +323,14 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     }
 
     /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return Php::dumpVars($this->data);
+    }
+
+    /**
      * Get collection keys
      *
      * @return array The collection's source data keys
@@ -337,6 +381,14 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     public function reset(): void
     {
         $this->data = [];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 
     /********************************************************************************

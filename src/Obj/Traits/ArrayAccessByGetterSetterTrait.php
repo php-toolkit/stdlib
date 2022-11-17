@@ -25,7 +25,6 @@ use function property_exists;
  */
 trait ArrayAccessByGetterSetterTrait
 {
-    /** @var bool */
     // protected $__strict__ = false;
 
     /**

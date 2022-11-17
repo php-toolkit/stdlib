@@ -32,12 +32,10 @@ trait PropertyAccessByGetterSetterTrait
     /**
      * @reference yii2 yii\base\Object::__set()
      *
-     * @param $name
-     * @param $value
-     *
-     * @throws SetPropertyException
+     * @param string $name
+     * @param mixed $value
      */
-    public function __set($name, $value): void
+    public function __set(string $name, mixed $value): void
     {
         $setter = 'set' . ucfirst($name);
 
@@ -58,7 +56,7 @@ trait PropertyAccessByGetterSetterTrait
      * @return mixed
      * @throws GetPropertyException
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         $getter = 'get' . ucfirst($name);
 
@@ -78,7 +76,7 @@ trait PropertyAccessByGetterSetterTrait
      *
      * @return bool
      */
-    public function __isset($name)
+    public function __isset(string $name)
     {
         $getter = 'get' . ucfirst($name);
 

@@ -16,6 +16,7 @@ use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Str;
 use UnexpectedValueException;
 use function in_array;
+use const JSON_UNESCAPED_SLASHES;
 
 /**
  * Class DataObject
@@ -247,7 +248,7 @@ class DataObject extends ArrayObject implements JsonSerializable
      */
     public function toString(): string
     {
-        return JsonHelper::enc($this->getArrayCopy(), JSON_THROW_ON_ERROR);
+        return JsonHelper::enc($this->getArrayCopy(), JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -256,6 +257,37 @@ class DataObject extends ArrayObject implements JsonSerializable
     public function __toString(): string
     {
         return $this->toString();
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function __isset(string $key): bool
+    {
+        return $this->offsetExists($key);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function __get(string $key): mixed
+    {
+        return $this->offsetGet($key);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function __set(string $key, mixed $value): void
+    {
+         $this->offsetSet($key, $value);
     }
 
     /**

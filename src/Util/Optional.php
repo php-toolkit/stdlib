@@ -168,7 +168,7 @@ final class Optional
      */
     public function isEmpty(): bool
     {
-        return $this->value === null;
+        return empty($this->value);
     }
 
     /**
