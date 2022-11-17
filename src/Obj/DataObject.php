@@ -36,6 +36,16 @@ class DataObject extends ArrayObject implements JsonSerializable
     }
 
     /**
+     * @param string $json
+     *
+     * @return static
+     */
+    public static function fromJson(string $json): static
+    {
+        return new static(JsonHelper::decode($json, true));
+    }
+
+    /**
      * @param array $data
      * @param bool  $override
      */
