@@ -227,11 +227,22 @@ class DataObject extends ArrayObject implements JsonSerializable
     }
 
     /**
+     * @param array $fields
+     *
+     * @return array
+     * @deprecated please use getMulti()
+     */
+    public function getSome(array $fields = []): array
+    {
+        return $this->getMulti($fields);
+    }
+
+    /**
      * @param array $fields Restrict to return only these fields, and return all of them if it is empty
      *
      * @return array
      */
-    public function getSome(array $fields = []): array
+    public function getMulti(array $fields = []): array
     {
         $data = [];
         foreach ($this->getArrayCopy() as $key => $value) {
@@ -254,11 +265,24 @@ class DataObject extends ArrayObject implements JsonSerializable
     }
 
     /**
+     * @return array
+     */
+    public function getKeys(): array
+    {
+        $keys = [];
+        foreach ($this as $key => $val) {
+            $keys[] = $key;
+        }
+
+        return $keys;
+    }
+
+    /**
      * @return string
      */
     public function toString(): string
     {
-        return JsonHelper::enc($this->getArrayCopy(), JSON_THROW_ON_ERROR|JSON_UNESCAPED_SLASHES);
+        return JsonHelper::enc($this->getArrayCopy(), JSON_UNESCAPED_SLASHES);
     }
 
     /**

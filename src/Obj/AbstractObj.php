@@ -11,7 +11,6 @@ namespace Toolkit\Stdlib\Obj;
 
 use Toolkit\Stdlib\Obj;
 use Toolkit\Stdlib\Obj\Traits\QuickInitTrait;
-use function get_object_vars;
 
 /**
  * Class AbstractObj
@@ -37,6 +36,6 @@ abstract class AbstractObj
      */
     public function toArray(): array
     {
-        return get_object_vars($this);
+        return Obj::toArray($this);
     }
 }

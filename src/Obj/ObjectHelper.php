@@ -25,6 +25,7 @@ use function base64_decode;
 use function base64_encode;
 use function basename;
 use function dirname;
+use function get_object_vars;
 use function gettype;
 use function gzcompress;
 use function gzuncompress;
@@ -156,31 +157,26 @@ class ObjectHelper
     }
 
     /**
-     * php对象转换成为数组
+     * PHP对象转换成为数组
      *
-     * @param Traversable|array $data
+     * @param object $data
      * @param bool $recursive
      *
      * @return array
      */
-    public static function toArray(Traversable|array $data, bool $recursive = false): array
+    public static function toArray(object $data, bool $recursive = false): array
     {
-        $arr = [];
-
-        // Ensure the input data is an array.
-        if (is_object($data)) {
-            if ($data instanceof Traversable) {
-                $arr = iterator_to_array($data);
-            } elseif (method_exists($data, 'toArray')) {
-                $arr = $data->toArray();
-            }
+        if ($data instanceof Traversable) {
+            $arr = iterator_to_array($data);
+        } elseif (method_exists($data, 'toArray')) {
+            $arr = $data->toArray();
         } else {
-            $arr = (array)$data;
+            $arr = get_object_vars($data);
         }
 
         if ($recursive) {
             foreach ($arr as $key => $value) {
-                if (is_array($value) || is_object($value)) {
+                if (is_object($value)) {
                     $arr[$key] = static::toArray($value, $recursive);
                 }
             }
