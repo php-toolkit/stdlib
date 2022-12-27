@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Helper;
 
+use Toolkit\Stdlib\Json;
 use function filter_var;
 use function gettype;
 use function is_array;
@@ -16,7 +17,6 @@ use function is_bool;
 use function is_object;
 use function is_scalar;
 use function is_string;
-use function json_encode;
 use function method_exists;
 use const FILTER_NULL_ON_FAILURE;
 use const FILTER_VALIDATE_BOOLEAN;
@@ -59,13 +59,17 @@ class DataHelper
 
     /**
      * @param mixed $val
+     * @param bool $simpleBool
      *
      * @return string
      */
-    public static function toString(mixed $val): string
+    public static function toString(mixed $val, bool $simpleBool = false): string
     {
         if (is_scalar($val)) {
             if (is_bool($val)) {
+                if ($simpleBool) {
+                    return $val ? 'TRUE' : 'FALSE';
+                }
                 return $val ? 'bool(TRUE)' : 'bool(FALSE)';
             }
 
@@ -78,7 +82,7 @@ class DataHelper
         }
 
         if (is_array($val)) {
-            return json_encode($val);
+            return Json::enc($val);
         }
 
         if (is_object($val)) {

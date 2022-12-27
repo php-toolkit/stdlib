@@ -45,6 +45,7 @@ class MapStream extends DataStream
 
     /**
      * @param callable(mixed): mixed $func
+     * @param array $map
      *
      * @return array<string, mixed>
      */

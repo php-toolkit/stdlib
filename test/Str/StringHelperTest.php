@@ -36,6 +36,15 @@ class StringHelperTest extends TestCase
         $this->assertFalse(Str::isBool('abc'));
     }
 
+    public function testIsVarName(): void
+    {
+        $this->assertTrue(Str::isVarName('true'));
+        $this->assertTrue(Str::isVarName('abc'));
+        $this->assertTrue(Str::isVarName('some_name'));
+        $this->assertFalse(Str::isVarName('some-name'));
+        $this->assertFalse(Str::isVarName('some_name()'));
+    }
+
     public function testToTyped(): void
     {
         $tests = [
