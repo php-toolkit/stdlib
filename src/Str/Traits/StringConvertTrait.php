@@ -16,6 +16,7 @@ use function array_map;
 use function array_values;
 use function count;
 use function explode;
+use function implode;
 use function is_numeric;
 use function mb_convert_encoding;
 use function mb_convert_variables;
@@ -116,6 +117,24 @@ trait StringConvertTrait
         }
 
         return $str;
+    }
+
+    /**
+     * like implode() but support any type
+     *
+     * @param array $list
+     * @param string $sep
+     *
+     * @return string
+     */
+    public static function join(array $list, string $sep = ','): string
+    {
+        $strings = [];
+        foreach ($list as $value) {
+            $strings[] = DataHelper::toString($value, true);
+        }
+
+        return implode($sep, $strings);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -451,5 +470,45 @@ trait StringConvertTrait
         }
 
         return $tmp;
+    }
+
+    /**
+     * split string to two-node strings.
+     *
+     * eg: "name=tom" => ['name', 'tom']
+     *
+     * @param string $str
+     * @param string $sep
+     *
+     * @return array
+     */
+    public static function split2node(string $str, string $sep = '='): array
+    {
+        $nodes = self::splitTrimmed($str, $sep, 2);
+
+        return count($nodes) === 2 ? $nodes : [$nodes[0], ''];
+    }
+
+    /**
+     * @param string $text multi line text
+     * @param string $lineSep
+     * @param string $valSep
+     *
+     * @return array
+     */
+    public static function splitKvMap(string $text, string $lineSep = "\n", string $valSep = '='): array
+    {
+        $map = [];
+
+        foreach (explode($lineSep, $text) as $line) {
+            if (!$line = trim($line)) {
+                continue;
+            }
+
+            [$k, $v] = self::split2node($line, $valSep);
+            $map[$k] = $v;
+        }
+
+        return $map;
     }
 }

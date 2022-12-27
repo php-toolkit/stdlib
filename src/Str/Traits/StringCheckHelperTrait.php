@@ -476,7 +476,17 @@ trait StringCheckHelperTrait
      */
     public static function isVarName(string $string): bool
     {
-        return preg_match('@^[a-zA-Z_\x7f-\xff][a-zA-Z\d_\x7f-\xff]*@i', $string) === 1;
+        return preg_match('@^[a-zA-Z_\x7f-\xff][a-zA-Z\d_\x7f-\xff]*$@i', $string) === 1;
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function isAlphaNum(string $str): bool
+    {
+        return preg_match('/^[a-zA-Z0-9]+$/', $str) === 1;
     }
 
     /**
