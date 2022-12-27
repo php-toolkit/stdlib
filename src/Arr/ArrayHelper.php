@@ -112,12 +112,12 @@ class ArrayHelper
     /**
      * array data to object
      *
-     * @param Traversable|array $array
-     * @param string            $class
+     * @param iterable $array
+     * @param string   $class
      *
      * @return mixed
      */
-    public static function toObject(Traversable|array $array, string $class = stdClass::class): mixed
+    public static function toObject(iterable $array, string $class = stdClass::class): mixed
     {
         $object = new $class;
 
@@ -409,6 +409,24 @@ class ArrayHelper
     }
 
     /**
+     * like implode() but support any type
+     *
+     * @param array $list
+     * @param string $sep
+     *
+     * @return string
+     */
+    public static function join(array $list, string $sep = ','): string
+    {
+        $strings = [];
+        foreach ($list as $value) {
+            $strings[] = DataHelper::toString($value, true);
+        }
+
+        return implode($sep, $strings);
+    }
+
+    /**
      * Cross join the given arrays, returning all possible permutations.
      *
      * @param array ...$arrays
@@ -649,6 +667,20 @@ class ArrayHelper
     }
 
     /**
+     * @param array $arr
+     * @param ...$keys
+     *
+     * @return array
+     */
+    public static function deleteKeys(array $arr, ...$keys): array
+    {
+        foreach ($keys as $key) {
+            unset($arr[$key]);
+        }
+        return $arr;
+    }
+
+    /**
      * Get a value from the array, and remove it.
      *
      * @param ArrayAccess|array $array
@@ -862,7 +894,7 @@ class ArrayHelper
     {
         $lines = [];
         foreach ($data as $key => $val) {
-            $lines = $key . $kvSep . DataHelper::toString($val);
+            $lines = $key . $kvSep . DataHelper::toString($val, true);
         }
 
         return implode($lineSep, $lines);
