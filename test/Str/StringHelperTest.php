@@ -267,4 +267,22 @@ class StringHelperTest extends TestCase
             $this->assertEquals($want, Str::toTypedArray($given));
         }
     }
+
+    public function testRenderVars(): void
+    {
+        $vars = [
+            'name' => 'inhere',
+            'age'  => 200,
+            'tags' => ['php'],
+            'top' => [
+                'key0' => 'val0',
+            ]
+        ];
+
+        $text = Str::renderVars('hello {{ name }}, age: {{ age}}, tags: {{ tags.0 }}, key0: {{top.key0 }}', $vars);
+        $this->assertEquals('hello inhere, age: 200, tags: php, key0: val0', $text);
+
+        $text = Str::renderVars('hello ${ name }, age: ${ age}, tags: ${ tags.0 }, key0: ${top.key0 }', $vars, '${%s}');
+        $this->assertEquals('hello inhere, age: 200, tags: php, key0: val0', $text);
+    }
 }

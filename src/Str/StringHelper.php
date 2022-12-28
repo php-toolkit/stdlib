@@ -12,6 +12,7 @@ namespace Toolkit\Stdlib\Str;
 use DateTime;
 use Exception;
 use Stringable;
+use Toolkit\Stdlib\Arr;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringCheckHelperTrait;
 use Toolkit\Stdlib\Str\Traits\StringConvertTrait;
@@ -33,6 +34,8 @@ use function is_int;
 use function mb_strwidth;
 use function microtime;
 use function preg_match;
+use function preg_quote;
+use function preg_replace_callback;
 use function preg_split;
 use function random_bytes;
 use function random_int;
@@ -46,6 +49,7 @@ use function str_word_count;
 use function strlen;
 use function strtr;
 use function substr;
+use function trim;
 use function uniqid;
 use const STR_PAD_LEFT;
 use const STR_PAD_RIGHT;
@@ -279,7 +283,7 @@ abstract class StringHelper
 
     /**
      * @param string $tplCode
-     * @param array  $vars
+     * @param array  $vars [k => v]
      *
      * @return string
      */
@@ -289,28 +293,47 @@ abstract class StringHelper
     }
 
     /**
+     * Simple render vars to template string.
+     *
      * @param string $tplCode
      * @param array $vars
-     * @param string $format
+     * @param string $format  Template var format
+     *
+     * @return string
+     */
+    public static function renderVars(string $tplCode, array $vars, string $format = '{{%s}}'): string
+    {
+        // get left chars
+        [$left, $right] = explode('%s', $format);
+        if (!$vars || !str_contains($tplCode, $left)) {
+            return $tplCode;
+        }
+
+        $fmtVars = Arr::flattenMap($vars, Arr::FLAT_DOT_JOIN_INDEX);
+        $pattern = sprintf('/%s([\w\s.-]+)%s/', preg_quote($left, '/'), preg_quote($right, '/'));
+
+        return preg_replace_callback($pattern, static function (array $match) use ($fmtVars) {
+            $var = trim($match[1]);
+            if ($var && isset($fmtVars[$var])) {
+                return $fmtVars[$var];
+            }
+
+            return $match[0];
+        }, $tplCode);
+    }
+
+    /**
+     * Alias of renderVars().
+     *
+     * @param string $tplCode
+     * @param array $vars
+     * @param string $format Template var format
      *
      * @return string
      */
     public static function renderTemplate(string $tplCode, array $vars, string $format = '{{%s}}'): string
     {
-        // get left chars
-        [$left, ] = explode('%s', $format);
-        if (!$vars || !str_contains($tplCode, $left)) {
-            return $tplCode;
-        }
-
-        $fmtVars = [];
-        foreach ($vars as $name => $var) {
-            $name = sprintf($format, (string)$name);
-            // add
-            $fmtVars[$name] = $var;
-        }
-
-        return strtr($tplCode, $fmtVars);
+        return self::renderVars($tplCode, $vars, $format);
     }
 
     ////////////////////////////////////////////////////////////
