@@ -12,16 +12,22 @@ namespace Toolkit\StdlibTest\Str;
 use PHPUnit\Framework\TestCase;
 use Toolkit\Stdlib\Str\StrValue;
 
+/**
+ * class StrValueTest
+ *
+ * @author inhere
+ * @date 2022/12/27
+ */
 class StrValueTest extends TestCase
 {
     public function testStrObjectBasic(): void
     {
         $s = StrValue::new('abc ');
 
+        self::assertFalse($s->hasSuffix('c'));
         self::assertEquals(4, $s->length());
         self::assertEquals('abc', $s->trimmed()->value());
         self::assertEquals('abc', $s->trim()->toString());
-        self::assertFalse($s->hasSuffix('c'));
 
         $s->trim();
 
