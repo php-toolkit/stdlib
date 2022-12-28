@@ -883,7 +883,51 @@ class ArrayHelper
         return $array;
     }
 
+    public const FLAT_DOT_JOIN_INDEX = 1;
+
     /**
+     * @param iterable $data
+     * @param int $flags
+     *
+     * @return array
+     */
+    public static function flattenMap(iterable $data, int $flags = 0): array
+    {
+        $flatMap = [];
+        self::doFlattenMap($data, $flatMap, '', $flags);
+        return $flatMap;
+    }
+
+    /**
+     * @param iterable $data
+     * @param array $flatMap
+     * @param string $parentPath
+     * @param int $flags
+     */
+    public static function doFlattenMap(iterable $data, array &$flatMap = [], string $parentPath = '', int $flags = 0): void
+    {
+        foreach ($data as $key => $val) {
+            if ($parentPath) {
+                if (is_int($key) && $flags^self::FLAT_DOT_JOIN_INDEX) {
+                    $path = $parentPath . "[$key]";
+                } else {
+                    $path = $parentPath . '.' . $key;
+                }
+            } else {
+                $path = $key;
+            }
+
+            if (is_scalar($val) || $val === null) {
+                $flatMap[$path] = $val;
+            } else {
+                self::doFlattenMap($val, $flatMap, $path, $flags);
+            }
+        }
+    }
+
+    /**
+     * Quickly build multi line k-v text
+     *
      * @param array $data
      * @param string $kvSep
      * @param string $lineSep
