@@ -27,6 +27,10 @@ class StringHelperTest extends TestCase
 
         $this->assertTrue(Str::isNull('null'));
         $this->assertFalse(Str::isNull('abc'));
+
+        $this->assertTrue(Str::isAlphaNum('abc'));
+        $this->assertTrue(Str::isAlphaNum('abc23'));
+        $this->assertFalse(Str::isAlphaNum('--'));
     }
 
     public function testIsBool(): void
@@ -273,7 +277,7 @@ class StringHelperTest extends TestCase
         $vars = [
             'name' => 'inhere',
             'age'  => 200,
-            'tags' => ['php'],
+            'tags' => ['php', 'java'],
             'top' => [
                 'key0' => 'val0',
             ]
@@ -284,5 +288,8 @@ class StringHelperTest extends TestCase
 
         $text = Str::renderVars('hello ${ name }, age: ${ age}, tags: ${ tags.0 }, key0: ${top.key0 }', $vars, '${%s}');
         $this->assertEquals('hello inhere, age: 200, tags: php, key0: val0', $text);
+
+        $text = Str::renderVars('tags: ${ tags }', $vars, '${%s}');
+        $this->assertEquals('tags: [php, java]', $text);
     }
 }

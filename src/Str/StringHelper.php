@@ -30,6 +30,7 @@ use function explode;
 use function gethostname;
 use function hash;
 use function hex2bin;
+use function is_array;
 use function is_int;
 use function mb_strwidth;
 use function microtime;
@@ -309,8 +310,15 @@ abstract class StringHelper
             return $tplCode;
         }
 
-        $fmtVars = Arr::flattenMap($vars, Arr::FLAT_DOT_JOIN_INDEX);
+        $fmtVars = Arr::flattenMap($vars, Arr\ArrConst::FLAT_DOT_JOIN_INDEX);
         $pattern = sprintf('/%s([\w\s.-]+)%s/', preg_quote($left, '/'), preg_quote($right, '/'));
+
+        // convert array value to string.
+        foreach ($vars as $name => $val) {
+            if (is_array($val)) {
+                $fmtVars[$name] = Arr::toStringV2($val);
+            }
+        }
 
         return preg_replace_callback($pattern, static function (array $match) use ($fmtVars) {
             $var = trim($match[1]);

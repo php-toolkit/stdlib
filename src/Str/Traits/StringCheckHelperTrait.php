@@ -490,6 +490,17 @@ trait StringCheckHelperTrait
     }
 
     /**
+     * @param string $pattern
+     * @param string $str
+     *
+     * @return bool
+     */
+    public static function pregMatch(string $pattern, string $str): bool
+    {
+        return preg_match($pattern, $str) === 1;
+    }
+
+    /**
      * 使用正则验证数据
      *
      * @param string $value 要验证的数据
