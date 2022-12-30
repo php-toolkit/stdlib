@@ -25,6 +25,12 @@ class ArrHelperTest extends TestCase
         $this->assertTrue(Arr::isAssoc(['a' => 'v0', 'b']));
     }
 
+    public function testToStringV2(): void
+    {
+        $this->assertEquals('[ab, 234]', Arr::toStringV2(['ab', 234]));
+        $this->assertEquals('{k0: ab, k1: 234}', Arr::toStringV2(['k0' => 'ab', 'k1' => 234]));
+    }
+
     public function testGetKeyMaxWidth(): void
     {
         $data = [
