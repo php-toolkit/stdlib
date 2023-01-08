@@ -47,6 +47,26 @@ class Assert
     }
 
     /**
+     * Assert value is empty, otherwise will throw ex.
+     *
+     * @param mixed $value
+     * @param string $errMsg
+     * @param bool $isPrefix
+     */
+    public static function empty(mixed $value, string $errMsg = '', bool $isPrefix = false): void
+    {
+        if (!empty($value)) {
+            if ($errMsg) {
+                $errMsg = $isPrefix ? "$errMsg should be empty" : $errMsg;
+            } else {
+                $errMsg = 'Expected a empty value';
+            }
+
+            throw static::createEx($errMsg);
+        }
+    }
+
+    /**
      * @param mixed $value
      * @param string $errMsg
      */
