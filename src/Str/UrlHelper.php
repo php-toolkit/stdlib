@@ -10,29 +10,29 @@
 namespace Toolkit\Stdlib\Str;
 
 use InvalidArgumentException;
-use function implode;
-use function preg_match;
-use function http_build_query;
-use function curl_init;
-use function curl_setopt;
 use function curl_exec;
 use function curl_getinfo;
+use function curl_init;
+use function curl_setopt;
+use function file_get_contents;
 use function function_exists;
 use function get_headers;
-use function stream_context_create;
-use function file_get_contents;
+use function http_build_query;
+use function implode;
+use function mb_convert_encoding;
 use function parse_url;
+use function preg_match;
+use function rawurlencode;
+use function str_replace;
+use function stream_context_create;
 use function strpos;
 use function trim;
 use function urldecode;
-use function rawurlencode;
-use function mb_convert_encoding;
-use function str_replace;
 use function urlencode;
-use const CURLOPT_NOBODY;
-use const CURLOPT_CONNECTTIMEOUT;
-use const CURLOPT_TIMEOUT;
 use const CURLINFO_HTTP_CODE;
+use const CURLOPT_CONNECTTIMEOUT;
+use const CURLOPT_NOBODY;
+use const CURLOPT_TIMEOUT;
 
 /**
  * Class UrlHelper
@@ -272,8 +272,8 @@ class UrlHelper
         }
 
         // 若已被编码的url，将被解码，再继续重新编码
-        $decodeUrl = urldecode($url);
-        $encodeUrl = urlencode($decodeUrl);
+        // $decodeUrl = urldecode($url);
+        $encodeUrl = urlencode($url);
 
         return str_replace(self::$entities, self::$replacements, $encodeUrl);
     }
@@ -297,7 +297,7 @@ class UrlHelper
         }
 
         // 若已被编码的url，将被解码，再继续重新编码
-        $url = urldecode($url);
+        // $url = urldecode($url);
 
         $encodeUrl = rawurlencode(mb_convert_encoding($url, 'utf-8'));
         // $url  = rawurlencode($url);

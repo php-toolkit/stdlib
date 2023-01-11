@@ -36,6 +36,6 @@ abstract class AbstractObj
      */
     public function toArray(): array
     {
-        return Obj::toArray($this);
+        return Obj::toArray($this, false, false);
     }
 }

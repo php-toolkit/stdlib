@@ -59,12 +59,11 @@ class ObjectHelper
      * - 会先尝试用 setter 方法设置属性
      * - 再尝试直接设置属性
      *
-     * @template T object
-     * @param T $object An object instance
+     * @param object $object An object instance
      * @param array $config
      * @param bool $toCamel
      *
-     * @return T
+     * @return object
      */
     public static function init(object $object, array $config, bool $toCamel = false): object
     {
@@ -159,25 +158,26 @@ class ObjectHelper
     /**
      * PHP对象转换成为数组
      *
-     * @param object $data
+     * @param object $obj
      * @param bool $recursive
+     * @param bool $checkMth in the data obj
      *
      * @return array
      */
-    public static function toArray(object $data, bool $recursive = false): array
+    public static function toArray(object $obj, bool $recursive = false, bool $checkMth = true): array
     {
-        if ($data instanceof Traversable) {
-            $arr = iterator_to_array($data);
-        } elseif (method_exists($data, 'toArray')) {
-            $arr = $data->toArray();
+        if ($obj instanceof Traversable) {
+            $arr = iterator_to_array($obj);
+        } elseif ($checkMth && method_exists($obj, self::TO_ARRAY_METHOD)) {
+            $arr = $obj->toArray();
         } else {
-            $arr = get_object_vars($data);
+            $arr = get_object_vars($obj);
         }
 
         if ($recursive) {
             foreach ($arr as $key => $value) {
                 if (is_object($value)) {
-                    $arr[$key] = static::toArray($value, $recursive);
+                    $arr[$key] = static::toArray($value, $recursive, $checkMth);
                 }
             }
         }
