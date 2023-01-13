@@ -20,7 +20,7 @@ trait NameAliasTrait
     /**
      * @var array
      */
-    private array $aliases = [];
+    protected array $aliases = [];
 
     /**
      * set name alias(es)
@@ -74,23 +74,43 @@ trait NameAliasTrait
     }
 
     /**
+     * get all alias to name map
+     *
+     * @return array
+     */
+    public function getAliasMap(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * get aliases for input name.
+     *
+     * @param string $name
+     *
+     * @return array
+     */
+    public function getNameAliases(string $name): array
+    {
+        $aliases = [];
+        foreach ($this->aliases as $alias => $n) {
+            if ($name === $n) {
+                $aliases[] = $alias;
+            }
+        }
+
+        return $aliases;
+    }
+
+    /**
+     * get aliases for input name or get all.
+     *
      * @param string $name
      *
      * @return array
      */
     public function getAliases(string $name = ''): array
     {
-        if ($name) {
-            $aliases = [];
-            foreach ($this->aliases as $alias => $n) {
-                if ($name === $n) {
-                    $aliases[] = $alias;
-                }
-            }
-
-            return $aliases;
-        }
-
-        return $this->aliases;
+        return $name ? $this->getNameAliases($name) : $this->aliases;
     }
 }
