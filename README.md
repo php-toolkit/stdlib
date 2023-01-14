@@ -183,6 +183,15 @@ $userList = ListStream::of($userModels)
 vdump($userList);
 ```
 
+### PipeFilters
+
+```php
+$pf = PipeFilters::newWithDefaultFilters();
+
+$val = $pf->applyString('inhere', 'upper'); // 'INHERE'
+$val = $pf->applyString('inhere', 'upper|substr:0,3'); // 'INH'
+```
+
 ## License
 
 [MIT](LICENSE)

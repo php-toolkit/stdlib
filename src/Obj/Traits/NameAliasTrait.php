@@ -18,7 +18,9 @@ use function count;
 trait NameAliasTrait
 {
     /**
-     * @var array
+     * aliases string-map
+     *
+     * @var array<string, string>
      */
     protected array $aliases = [];
 
