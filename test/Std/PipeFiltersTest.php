@@ -41,7 +41,7 @@ class PipeFiltersTest extends BaseLibTestCase
 
         $pf = PipeFilters::newWithDefaultFilters();
         foreach ($tests as [$wanted, $value, $rules]) {
-            $this->assertEquals($wanted, $pf->applyStringRules($value, $rules));
+            $this->assertEquals($wanted, $pf->applyString($value, $rules));
         }
     }
 }

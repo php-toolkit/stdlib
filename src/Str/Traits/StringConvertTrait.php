@@ -505,6 +505,11 @@ trait StringConvertTrait
                 continue;
             }
 
+            // skip comments and must be contains $valSep
+            if ($line[0] === '#' || !str_contains($line, $valSep)) {
+                continue;
+            }
+
             [$k, $v] = self::split2node($line, $valSep);
             $map[$k] = $v;
         }
