@@ -11,7 +11,6 @@ namespace Toolkit\Stdlib\Arr\Traits;
 
 use ArrayAccess;
 use Toolkit\Stdlib\Php;
-use Traversable;
 use function array_filter;
 use function array_shift;
 use function count;
@@ -32,9 +31,9 @@ trait ArrayValueGetSetTrait
     /**
      * Add an element to an array using "dot" notation if it doesn't exist.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return array
      */
@@ -81,9 +80,9 @@ trait ArrayValueGetSetTrait
      * Set an array item to a given value using "dot" notation.
      * If no key is given to the method, the entire array will be replaced.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return array
      */
@@ -114,9 +113,8 @@ trait ArrayValueGetSetTrait
     /**
      * Get Multi - 获取多个, 可以设置默认值
      *
-     * @param array      $data array data
-     * @param array      $needKeys
-     *                         $needKeys = [
+     * @param array $data array data
+     * @param array $needKeys = [
      *                         'name',
      *                         'password',
      *                         'status' => '1'
@@ -131,7 +129,7 @@ trait ArrayValueGetSetTrait
 
         foreach ($needKeys as $key => $default) {
             if (is_int($key)) {
-                $key     = $default;
+                $key = $default;
                 $default = null;
             }
 
@@ -163,14 +161,14 @@ trait ArrayValueGetSetTrait
      * Get data from array or object by path.
      * Example: `DataCollector::getByPath($array, 'foo.bar.yoo')` equals to $array['foo']['bar']['yoo'].
      *
-     * @param Traversable|array $data      An array or object to get value.
-     * @param string            $path      The key path.
+     * @param iterable $data An array or object to get value.
+     * @param string $path The key path.
      * @param mixed|null $default
-     * @param string            $separator Separator of paths.
+     * @param string $separator Separator of paths.
      *
      * @return mixed Found value, null if not exists.
      */
-    public static function getByPath(Traversable|array $data, string $path, mixed $default = null, string $separator = '.'): mixed
+    public static function getByPath(iterable $data, string $path, mixed $default = null, string $separator = '.'): mixed
     {
         if (isset($data[$path])) {
             return $data[$path];
@@ -224,12 +222,12 @@ trait ArrayValueGetSetTrait
     /**
      * setByPath
      *
-     * @param ArrayAccess|array &$data
-     * @param string             $path
-     * @param mixed              $value
-     * @param string             $separator
+     * @param array $data
+     * @param string $path
+     * @param mixed $value
+     * @param string $separator
      */
-    public static function setByPath(ArrayAccess|array &$data, string $path, mixed $value, string $separator = '.'): void
+    public static function setByPath(array &$data, string $path, mixed $value, string $separator = '.'): void
     {
         if (!str_contains($path, $separator)) {
             $data[$path] = $value;

@@ -323,4 +323,63 @@ trait ArrayConvertTrait
         }
         return '{' . implode(', ', $strings) . '}';
     }
+
+    /**
+     * simple format array data to string.
+     *
+     * @param array $data
+     * @param int   $depth
+     *
+     * @return string
+     */
+    public static function toStringV3(array $data, int $depth = 3): string
+    {
+        return self::doFormat($data, $depth);
+    }
+
+    private static function doFormat(array $data, int $depth = 3, int $innerDepth = 1): string
+    {
+        if (!$data) {
+            return '{}';
+        }
+
+        if ($depth === 0) {
+            return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+
+        $count  = count($data);
+        $isList = isset($data[0], $data[$count - 1]);
+
+        // number list
+        $isNumbers = $isList && is_int($data[0]) && is_int($data[$count - 1]);
+        if ($isNumbers) {
+            return '[' . implode(',', $data) . "]";
+        }
+
+        $strings = ['{'];
+        $indents = str_repeat(' ', $innerDepth * 2);
+
+        foreach ($data as $key => $value) {
+            $sfx = '';
+            if ($value === null) {
+                $str = 'null';
+            } elseif (is_bool($value)) {
+                $str = $value ? 'true' : 'false';
+            } elseif (is_scalar($value)) {
+                $str = (string)$value;
+            } elseif (is_array($value)) {
+                $str = self::doFormat($value, $depth - 1, $innerDepth +1);
+                $sfx = " #len=" . count($value);
+            } else {
+                $str = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            }
+
+            $keyString = $isList ? '' : "$key: ";
+            $strings[] = sprintf('%s%s%s,%s', $indents, $keyString, $str, $sfx);
+        }
+
+        $strings[] = str_repeat(' ', ($innerDepth-1) * 2) . '}';
+        return implode("\n", $strings);
+    }
+
 }

@@ -3,9 +3,9 @@
 namespace Toolkit\Stdlib\Obj;
 
 /**
- * Class AbstractObj
+ * Class BaseObj
  */
-abstract class AbstractObj extends BaseObject
+abstract class BaseObj extends BaseObject
 {
 
 }

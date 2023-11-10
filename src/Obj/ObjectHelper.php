@@ -17,7 +17,6 @@ use ReflectionFunctionAbstract;
 use ReflectionMethod;
 use ReflectionNamedType;
 use RuntimeException;
-use Toolkit\Stdlib\Helper\PhpHelper;
 use Toolkit\Stdlib\Str\StringHelper;
 use Traversable;
 use UnexpectedValueException;
@@ -30,7 +29,6 @@ use function gettype;
 use function gzcompress;
 use function gzuncompress;
 use function is_array;
-use function is_numeric;
 use function is_object;
 use function is_string;
 use function iterator_to_array;
@@ -59,53 +57,65 @@ class ObjectHelper
      * - 会先尝试用 setter 方法设置属性
      * - 再尝试直接设置属性
      *
-     * @param object $object An object instance
-     * @param array $config
+     * @param object $obj An object instance
+     * @param array $data
      * @param bool $toCamel
+     * @param array $aliasMap
      *
      * @return object
      */
-    public static function init(object $object, array $config, bool $toCamel = false): object
+    public static function init(object $obj, array $data, bool $toCamel = false, array $aliasMap = []): object
     {
-        foreach ($config as $property => $value) {
-            if (is_numeric($property)) {
-                continue;
+        foreach ($data as $field => $value) {
+            if ($aliasMap) {
+                $field = $aliasMap[$field] ?? $field;
             }
 
             if ($toCamel) {
-                $property = StringHelper::camelCase($property, false, '_');
+                $field = StringHelper::toCamel($field);
             }
 
-            $setter = 'set' . ucfirst($property);
-
-            // has setter
-            if (method_exists($object, $setter)) {
-                $object->$setter($value);
-            } elseif (property_exists($object, $property)) {
-                $object->$property = $value;
-            }
+            self::setValue($obj, $field, $value);
         }
 
-        return $object;
+        return $obj;
     }
 
     /**
-     * 给对象设置属性值
+     * Set property value for object. first, will try to use setter method.
      *
-     * @param object $object
-     * @param array $options
+     * @param object $obj
+     * @param string $field
+     * @param mixed $value
+     *
+     * @return void
      */
-    public static function configure(object $object, array $options): void
+    public static function setValue(object $obj, string $field, mixed $value): void
     {
-        foreach ($options as $property => $value) {
-            if (property_exists($object, $property)) {
-                $object->$property = $value;
-            }
+        // check has setter
+        $setter = 'set' . ucfirst($field);
+        if (method_exists($obj, $setter)) {
+            $obj->$setter($value);
+        } elseif (property_exists($obj, $field)) {
+            $obj->$field = $value;
         }
     }
 
     /**
-     * 给对象设置属性值
+     * Set property values for object. first, will try to use setter method.
+     *
+     * @param object $obj
+     * @param array $data
+     */
+    public static function configure(object $obj, array $data): void
+    {
+        foreach ($data as $field => $value) {
+           self::setValue($obj, $field, $value);
+        }
+    }
+
+    /**
+     * Set property values for object
      *
      * @param object $object
      * @param array $options
@@ -116,18 +126,14 @@ class ObjectHelper
     }
 
     /**
-     * @param object $object
-     * @param array $data
+     * Copy src object properties value to dst object
      *
-     * @throws ReflectionException
+     * @param object $srcObj
+     * @param object $dstObj
      */
-    public static function mappingProps(object $object, array $data): void
+    public static function copyProps(object $srcObj, object $dstObj): void
     {
-        $rftObj = PhpHelper::reflectClass($object);
-        foreach ($rftObj->getProperties() as $rftProp) {
-            // TODO
-            // $typeName = $rftProp->getType()
-        }
+        self::configure($dstObj, self::toArray($srcObj));
     }
 
     /**
@@ -156,7 +162,7 @@ class ObjectHelper
     }
 
     /**
-     * PHP对象转换成为数组
+     * Convert PHP object to array map, key is property name, value is property value.
      *
      * @param object $obj
      * @param bool $recursive
