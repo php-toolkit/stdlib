@@ -169,7 +169,6 @@ class OS
         if (defined('PHP_OS_FAMILY')) {
             return PHP_OS_FAMILY;
         }
-
         return PHP_OS;
     }
 
@@ -363,7 +362,6 @@ class OS
         if (self::isUnix()) {
             return '/dev/null';
         }
-
         return 'NUL';
     }
 
@@ -420,6 +418,6 @@ class OS
      */
     public static function mkdir(string $path, int $mode = 0775, bool $recursive = true): bool
     {
-        return (is_dir($path) || !(!@mkdir($path, $mode, $recursive) && !is_dir($path))) && is_writable($path);
+        return (is_dir($path) || !(!mkdir($path, $mode, $recursive) && !is_dir($path))) && is_writable($path);
     }
 }

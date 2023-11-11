@@ -11,6 +11,9 @@ namespace Toolkit\Stdlib\Helper;
 
 use function is_array;
 use function is_int;
+use function max;
+use function min;
+use function pack;
 
 /**
  * Class IntHelper
@@ -27,7 +30,7 @@ class IntHelper
      */
     public static function getMax(int $val1, int $val2): int
     {
-        return $val1 > $val2 ? $val1 : $val2;
+        return max($val1, $val2);
     }
 
     /**
@@ -38,7 +41,7 @@ class IntHelper
      */
     public static function getMin(int $val1, int $val2): int
     {
-        return $val1 < $val2 ? $val1 : $val2;
+        return min($val1, $val2);
     }
 
     // ----- http://cn2.php.net/manual/zh/function.pack.php#119402

@@ -24,7 +24,9 @@ use function substr;
 
 /**
  * Usage:
+ *
  * $user = $db->query(['name' => $_POST['name'] ]);
+ *
  * 1.
  *  gen:
  *      $password = Token::gen('123456');

@@ -9,6 +9,8 @@
 
 namespace Toolkit\Stdlib\Util\Contract;
 
+use Closure;
+
 /**
  * Interface PipelineInterface
  *
@@ -19,11 +21,11 @@ interface PipelineInterface
     /**
      * Adds stage to the pipeline
      *
-     * @param callable $stage
+     * @param Closure $stage
      *
      * @return $this
      */
-    public function add(callable $stage): PipelineInterface;
+    public function add(Closure $stage): PipelineInterface;
 
     /**
      * Runs pipeline with initial value

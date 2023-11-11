@@ -320,7 +320,7 @@ class Assert
      *
      * @return void
      */
-    public static function isResource($res, string $errMsg = ''): void
+    public static function isResource(mixed $res, string $errMsg = ''): void
     {
         if (!is_resource($res)) {
             throw static::createEx($errMsg ?: 'Excepted an resource');

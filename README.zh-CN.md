@@ -27,7 +27,7 @@
 composer require toolkit/stdlib
 ```
 
-## String helper
+## Strings
 
 ### StrBuffer
 
@@ -45,7 +45,7 @@ $str = $buf->fetch(); // "abcde"
 $str = $buf->join(','); // "ab,c,de"
 ```
 
-## Object helper
+## Objects
 
 ### Object box
 
@@ -142,7 +142,7 @@ $username = Optional::ofNullable($userModel)
     ->orElse('unknown');
 ```
 
-### PhpDotEnv
+### Php DotEnv
 
 `PhpDotEnv` - a simple dont env file loader.
 

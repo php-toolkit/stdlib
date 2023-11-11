@@ -32,9 +32,9 @@ trait ObjectPoolTrait
     /**
      * @param string $class
      *
-     * @return mixed
+     * @return object of $class
      */
-    public static function get(string $class): mixed
+    public static function get(string $class): object
     {
         $stack = self::getStack($class);
 

@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Util;
 
+use Closure;
 use SplObjectStorage;
 use Toolkit\Stdlib\Util\Contract\PipelineInterface;
 use function is_callable;
@@ -34,7 +35,7 @@ class Pipeline implements PipelineInterface
     /**
      * {@inheritdoc}
      */
-    public function add(callable $stage): PipelineInterface
+    public function add(Closure $stage): PipelineInterface
     {
         if ($stage instanceof $this) {
             $stage->add(fn ($payload) => $this->invokeStage($payload));
@@ -50,7 +51,6 @@ class Pipeline implements PipelineInterface
     public function run(mixed $payload): mixed
     {
         $this->stages->rewind();
-
         return $this->invokeStage($payload);
     }
 
