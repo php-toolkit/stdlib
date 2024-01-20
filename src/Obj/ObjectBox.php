@@ -58,9 +58,9 @@ class ObjectBox implements ContainerInterface
     private bool $callInit = true;
 
     /**
-     * @var string
+     * @var string Will call init method on object create. Default is 'initObj()'
      */
-    private string $initMethod = 'init';
+    private string $initMethod = 'initObj';
 
     /**
      * Created objects
@@ -70,9 +70,57 @@ class ObjectBox implements ContainerInterface
     private array $objects = [];
 
     /**
-     * Definitions for create objects
+     * Definitions for create objects.
+     *
+     * For definition format:
+     *
+     *  - Closure(ObjectBox): object
+     *  - Object and has __invoke()
+     *  - string: an function name
+     *  - array: callable array [class, method]
+     *  - array: config array for create object
+     *  - more, any type as config data.
+     *
+     * ```php
+     * [
+     *     // array config of definition
+     *     'myObj' => [
+     *         'class' => MyObj::class,
+     *         '__opt' => [
+     *              'callInit' => true, // call init method on object create. Default is true
+     *              'objType' => ObjectBox::TYPE_SINGLETON, // default is TYPE_SINGLETON
+     *              'argsForNew'  => [
+     *                  'foo' => 'bar',
+     *              ],
+     *         ],
+     *         // props settings ...
+     *         'propName' => value,
+     *     ],
+     *     // use creator func
+     *     'myObj2' => [
+     *          '__creator' => function (ObjectBox $box) {
+     *             return new MyObj2();
+     *          },
+     *          '__opt' => [],
+     *          // props settings ...
+     *          'propName' => value,
+     *     ],
+     *     // use [class, method] of definition
+     *     'myObj3' => [MyObj3::class, 'createObj3'],
+     *     // function name of definition
+     *     'myObj4' => 'my_create_func',
+     *     // Closure object
+     *     'myObj5' => function (ObjectBox $box) {
+     *          return new MyObj5();
+     *      },
+     *     // callable object: has __invoke() method
+     *     'myObj6' => new Obj6Factory(),
+     * ]
+     *
+     * ```
      *
      * @var array
+     * @see createObject()
      */
     private array $definitions = [];
 
@@ -108,10 +156,11 @@ class ObjectBox implements ContainerInterface
 
             if (is_object($obj)) {
                 $callInit = $opt['callInit'] ?? $this->callInit;
+                $initMth  = $this->initMethod;
 
                 // has init method in the object, call it.
-                if ($callInit && method_exists($obj, $this->initMethod)) {
-                    $obj->init();
+                if ($callInit && $initMth && method_exists($obj, $initMth)) {
+                    $obj->$initMth();
                 }
 
                 // storage it on type is TYPE_SINGLETON
@@ -130,7 +179,7 @@ class ObjectBox implements ContainerInterface
     /**
      * Create object from definition.
      *
-     * return options:
+     * return [obj, options], options:
      *
      * ```php
      * [
@@ -188,7 +237,7 @@ class ObjectBox implements ContainerInterface
             }
         }
 
-        // as config data.
+        // save as config data.
         if ($obj === null) {
             $obj = $value;
         }
@@ -209,7 +258,7 @@ class ObjectBox implements ContainerInterface
      *
      * ```php
      * [
-     *  'class' => class-string,
+     *  'class' => 'class-string',
      *  // '__creator' => callable(ObjectBox): object, // can also use creator func.
      *
      *  // option for create object.

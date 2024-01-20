@@ -42,6 +42,18 @@ trait StringTruncateHelperTrait
     ////////////////////////////////////////////////////////////////////////
 
     /**
+     * @param string   $s
+     * @param string   $start
+     * @param int|null $length
+     *
+     * @return string
+     */
+    public static function afterStart(string $s, string $start, ?int $length = null): string
+    {
+        return substr($s, strlen($start), $length);
+    }
+
+    /**
      * @param string   $str
      * @param int      $start
      * @param int|null $length

@@ -18,7 +18,7 @@ use function is_string;
  * @package Toolkit\Stdlib
  * @see     \gettype()
  */
-final class Type
+class Type
 {
     // ------ basic types ------
 
