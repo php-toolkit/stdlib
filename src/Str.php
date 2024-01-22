@@ -18,4 +18,5 @@ use Toolkit\Stdlib\Str\StringHelper;
  */
 final class Str extends StringHelper
 {
+
 }

@@ -292,4 +292,14 @@ class StringHelperTest extends TestCase
         $text = Str::renderVars('tags: ${ tags }', $vars, '${%s}');
         $this->assertEquals('tags: [php, java]', $text);
     }
+
+    public function testBeforeAfter(): void
+    {
+        $s = 'hello/world';
+        $this->assertEquals('hello', Str::before($s, '/'));
+        $this->assertEquals('some', Str::before($s, '+', 'some'));
+
+        $this->assertEquals('world', Str::after($s, '/'));
+        $this->assertEquals('some', Str::after($s, '+', 'some'));
+    }
 }

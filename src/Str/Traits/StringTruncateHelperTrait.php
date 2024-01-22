@@ -42,8 +42,40 @@ trait StringTruncateHelperTrait
     ////////////////////////////////////////////////////////////////////////
 
     /**
+     * @param string $s
+     * @param array  $prefixes
+     *
+     * @return string
+     */
+    public static function removePrefixes(string $s, array $prefixes): string
+    {
+        foreach ($prefixes as $prefix) {
+            if (str_starts_with($s, $prefix)) {
+                return substr($s, strlen($prefix));
+            }
+        }
+        return $s;
+    }
+
+    /**
+     * @param string $s
+     * @param array  $suffixes
+     *
+     * @return string
+     */
+    public static function removeSuffixes(string $s, array $suffixes): string
+    {
+        foreach ($suffixes as $suffix) {
+            if (str_ends_with($s, $suffix)) {
+                return substr($s, 0, -strlen($suffix));
+            }
+        }
+        return $s;
+    }
+
+    /**
      * @param string   $s
-     * @param string   $start
+     * @param string   $start prefix string
      * @param int|null $length
      *
      * @return string
@@ -51,6 +83,42 @@ trait StringTruncateHelperTrait
     public static function afterStart(string $s, string $start, ?int $length = null): string
     {
         return substr($s, strlen($start), $length);
+    }
+
+    /**
+     * get substring before $sub.
+     * eg: s='hello/world', sub='/' => 'hello'
+     *
+     * @param string $s
+     * @param string $sub
+     * @param string $fallback
+     *
+     * @return string
+     */
+    public static function before(string $s, string $sub, string $fallback = ''): string
+    {
+        if ($i = strpos($s, $sub)) {
+            return substr($s, 0, $i);
+        }
+        return $fallback;
+    }
+
+    /**
+     * get substring after $sub.
+     * eg: s='hello/world', sub='/' => 'world'
+     *
+     * @param string $s
+     * @param string $sub
+     * @param string $fallback
+     *
+     * @return string
+     */
+    public static function after(string $s, string $sub, string $fallback = ''): string
+    {
+        if (($i = strpos($s, $sub)) !== false) {
+            return substr($s, $i + strlen($sub));
+        }
+        return $fallback;
     }
 
     /**

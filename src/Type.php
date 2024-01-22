@@ -96,8 +96,7 @@ class Type
         return match ($type) {
             self::INT, self::INTEGER => 0,
             self::BOOL, self::BOOLEAN => false,
-            self::FLOAT => (float)0,
-            self::DOUBLE => (double)0,
+            self::FLOAT, self::DOUBLE => 0.0,
             self::STRING => '',
             self::ARRAY => [],
             default => null,
@@ -187,5 +186,25 @@ class Type
             self::OBJECT,
             self::RESOURCE,
         ];
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isInt(string $type): bool
+    {
+        return in_array($type, [self::INT, self::INTEGER], true);
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isComplex(string $type): bool
+    {
+        return in_array($type, self::complexes(), true);
     }
 }

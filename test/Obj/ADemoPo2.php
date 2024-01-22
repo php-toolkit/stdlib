@@ -9,7 +9,7 @@ use Toolkit\Stdlib\Obj\AbstractObj;
  */
 class ADemoPo2 extends AbstractObj
 {
-    protected array $_aliasMap = [
+    protected array $_jsonMap = [
         'ot2' => 'oneTwo2',
     ];
 

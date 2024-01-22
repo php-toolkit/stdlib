@@ -111,7 +111,7 @@ class BaseObjectTest extends BaseLibTestCase
         $this->assertArrayNotHasKey('str1', $subItem);
     }
 
-    public function testUseAlias(): void
+    public function testUseJsonMap(): void
     {
         // use snake
         $po = new ADemoPo2(['one_two' => 'abc']);

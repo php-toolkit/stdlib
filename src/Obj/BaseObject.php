@@ -24,11 +24,11 @@ abstract class BaseObject implements JsonSerializable
     use QuickInitTrait;
 
     /**
-     * Field alias mapping. [alias => field]
+     * JSON field mapping. Format: [json-field => field]
      *
      * @var array
      */
-    protected array $_aliasMap = [];
+    protected array $_jsonMap = [];
 
     /**
      * Class constructor.
@@ -58,12 +58,12 @@ abstract class BaseObject implements JsonSerializable
      * - Automatically convert fields to camelCase format
      *
      * @param array $data
-     * @param array $aliasMap
+     * @param array $jsonMap json field mapping
      */
-    public function load(array $data, array $aliasMap = []): void
+    public function load(array $data, array $jsonMap = []): void
     {
         if ($data) {
-            Obj::init($this, $data, true, $aliasMap ?: $this->_aliasMap);
+            Obj::init($this, $data, true, $jsonMap ?: $this->_jsonMap);
         }
     }
 
@@ -76,7 +76,7 @@ abstract class BaseObject implements JsonSerializable
      */
     public function setValue(string $field, mixed $value): static
     {
-        Obj::init($this, [$field => $value], true, $this->_aliasMap);
+        Obj::init($this, [$field => $value], true, $this->_jsonMap);
         return $this;
     }
 
@@ -85,19 +85,20 @@ abstract class BaseObject implements JsonSerializable
      */
     public function toArray(): array
     {
-        return Obj::toArray($this, false, false);
+        return $this->convToMap(true, true);
     }
 
     /**
      * Convert to array map.
      *
-     * @param bool $filter
+     * @param bool $filter exclude empty value
+     * @param bool $useJsonMap use json field map
      *
      * @return array
      */
-    public function toMap(bool $filter = false): array
+    public function toMap(bool $filter = false, bool $useJsonMap = false): array
     {
-        return $this->convToMap($filter);
+        return $this->convToMap($filter, $useJsonMap);
     }
 
     /**
@@ -107,7 +108,7 @@ abstract class BaseObject implements JsonSerializable
      */
     public function toCleaned(): array
     {
-        return $this->convToMap(true);
+        return $this->convToMap(true, true);
     }
 
     /**
@@ -135,8 +136,8 @@ abstract class BaseObject implements JsonSerializable
     {
         $data = [];
         $full = get_object_vars($this);
-        if ($aliased && $this->_aliasMap) {
-            $this->_name2alias = array_flip($this->_aliasMap);
+        if ($aliased && $this->_jsonMap) {
+            $this->_name2alias = array_flip($this->_jsonMap);
         }
 
         // filter empty value
@@ -211,11 +212,11 @@ abstract class BaseObject implements JsonSerializable
      * 转成 JSON 字符串
      *
      * @param bool $filter filter empty value
-     * @param bool $aliased
+     * @param bool $aliased use json field map
      *
      * @return string
      */
-    public function toJson(bool $filter = true, bool $aliased = false): string
+    public function toJson(bool $filter = true, bool $aliased = true): string
     {
         return Json::unescaped($this->convToMap($filter, $aliased));
     }
@@ -233,7 +234,7 @@ abstract class BaseObject implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return $this->toMap(true);
+        return $this->convToMap(true, true);
     }
 
 }
