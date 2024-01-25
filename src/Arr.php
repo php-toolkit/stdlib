@@ -13,7 +13,7 @@ use Toolkit\Stdlib\Arr\ArrayHelper;
 
 /**
  * Class Arr
- *  alias of the ArrayHelper
+ *  - alias of the ArrayHelper
  *
  * @package Toolkit\Stdlib
  */

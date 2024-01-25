@@ -11,21 +11,22 @@ namespace Toolkit\Stdlib\Util;
 
 use Exception;
 use InvalidArgumentException;
-use function microtime;
+use RuntimeException;
 use function base_convert;
+use function bin2hex;
+use function chr;
+use function hexdec;
+use function md5;
+use function microtime;
+use function ord;
+use function pack;
+use function preg_match;
+use function preg_replace;
 use function property_exists;
 use function random_bytes;
-use function preg_replace;
-use function strlen;
-use function pack;
-use function md5;
 use function sha1;
-use function chr;
-use function preg_match;
+use function strlen;
 use function substr;
-use function bin2hex;
-use function hexdec;
-use function ord;
 
 /**
  * Class UUID
@@ -116,25 +117,30 @@ class UUID
     public const VALID_UUID_REGEX = '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$';
 
     /**
-     * @param int         $ver
-     * @param string|null $node
-     * @param string|null $ns
+     * @param int         $ver 1, 3, 4, 5
+     * @param string|null $node for version 1, 3, 5
+     * @param string|null $ns for version 3, 5
+     *
      * @return UUID
-     * @throws InvalidArgumentException
-     * @throws Exception
      */
-    public static function gen(int $ver = 1, string $node = null, string $ns = null): self
+    public static function new(int $ver = 1, string $node = null, string $ns = null): self
     {
         return self::generate($ver, $node, $ns);
     }
 
+    public static function v1(string $node = null): self
+    {
+        return self::generate(1, $node);
+    }
+
     /**
-     * @param int    $ver
-     * @param string|null $node
-     * @param string|null $ns
+     * Create a new UUID based on provided data
+     *
+     * @param int         $ver 1, 3, 4, 5
+     * @param string|null $node for version 1, 3, 5
+     * @param string|null $ns for version 3, 5
+     *
      * @return UUID
-     * @throws InvalidArgumentException
-     * @throws Exception
      */
     public static function generate(int $ver = 1, string $node = null, string $ns = null): self
     {
@@ -152,13 +158,22 @@ class UUID
             case 5:
                 return new static(static::mintName(static::SHA1, $node, $ns));
             default:
-                throw new InvalidArgumentException('Selected version is invalid or unsupported.');
+                throw new InvalidArgumentException("The version $ver is invalid or unsupported.");
         }
     }
 
     /**
+     * @var string raw string bytes
+     */
+    private string $bytes;
+
+    /**
+     * @var string optimize the most common use format.
+     */
+    private string $value;
+
+    /**
      * @param string $uuid
-     * @throws InvalidArgumentException
      */
     protected function __construct(string $uuid)
     {
@@ -169,7 +184,7 @@ class UUID
         $this->bytes = $uuid;
 
         // Optimize the most common use
-        $this->string = bin2hex(substr($uuid, 0, 4)) . '-' .
+        $this->value = bin2hex(substr($uuid, 0, 4)) . '-' .
             bin2hex(substr($uuid, 4, 2)) . '-' .
             bin2hex(substr($uuid, 6, 2)) . '-' .
             bin2hex(substr($uuid, 8, 2)) . '-' .
@@ -182,7 +197,6 @@ class UUID
      *
      * @param string|null $node
      * @return string
-     * @throws Exception
      */
     protected static function mintTime(string $node = null): string
     {
@@ -236,11 +250,14 @@ class UUID
      *
      * @param int $bytes
      * @return string
-     * @throws Exception
      */
     public static function randomBytes(int $bytes): string
     {
-        return random_bytes($bytes);
+        try {
+            return random_bytes($bytes);
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -285,7 +302,6 @@ class UUID
      * @param string|null $ns
      *
      * @return string
-     * @throws InvalidArgumentException
      */
     protected static function mintName(int $ver, string $node, ?string $ns): string
     {
@@ -329,7 +345,6 @@ class UUID
      * generate random fields
      *
      * @return string
-     * @throws Exception
      */
     protected static function mintRand(): string
     {
@@ -347,7 +362,6 @@ class UUID
      *
      * @param string $uuid
      * @return Uuid
-     * @throws InvalidArgumentException
      */
     public static function import(string $uuid): UUID
     {
@@ -372,13 +386,12 @@ class UUID
     /**
      * Import and validate an UUID
      *
-     * @param Uuid|string $uuid
+     * @param string $uuid
      * @return boolean
-     * @throws InvalidArgumentException
      */
     public static function validate(string $uuid): bool
     {
-        return (bool)preg_match('~' . static::VALID_UUID_REGEX . '~', static::import($uuid)->string);
+        return (bool)preg_match('~' . static::VALID_UUID_REGEX . '~', static::import($uuid)->value);
     }
 
     /**
@@ -414,7 +427,7 @@ class UUID
 
                 return null;
             case 'string':
-                return $this->__toString();
+                return $this->value;
             case 'time':
                 if (ord($this->bytes[6]) >> 4 === 1) {
                     // Restore contiguous big-endian byte order
@@ -429,7 +442,7 @@ class UUID
 
                 break;
             case 'urn':
-                return 'urn:uuid:' . $this->__toString();
+                return 'urn:uuid:' . $this->value;
             case 'variant':
                 $byte = ord($this->bytes[8]);
                 if ($byte >= static::VAR_RES) {
@@ -455,12 +468,32 @@ class UUID
     }
 
     /**
+     * Return the UUID, not split with hyphens(-)
+     *
+     * @return string
+     */
+    public function getRaw(): string
+    {
+        return bin2hex($this->bytes);
+    }
+
+    /**
+     * Return the UUID. format: 00000000-0000-0000-0000-000000000000
+     *
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
      * Return the UUID
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->string;
+        return $this->value;
     }
 }

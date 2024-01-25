@@ -111,22 +111,18 @@ class DataStream extends ArrayIterator implements JsonSerializable
     // ---------------------- middle operations ----------------------
 
     /**
-     * @param callable(array): bool $func
+     * @param callable(array): bool $func Will collect items that return true
      * @param mixed                 $boolExpr
      *
      * @return $this
      */
     public function filterIf(callable $func, mixed $boolExpr): self
     {
-        if ($boolExpr) {
-            return $this->filter($func);
-        }
-
-        return $this;
+        return $boolExpr ? $this->filter($func) : $this;
     }
 
     /**
-     * @param callable(mixed):bool $filterFn
+     * @param callable(mixed):bool $filterFn Will collect items that return true
      *
      * @return $this
      */
@@ -431,7 +427,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @return Optional<T>
      */
     public function findFirst(): Optional
@@ -448,7 +443,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @return Optional<T>
      */
     public function findLast(): Optional
@@ -467,7 +461,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @return Optional<T>
      */
     public function findAny(): Optional
@@ -478,7 +471,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     /**
      * Find one item by given matcher
      *
-     * @template T
      * @param callable(mixed): bool $matcher
      *
      * @return Optional<T>
@@ -495,7 +487,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @return Optional<T>
      */
     public function findRandom(): Optional
@@ -506,7 +497,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @param callable(T, T): int $comparer
      *
      * @return Optional<T>
@@ -517,7 +507,6 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @template T
      * @param callable(T, T): int $comparer
      *
      * @return Optional<T>
