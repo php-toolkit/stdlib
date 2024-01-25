@@ -157,10 +157,10 @@ DEBUG=true
 Usage:
 
 ```php
-PhpDotEnv::load(__DIR__, '.env');
+PhpDotEnv::load(__DIR__ . '/.env');
 
-env('DEBUG', false);
-env('APP_ENV', 'prod');
+getenv('DEBUG', false);
+getenv('APP_ENV', 'prod');
 ```
 
 ### Stream

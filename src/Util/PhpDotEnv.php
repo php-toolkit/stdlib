@@ -49,72 +49,30 @@ class PhpDotEnv
 {
     public const FULL_ENV_KEY = 'PHP_DOTENV_VARS';
 
-    public const DEFAULT_NAME = '.env';
+    private function __construct(){}
 
     /**
-     * @var self|null
-     */
-    private static ?self $global = null;
-
-    /**
-     * @var array
-     */
-    private array $loadedFiles = [];
-
-    /**
-     * @return static
-     */
-    public static function global(): self
-    {
-        if (!self::$global) {
-            self::$global = new self('');
-        }
-
-        return self::$global;
-    }
-
-    /**
-     * @param string $fileDir
-     * @param string $fileName
+     * loads env data
      *
-     * @return static
-     */
-    public static function load(string $fileDir, string $fileName = self::DEFAULT_NAME): self
-    {
-        return new self($fileDir, $fileName);
-    }
-
-    /**
-     * class constructor.
+     * @param string $file - path to .env file
      *
-     * @param string $fileDir
-     * @param string $fileName
+     * @return void
      */
-    public function __construct(string $fileDir, string $fileName = self::DEFAULT_NAME)
+    public static function load(string $file): void
     {
-        if ($fileDir) {
-            $file = $fileDir . DIRECTORY_SEPARATOR . ($fileName ?: self::DEFAULT_NAME);
-            $this->add($file);
+        if ($file) {
+            if (is_file($file) && is_readable($file) && $fileData = parse_ini_file($file)) {
+                self::setEnv($fileData);
+            }
         }
     }
 
     /**
-     * @param string $file
-     */
-    public function add(string $file): void
-    {
-        if (is_file($file) && is_readable($file)) {
-            $this->loadedFiles[] = $file;
-            $this->settingEnv(parse_ini_file($file));
-        }
-    }
-
-    /**
-     * setting env data
+     * sets env data
      *
      * @param array $data
      */
-    private function settingEnv(array $data): void
+    private static function setEnv(array $data): void
     {
         $loadedVars = array_flip(explode(',', (string)getenv(self::FULL_ENV_KEY)));
         unset($loadedVars['']);
@@ -159,13 +117,5 @@ class PhpDotEnv
             $_ENV[self::FULL_ENV_KEY]    = $loadedVars;
             $_SERVER[self::FULL_ENV_KEY] = $loadedVars;
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getLoadedFiles(): array
-    {
-        return $this->loadedFiles;
     }
 }
