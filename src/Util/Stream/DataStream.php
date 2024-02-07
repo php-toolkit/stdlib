@@ -541,10 +541,12 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
+     * Each item to map
+     *
      * @param callable(array|mixed): array{string, mixed} $func
      * @param array $map
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed> return the map key and value
      */
     public function eachToMap(callable $func, array $map = []): array
     {
