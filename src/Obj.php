@@ -16,8 +16,6 @@ use Toolkit\Stdlib\Obj\Traits\SingletonPoolTrait;
 /**
  * Class Obj
  *  alias of the ObjectHelper
- *
- * @package Toolkit\Stdlib\Obj
  */
 class Obj extends ObjectHelper
 {

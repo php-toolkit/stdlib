@@ -24,8 +24,6 @@ use function substr;
 
 /**
  * Class Format
- *
- * @package Toolkit\Stdlib\Helper
  */
 class Format
 {

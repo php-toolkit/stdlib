@@ -11,8 +11,6 @@ namespace Toolkit\Stdlib\Str;
 
 /**
  * Class StrHelper
- *
- * @package Toolkit\Stdlib\Str
  */
 class StrHelper extends StringHelper
 {

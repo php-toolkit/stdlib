@@ -11,8 +11,6 @@ namespace Toolkit\Stdlib\Arr;
 
 /**
  * Class ArrBuffer
- *
- * @package Toolkit\Stdlib\Arr
  */
 final class ArrBuffer
 {

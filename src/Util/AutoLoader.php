@@ -35,7 +35,6 @@ use const DIRECTORY_SEPARATOR;
  * ]);
  * ```
  *
- * @package Toolkit\Stdlib\Util
  */
 class AutoLoader
 {

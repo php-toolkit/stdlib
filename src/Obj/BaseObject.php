@@ -16,8 +16,6 @@ use Toolkit\Stdlib\Obj\Traits\QuickInitTrait;
 
 /**
  * Class AbstractObj
- *
- * @package Toolkit\Stdlib\Obj
  */
 abstract class BaseObject implements JsonSerializable
 {
@@ -40,13 +38,13 @@ abstract class BaseObject implements JsonSerializable
         if ($data) {
             $this->load($data);
         }
-        $this->init();
+        $this->afterNew();
     }
 
     /**
-     * will call init() after constructor.
+     * will call it after constructor.
      */
-    protected function init(): void
+    protected function afterNew(): void
     {
         // do something...
     }

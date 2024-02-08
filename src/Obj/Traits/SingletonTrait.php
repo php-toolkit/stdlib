@@ -14,7 +14,6 @@ use Toolkit\Stdlib\Obj;
 /**
  * Trait SingletonTrait
  *
- * @package Toolkit\Stdlib\Obj\Traits
  */
 trait SingletonTrait
 {

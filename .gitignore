@@ -7,5 +7,7 @@ composer.lock
 *.log
 *.pid
 *.cache
+.phpdoc/
+phpdoc/
 *.patch
 .DS_Store

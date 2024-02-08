@@ -12,7 +12,6 @@ namespace Toolkit\Stdlib\Obj\Traits;
 /**
  * Trait SingletonPoolTrait
  *
- * @package Toolkit\Stdlib\Obj\Traits
  */
 trait SingletonPoolTrait
 {

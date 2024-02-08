@@ -22,8 +22,6 @@ use const PREG_SPLIT_NO_EMPTY;
 
 /**
  * Class PhpDoc
- *
- * @package Toolkit\PhpKit
  */
 class PhpDoc
 {

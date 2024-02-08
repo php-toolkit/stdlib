@@ -23,8 +23,6 @@ use function trim;
 
 /**
  * Trait ArrayValueGetSetTrait
- *
- * @package Toolkit\Stdlib\Arr\Traits
  */
 trait ArrayValueGetSetTrait
 {

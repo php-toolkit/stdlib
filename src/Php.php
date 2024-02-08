@@ -13,8 +13,6 @@ use Toolkit\Stdlib\Helper\PhpHelper;
 
 /**
  * Class PHP
- *
- * @package Toolkit\Stdlib
  */
 class Php extends PhpHelper
 {

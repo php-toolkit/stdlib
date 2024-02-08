@@ -28,7 +28,6 @@ use function trim;
 /**
  * Trait StringCheckHelperTrait
  *
- * @package Toolkit\Stdlib\Str\Traits
  */
 trait StringCheckHelperTrait
 {

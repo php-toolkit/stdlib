@@ -43,7 +43,6 @@ use function putenv;
  * env('APP_ENV', 'pdt');
  * ```
  *
- * @package Toolkit\Stdlib\Util
  */
 class PhpDotEnv
 {

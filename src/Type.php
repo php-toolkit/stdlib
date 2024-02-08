@@ -15,7 +15,6 @@ use function is_string;
 /**
  * Class Type - php data type
  *
- * @package Toolkit\Stdlib
  * @see     \gettype()
  */
 class Type

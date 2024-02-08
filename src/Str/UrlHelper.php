@@ -37,7 +37,6 @@ use const CURLOPT_TIMEOUT;
 /**
  * Class UrlHelper
  *
- * @package Toolkit\Stdlib\Str
  */
 class UrlHelper
 {

@@ -17,8 +17,6 @@ use function sprintf;
 
 /**
  * Class StrBuffer
- *
- * @package Toolkit\Stdlib\Str
  */
 class StrBuffer implements Stringable
 {

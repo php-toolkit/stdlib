@@ -17,8 +17,6 @@ use function is_int;
 
 /**
  * Trait ArrayMergeTrait
- *
- * @package Toolkit\Stdlib\Arr\Traits
  */
 trait ArrayMergeTrait
 {

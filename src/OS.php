@@ -37,8 +37,6 @@ use const PHP_OS_FAMILY;
 
 /**
  * Class OsEnv
- *
- * @package Toolkit\PhpKit\OS
  */
 class OS
 {

@@ -49,8 +49,6 @@ use function var_export;
 
 /**
  * Class PhpHelper
- *
- * @package Toolkit\PhpKit
  */
 class PhpHelper
 {

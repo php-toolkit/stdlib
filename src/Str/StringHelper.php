@@ -57,8 +57,6 @@ use const STR_PAD_RIGHT;
 
 /**
  * Class StringHelper
- *
- * @package Toolkit\Stdlib\Str
  */
 abstract class StringHelper
 {

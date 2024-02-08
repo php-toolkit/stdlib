@@ -22,7 +22,6 @@ use const ENT_COMPAT;
 /**
  * Trait StringLengthHelperTrait
  *
- * @package Toolkit\Stdlib\Str\Traits
  */
 trait StringLengthHelperTrait
 {

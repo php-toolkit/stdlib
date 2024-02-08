@@ -20,7 +20,6 @@ use function is_string;
 /**
  * Class ObjectPoolTrait
  *
- * @package Toolkit\Stdlib\Obj\Traits
  */
 trait ObjectPoolTrait
 {

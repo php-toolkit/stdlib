@@ -45,8 +45,6 @@ use function unserialize;
 
 /**
  * Class ObjectHelper
- *
- * @package Toolkit\Stdlib\Obj
  */
 class ObjectHelper
 {

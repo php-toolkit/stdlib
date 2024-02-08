@@ -14,8 +14,6 @@ use RuntimeException;
 
 /**
  * Class NotFoundException
- *
- * @package Toolkit\Stdlib\Obj\Exception
  */
 class NotFoundException extends RuntimeException implements NotFoundExceptionInterface
 {

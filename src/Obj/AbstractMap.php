@@ -14,8 +14,6 @@ use Toolkit\Stdlib\Helper\JsonHelper;
 
 /**
  * Class AbstractMap
- *
- * @package Toolkit\Stdlib\Obj
  */
 abstract class AbstractMap implements JsonSerializable
 {

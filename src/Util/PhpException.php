@@ -17,7 +17,6 @@ use function strip_tags;
 /**
  * Class PhpException
  *
- * @package Toolkit\Stdlib\Util
  */
 class PhpException
 {

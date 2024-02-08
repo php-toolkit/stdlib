@@ -36,7 +36,6 @@ use const PREG_SPLIT_NO_EMPTY;
 /**
  * Trait StringSplitHelperTrait
  *
- * @package Toolkit\Stdlib\Str\Traits
  */
 trait StringConvertTrait
 {

@@ -17,7 +17,6 @@ use function is_callable;
 /**
  * Class Pipeline
  *
- * @package Toolkit\Util
  * @link    https://github.com/ztsu/pipe/blob/master/src/Pipeline.php
  */
 class Pipeline implements PipelineInterface

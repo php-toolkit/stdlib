@@ -14,8 +14,6 @@ use RuntimeException;
 
 /**
  * Class ContainerException
- *
- * @package Toolkit\Stdlib\Obj\Exception
  */
 class ContainerException extends RuntimeException implements ContainerExceptionInterface
 {

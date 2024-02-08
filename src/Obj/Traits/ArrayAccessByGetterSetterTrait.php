@@ -15,7 +15,6 @@ use function property_exists;
 /**
  * Class TraitArrayAccess
  *
- * @package Toolkit\Stdlib\Obj\Traits
  * ```
  * class A implements \ArrayAccess
  * {

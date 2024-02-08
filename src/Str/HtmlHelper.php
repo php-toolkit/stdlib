@@ -24,8 +24,6 @@ use function strpos;
 
 /**
  * Class HtmlHelper
- *
- * @package Toolkit\Stdlib\Str
  */
 class HtmlHelper
 {

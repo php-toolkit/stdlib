@@ -33,8 +33,6 @@ use function trim;
 
 /**
  * Class ArrayHelper
- *
- * @package Toolkit\Stdlib\Arr
  */
 class ArrayHelper
 {

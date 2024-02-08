@@ -12,10 +12,7 @@ namespace Toolkit\Stdlib;
 use Toolkit\Stdlib\Arr\ArrayHelper;
 
 /**
- * Class Arr
- *  - alias of the ArrayHelper
- *
- * @package Toolkit\Stdlib
+ * Class Arr - alias of the ArrayHelper
  */
 class Arr extends ArrayHelper
 {

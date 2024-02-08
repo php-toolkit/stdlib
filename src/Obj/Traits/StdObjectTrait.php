@@ -21,7 +21,6 @@ use function strpos;
 /**
  * Class StdObjectTrait
  *
- * @package Toolkit\Stdlib\Obj\Traits
  */
 trait StdObjectTrait
 {

@@ -14,7 +14,6 @@ use Toolkit\Stdlib\Json;
 /**
  * Trait QuickInitTrait
  *
- * @package Toolkit\Stdlib\Obj\Traits
  */
 trait QuickInitTrait
 {

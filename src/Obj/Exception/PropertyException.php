@@ -13,8 +13,6 @@ use RuntimeException;
 
 /**
  * Class PropertyException
- *
- * @package Toolkit\Stdlib\Obj\Exception
  */
 class PropertyException extends RuntimeException
 {

@@ -13,8 +13,6 @@ use Toolkit\Stdlib\Helper\NumHelper;
 
 /**
  * Class Num
- *
- * @package Toolkit\Stdlib
  */
 class Num extends NumHelper
 {

@@ -14,7 +14,6 @@ use Closure;
 /**
  * Interface PipelineInterface
  *
- * @package Toolkit\Util
  */
 interface PipelineInterface
 {

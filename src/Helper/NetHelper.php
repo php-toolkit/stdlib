@@ -19,8 +19,6 @@ use function openssl_x509_export;
 
 /**
  * Class NetHelper
- *
- * @package Toolkit\Stdlib\Helper
  */
 class NetHelper
 {

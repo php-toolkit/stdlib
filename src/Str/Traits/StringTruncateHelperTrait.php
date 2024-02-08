@@ -32,7 +32,6 @@ use const PREG_SET_ORDER;
 
 /**
  * Trait StringTruncateHelperTrait
- * @package Toolkit\Stdlib\Str\Traits
  */
 trait StringTruncateHelperTrait
 {

@@ -32,8 +32,6 @@ use const MB_CASE_TITLE;
 
 /**
  * Trait StringCaseHelperTrait
- *
- * @package Toolkit\Stdlib\Str\Traits
  */
 trait StringCaseHelperTrait
 {

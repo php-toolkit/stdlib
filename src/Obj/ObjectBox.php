@@ -28,8 +28,6 @@ use function method_exists;
  * An simple object containers implements
  *
  * NOTICE: require the `psr/container` package.
- *
- * @package Toolkit\Stdlib\Obj
  */
 class ObjectBox implements ContainerInterface
 {

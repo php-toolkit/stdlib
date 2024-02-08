@@ -20,8 +20,6 @@ use const JSON_UNESCAPED_SLASHES;
 
 /**
  * Class DataObject
- *
- * @package Toolkit\Stdlib\Obj
  */
 class DataObject extends ArrayObject implements JsonSerializable
 {

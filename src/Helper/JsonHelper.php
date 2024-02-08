@@ -31,8 +31,6 @@ use const JSON_UNESCAPED_UNICODE;
 
 /**
  * Class JsonHelper
- *
- * @package Toolkit\Stdlib
  */
 class JsonHelper
 {

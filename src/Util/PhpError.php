@@ -29,7 +29,6 @@ use const E_WARNING;
 /**
  * Class PhpError
  *
- * @package Toolkit\Stdlib\Util
  */
 class PhpError
 {

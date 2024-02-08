@@ -13,8 +13,6 @@ use Toolkit\Stdlib\Obj\Traits\PropertyAccessByGetterSetterTrait;
 
 /**
  * Class Configurable
- *
- * @package Toolkit\Stdlib\Obj
  */
 abstract class Configurable
 {

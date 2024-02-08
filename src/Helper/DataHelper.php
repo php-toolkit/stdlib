@@ -23,8 +23,6 @@ use const FILTER_VALIDATE_BOOLEAN;
 
 /**
  * Class DataHelper
- *
- * @package Toolkit\Stdlib\Helper
  */
 class DataHelper
 {
