@@ -308,20 +308,13 @@ abstract class StringHelper
             return $tplCode;
         }
 
-        $fmtVars = Arr::flattenMap($vars, Arr\ArrConst::FLAT_DOT_JOIN_INDEX);
         $pattern = sprintf('/%s([\w\s.-]+)%s/', preg_quote($left, '/'), preg_quote($right, '/'));
-
-        // convert array value to string.
-        foreach ($vars as $name => $val) {
-            if (is_array($val)) {
-                $fmtVars[$name] = Arr::toStringV2($val);
-            }
-        }
-
-        return preg_replace_callback($pattern, static function (array $match) use ($fmtVars) {
-            $var = trim($match[1]);
-            if ($var && isset($fmtVars[$var])) {
-                return $fmtVars[$var];
+        return preg_replace_callback($pattern, static function (array $match) use ($vars) {
+            if ($var = trim($match[1])) {
+                $val = Arr::getByPath($vars, $var);
+                if ($val !== null) {
+                    return is_array($val) ? Arr::toStringV2($val) : (string)$val;
+                }
             }
 
             return $match[0];

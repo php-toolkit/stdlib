@@ -9,6 +9,7 @@
 
 namespace Toolkit\Stdlib\Helper;
 
+use Throwable;
 use function abs;
 use function ceil;
 use function floor;
@@ -72,5 +73,21 @@ class NumHelper
     public static function roundInt(float|int $value): int
     {
         return (int)round((float)$value);
+    }
+
+    /**
+     * @param int      $min
+     * @param int      $max
+     * @param int|null $fallback
+     *
+     * @return int
+     */
+    public static function random(int $min, int $max, int $fallback = null): int
+    {
+        try {
+            return random_int($min, $max);
+        } catch (Throwable) {
+            return $fallback ?? $min;
+        }
     }
 }

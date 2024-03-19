@@ -39,7 +39,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return static
      */
-    public static function new(array $data = []): self
+    public static function new(array $data = []): static
     {
         return new static($data);
     }
@@ -71,7 +71,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return $this
      */
-    public function set(string $key, mixed $value): self
+    public function set(string $key, mixed $value): static
     {
         $this->data[$key] = $value;
         return $this;
@@ -83,7 +83,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return $this
      */
-    public function add(string $name, $value): self
+    public function add(string $name, $value): static
     {
         if (!$this->has($name)) {
             $this->set($name, $value);
@@ -170,7 +170,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     public function getArray(string $key, array $default = []): array
     {
         $data = $this->get($key);
-
         return $data ? (array)$data : $default;
     }
 
@@ -183,7 +182,6 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
     public function getDataObject(string $key, array $default = []): DataObject
     {
         $data = $this->get($key);
-
         return DataObject::new($data ? (array)$data : $default);
     }
 
@@ -241,7 +239,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return static
      */
-    public function sets(array $data): self
+    public function sets(array $data): static
     {
         foreach ($data as $key => $value) {
             $this->set($key, $value);
@@ -255,7 +253,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return static
      */
-    public function reject(callable $filter): self
+    public function reject(callable $filter): static
     {
         $data = [];
 
@@ -275,7 +273,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
      *
      * @return static
      */
-    public function map(callable $callback): self
+    public function map(callable $callback): static
     {
         $data = [];
         foreach ($this->getIterator() as $key => $value) {

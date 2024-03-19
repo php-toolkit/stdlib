@@ -211,7 +211,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * @template U
      *
      * @param callable(T):U $mapper
-     * @param bool $boolExpr
+     * @param bool          $boolExpr
      *
      * @return static
      */
@@ -228,7 +228,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * @template U
      *
      * @param callable(T):U $mapper
-     * @param DataStream $stream
+     * @param DataStream    $stream
      *
      * @return static
      */
@@ -245,7 +245,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * Mapping values to MapStream
      *
      * @param callable(array|mixed): array{string,mixed} $mapper
-     * @param MapStream|null $new
+     * @param MapStream|null                             $new
      *
      * @return MapStream
      */
@@ -264,7 +264,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * Mapping values to IntStream
      *
      * @param callable(T):int $mapper
-     * @param IntStream|null $new
+     * @param IntStream|null  $new
      *
      * @return IntStream
      */
@@ -282,7 +282,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * Mapping values to StringStream
      *
      * @param callable(T):string $mapper
-     * @param StringStream|null $new
+     * @param StringStream|null  $new
      *
      * @return StringStream
      */
@@ -528,7 +528,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
 
     /**
      * @param callable(array|mixed, int|string): array $func
-     * @param array $arr
+     * @param array                                    $arr
      *
      * @return array
      */
@@ -544,7 +544,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      * Each item to map
      *
      * @param callable(array|mixed): array{string, mixed} $func
-     * @param array $map
+     * @param array                                       $map
      *
      * @return array<string, mixed> return the map key and value
      */
@@ -559,15 +559,51 @@ class DataStream extends ArrayIterator implements JsonSerializable
     }
 
     /**
-     * @param callable $handler
-     * @param ...$args
+     * Collect data items to list
      *
-     * @return mixed
+     * @param callable(mixed): mixed $func
+     * @param array                  $list
+     *
+     * @return array return an array: [item, ...]
      */
-    public function collect(callable $handler, ...$args): mixed
+    public function collectToList(callable $func, array $list = []): array
     {
-        // TODO
-        return null;
+        foreach ($this as $item) {
+            $list[] = $func($item);
+        }
+        return $list;
+    }
+
+    /**
+     * Collect data items to map
+     *
+     * @param callable $func
+     * @param array    $map
+     *
+     * @return array<string, mixed> return a map: [key => item]
+     */
+    public function collectToMap(callable $func, array $map = []): array
+    {
+        return $this->eachToMap($func, $map);
+    }
+
+    /**
+     * Group data by key
+     *
+     * @param callable $getKeyFn
+     *
+     * @return array
+     */
+    public function groupBy(callable $getKeyFn): array
+    {
+        $map = [];
+        foreach ($this as $item) {
+            $key = $getKeyFn($item);
+            // collect to map
+            $map[$key][] = $item;
+        }
+
+        return $map;
     }
 
     /**
