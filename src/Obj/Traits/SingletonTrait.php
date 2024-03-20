@@ -13,14 +13,25 @@ use Toolkit\Stdlib\Obj;
 
 /**
  * Trait SingletonTrait
- *
  */
 trait SingletonTrait
 {
     /**
-     * @return mixed
+     * Alias of instance.
+     *
+     * @return static
      */
-    public static function new(): mixed
+    public static function new(): static
+    {
+        return Obj::singleton(static::class);
+    }
+
+    /**
+     * Get singleton instance of the class.
+     *
+     * @return static
+     */
+    public static function instance(): static
     {
         return Obj::singleton(static::class);
     }

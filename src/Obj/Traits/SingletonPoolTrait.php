@@ -16,11 +16,13 @@ namespace Toolkit\Stdlib\Obj\Traits;
 trait SingletonPoolTrait
 {
     /**
-     * @var array
+     * @var array<string, object>
      */
     private static array $singletons = [];
 
     /**
+     * Get singleton instance of the class.
+     *
      * @param string $class
      *
      * @return mixed
