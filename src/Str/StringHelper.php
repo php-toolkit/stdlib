@@ -11,6 +11,7 @@ namespace Toolkit\Stdlib\Str;
 
 use DateTime;
 use Exception;
+use RuntimeException;
 use Stringable;
 use Toolkit\Stdlib\Arr;
 use Toolkit\Stdlib\Str\Traits\StringCaseHelperTrait;
@@ -295,25 +296,29 @@ abstract class StringHelper
      * Simple render vars to template string.
      *
      * @param string $tplCode
-     * @param array $vars
-     * @param string $format  Template var format
+     * @param array  $vars
+     * @param string $format Template var format
+     * @param bool   $mustVar Must find var in $vars, otherwise throw exception
      *
      * @return string
      */
-    public static function renderVars(string $tplCode, array $vars, string $format = '{{%s}}'): string
+    public static function renderVars(string $tplCode, array $vars, string $format = '{{%s}}', bool $mustVar = false): string
     {
         // get left chars
-        [$left, $right] = explode('%s', $format);
+        [$left, $right] = explode('%s', $format, 2);
         if (!$vars || !str_contains($tplCode, $left)) {
             return $tplCode;
         }
 
         $pattern = sprintf('/%s([\w\s.-]+)%s/', preg_quote($left, '/'), preg_quote($right, '/'));
-        return preg_replace_callback($pattern, static function (array $match) use ($vars) {
+        return preg_replace_callback($pattern, static function (array $match) use ($vars, $mustVar) {
             if ($var = trim($match[1])) {
-                $val = Arr::getByPath($vars, $var);
-                if ($val !== null) {
-                    return is_array($val) ? Arr::toStringV2($val) : (string)$val;
+                $value = Arr::getByPath($vars, $var);
+                if ($value !== null) {
+                    return is_array($value) ? Arr::toStringV2($value) : (string)$value;
+                }
+                if ($mustVar) {
+                    throw new RuntimeException(sprintf('template var not found: %s', $var));
                 }
             }
 

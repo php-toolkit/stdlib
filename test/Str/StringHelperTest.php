@@ -291,6 +291,13 @@ class StringHelperTest extends TestCase
 
         $text = Str::renderVars('tags: ${ tags }', $vars, '${%s}');
         $this->assertEquals('tags: [php, java]', $text);
+
+        $vars = [
+            'company' => 'mycompany',
+            'namePath' => 'group.demo1',
+        ];
+        $text = Str::renderVars('java/com/{company}/{namePath}', $vars, '{%s}');
+        $this->assertEquals('java/com/mycompany/group.demo1', $text);
     }
 
     public function testBeforeAfter(): void

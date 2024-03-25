@@ -483,6 +483,16 @@ trait StringCheckHelperTrait
      *
      * @return bool
      */
+    public static function isAlpha(string $str): bool
+    {
+        return preg_match('/^[a-zA-Z]+$/', $str) === 1;
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return bool
+     */
     public static function isAlphaNum(string $str): bool
     {
         return preg_match('/^[a-zA-Z0-9]+$/', $str) === 1;
