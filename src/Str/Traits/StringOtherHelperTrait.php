@@ -30,7 +30,7 @@ trait StringOtherHelperTrait
     /**
      * format description
      *
-     * @param       $str
+     * @param string $str input
      * @param array $replaceParams 用于 str_replace('search','replace',$str )
      * @param array $pregParams    用于 preg_replace('pattern','replace',$str)
      *
@@ -54,7 +54,7 @@ trait StringOtherHelperTrait
      *        ['yy','yy2'],  //'replace'
      *  ]
      */
-    public static function format($str, array $replaceParams = [], array $pregParams = []): string
+    public static function format(string $str, array $replaceParams = [], array $pregParams = []): string
     {
         if (!is_string($str) || !$str || (!$replaceParams && !$pregParams)) {
             return $str;

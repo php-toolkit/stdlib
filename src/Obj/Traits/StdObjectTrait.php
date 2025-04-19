@@ -41,7 +41,7 @@ trait StdObjectTrait
      *
      * @return string
      */
-    final public static function spaceName(string $fullName = null): string
+    final public static function spaceName(?string $fullName = null): string
     {
         $fullName = $fullName ?: self::fullName();
         $fullName = str_replace('\\', '/', $fullName);
@@ -56,7 +56,7 @@ trait StdObjectTrait
      *
      * @return string
      */
-    final public static function className(string $fullName = null): string
+    final public static function className(?string $fullName = null): string
     {
         $fullName = $fullName ?: self::fullName();
         $fullName = str_replace('\\', '/', $fullName);

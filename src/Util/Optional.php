@@ -89,7 +89,7 @@ final class Optional
     }
 
     /**
-     * @template S
+     * @template S mixed
      *
      * @param S      $value
      * @param S|null $nullValue
@@ -321,7 +321,7 @@ final class Optional
      *
      * @return T
      */
-    public function orElseThrow(callable $errCreator = null)
+    public function orElseThrow(?callable $errCreator = null)
     {
         if ($this->value !== null) {
             return $this->value;

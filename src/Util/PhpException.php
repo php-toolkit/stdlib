@@ -28,7 +28,7 @@ class PhpException
      * @return string
      * @see PhpException::toHtml()
      */
-    public static function toText(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    public static function toText(Throwable $e, bool $getTrace = true, ?string $catcher = null): string
     {
         return self::toHtml($e, $getTrace, $catcher, true);
     }
@@ -41,7 +41,7 @@ class PhpException
      * @return string
      * @see PhpException::toHtml()
      */
-    public static function toString(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    public static function toString(Throwable $e, bool $getTrace = true, ?string $catcher = null): string
     {
         return self::toHtml($e, $getTrace, $catcher, true);
     }
@@ -56,7 +56,7 @@ class PhpException
      *
      * @return string the string representation of the exception.
      */
-    public static function toHtml(Throwable $e, bool $getTrace = true, string $catcher = null, bool $clearHtml = false): string
+    public static function toHtml(Throwable $e, bool $getTrace = true, ?string $catcher = null, bool $clearHtml = false): string
     {
         if (!$getTrace) {
             $message = "Error: {$e->getMessage()}";
@@ -90,7 +90,7 @@ class PhpException
      *
      * @return array
      */
-    public static function toArray(Throwable $e, bool $getTrace = true, string $catcher = null): array
+    public static function toArray(Throwable $e, bool $getTrace = true, ?string $catcher = null): array
     {
         $data = [
             'class'   => get_class($e),
@@ -119,7 +119,7 @@ class PhpException
      *
      * @return string the string representation of the exception.
      */
-    public static function toJson(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    public static function toJson(Throwable $e, bool $getTrace = true, ?string $catcher = null): string
     {
         $errMsg = $e->getMessage();
         if (!$getTrace) {

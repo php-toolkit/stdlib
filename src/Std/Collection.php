@@ -79,11 +79,11 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
 
     /**
      * @param string $name
-     * @param $value
+     * @param mixed $value
      *
      * @return $this
      */
-    public function add(string $name, $value): static
+    public function add(string $name, mixed $value): static
     {
         if (!$this->has($name)) {
             $this->set($name, $value);
@@ -514,9 +514,9 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
 
     /**
      * @param string $name
-     * @param $value
+     * @param mixed $value
      */
-    public function __set(string $name, $value): void
+    public function __set(string $name, mixed $value): void
     {
         $this->set($name, $value);
     }

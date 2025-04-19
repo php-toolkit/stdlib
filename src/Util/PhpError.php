@@ -53,7 +53,7 @@ class PhpError
      *
      * @return array
      */
-    public static function toArray(array $lastError, string $catcher = null): array
+    public static function toArray(array $lastError, ?string $catcher = null): array
     {
         $digest = 'Fatal Error (' . self::codeToString($lastError['type']) . '): ' . $lastError['message'];
         $data   = [

@@ -85,7 +85,7 @@ abstract class BasePhpTestCase extends TestCase
      *
      * @return void
      */
-    public function assertException(Throwable $e, string $msg, int $code = null): void
+    public function assertException(Throwable $e, string $msg, ?int $code = null): void
     {
         $this->assertEquals($msg, $e->getMessage());
 

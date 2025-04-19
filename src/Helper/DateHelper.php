@@ -41,7 +41,7 @@ class DateHelper
      *
      * @param string $date 日期
      *
-     * @return boolean
+     * @return bool
      */
     public static function isDate(string $date): bool
     {
@@ -54,7 +54,7 @@ class DateHelper
      * @param string $date   日期
      * @param string $format 需要检验的格式数组
      *
-     * @return boolean
+     * @return bool
      */
     public static function isDateFormat(string $date, string $format = 'Y-m-d'): bool
     {

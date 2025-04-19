@@ -123,12 +123,12 @@ class UUID
      *
      * @return UUID
      */
-    public static function new(int $ver = 1, string $node = null, string $ns = null): self
+    public static function new(int $ver = 1, ?string $node = null, ?string $ns = null): self
     {
         return self::generate($ver, $node, $ns);
     }
 
-    public static function v1(string $node = null): self
+    public static function v1(?string $node = null): self
     {
         return self::generate(1, $node);
     }
@@ -142,7 +142,7 @@ class UUID
      *
      * @return UUID
      */
-    public static function generate(int $ver = 1, string $node = null, string $ns = null): self
+    public static function generate(int $ver = 1, ?string $node = null, ?string $ns = null): self
     {
         /* Create a new UUID based on provided data. */
         switch ($ver) {
@@ -198,7 +198,7 @@ class UUID
      * @param string|null $node
      * @return string
      */
-    protected static function mintTime(string $node = null): string
+    protected static function mintTime(?string $node = null): string
     {
         /** Get time since Gregorian calendar reform in 100ns intervals
          * This is exceedingly difficult because of PHP's (and pack()'s)
@@ -265,11 +265,11 @@ class UUID
      * Returns binary representation, or false on failure.
      *
      * @param string|self $str
-     * @param integer     $len
+     * @param int      $len
      *
      * @return string|null
      */
-    protected static function makeBin(UUID|string $str, int$len): ?string
+    protected static function makeBin(UUID|string $str, int $len): ?string
     {
         if ($str instanceof self) {
             return $str->bytes;
@@ -387,7 +387,7 @@ class UUID
      * Import and validate an UUID
      *
      * @param string $uuid
-     * @return boolean
+     * @return bool
      */
     public static function validate(string $uuid): bool
     {
@@ -411,7 +411,7 @@ class UUID
 
     /**
      * @param string $var
-     * @return string|int|NULL
+     * @return string|int|null
      */
     public function __get(string $var)
     {

@@ -47,26 +47,26 @@ class IntHelper
     // ----- http://cn2.php.net/manual/zh/function.pack.php#119402
 
     /**
-     * @param $i
+     * @param int|string $i
      *
      * @return false|mixed|string
      */
-    public static function int8($i): mixed
+    public static function int8(int|string $i): mixed
     {
         return is_int($i) ? pack('c', $i) : unpack('c', $i)[1];
     }
 
-    public static function uInt8($i)
+    public static function uInt8(int|string $i)
     {
         return is_int($i) ? pack('C', $i) : unpack('C', $i)[1];
     }
 
-    public static function int16($i)
+    public static function int16(int|string $i)
     {
         return is_int($i) ? pack('s', $i) : unpack('s', $i)[1];
     }
 
-    public static function uint16($i, $endianness = false)
+    public static function uint16(int|string $i, $endianness = false)
     {
         $f = is_int($i) ? 'pack' : 'unpack';
 

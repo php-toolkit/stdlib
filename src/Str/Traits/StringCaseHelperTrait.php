@@ -142,21 +142,21 @@ trait StringCaseHelperTrait
     }
 
     /**
-     * @param $str
+     * @param string $str
      *
      * @return string
      */
-    public static function ucfirst($str): string
+    public static function ucfirst(string $str): string
     {
         return self::upFirst($str);
     }
 
     /**
-     * @param $str
+     * @param string $str
      *
      * @return string
      */
-    public static function ucwords($str): string
+    public static function ucwords(string $str): string
     {
         return function_exists('mb_convert_case') ?
             mb_convert_case((string)$str, MB_CASE_TITLE) :

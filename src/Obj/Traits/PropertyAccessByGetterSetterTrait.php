@@ -51,7 +51,7 @@ trait PropertyAccessByGetterSetterTrait
     /**
      * @reference yii2 yii\base\Object::__set()
      *
-     * @param $name
+     * @param string $name
      *
      * @return mixed
      * @throws GetPropertyException
@@ -72,7 +72,7 @@ trait PropertyAccessByGetterSetterTrait
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
@@ -88,11 +88,11 @@ trait PropertyAccessByGetterSetterTrait
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @throws PropertyException
      */
-    public function __unset($name): void
+    public function __unset(string $name): void
     {
         $setter = 'set' . ucfirst($name);
 

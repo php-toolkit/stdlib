@@ -368,7 +368,7 @@ class OS
      *
      * @param int|resource|mixed $fileDescriptor
      *
-     * @return boolean
+     * @return bool
      */
     public static function isInteractive(mixed $fileDescriptor): bool
     {

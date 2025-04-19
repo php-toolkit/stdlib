@@ -294,7 +294,7 @@ class ObjectHelper
     {
         try {
             $reflection = new ReflectionClass($class);
-        } catch (ReflectionException $e) {
+        } catch (ReflectionException $_) {
             return false;
         }
 
@@ -361,7 +361,7 @@ class ObjectHelper
             $depRftClass = $param->getType();
 
             // If we have a dependency, that means it has been type-hinted.
-            if ($depRftClass && ($depClass = $depRftClass->getName()) !== Closure::class) {
+            if ($depRftClass && $depRftClass instanceof ReflectionNamedType && ($depClass = $depRftClass->getName()) !== Closure::class) {
                 $depObject = self::create($depClass);
 
                 if ($depObject instanceof $depClass) {

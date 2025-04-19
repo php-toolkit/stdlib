@@ -93,16 +93,16 @@ class HtmlHelper
      *  htmlspecialchars() <--> htmlspecialchars_decode() — 将特殊的 HTML 实体转换回普通字符
      * ENT_COMPAT ENT_QUOTES ENT_NOQUOTES ENT_HTML401 ENT_XML1 ENT_XHTML ENT_HTML5
      *
-     * @param        $data
+     * @param string|array $data
      * @param int    $type
      * @param string $encoding
      *
      * @return array|string
      */
-    public static function escape($data, int $type = 0, string $encoding = 'UTF-8'): array|string
+    public static function escape(string|array $data, int $type = 0, string $encoding = 'UTF-8'): array|string
     {
         if (is_array($data)) {
-            foreach ($data as $k => $v) {
+            foreach ($data as $k => $_) {
                 $data[$k] = self::escape($data, $type, $encoding);
             }
 
@@ -136,7 +136,7 @@ class HtmlHelper
     public static function unescap(array|string $data, int $type = 0, string $encoding = 'UTF-8'): array|string
     {
         if (is_array($data)) {
-            foreach ($data as $k => $v) {
+            foreach ($data as $k => $_) {
                 $data[$k] = self::unescap($data, $type, $encoding);
             }
         } elseif (!$type) {// 默认使用  htmlspecialchars_decode()

@@ -31,7 +31,7 @@ trait ArrayMergeTrait
      */
     public static function replace(array $base, array $replacements): array
     {
-        foreach ($base as $key => $value) {
+        foreach ($base as $key => $_) {
             if (isset($replacements[$key])) {
                 $base[$key] = $replacements[$key];
             }

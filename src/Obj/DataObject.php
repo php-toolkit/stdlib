@@ -268,7 +268,7 @@ class DataObject extends ArrayObject implements JsonSerializable
     public function getKeys(): array
     {
         $keys = [];
-        foreach ($this as $key => $val) {
+        foreach ($this as $key => $_) {
             $keys[] = $key;
         }
 

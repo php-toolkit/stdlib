@@ -28,7 +28,7 @@ trait ArrayAccessByPropertyTrait
      *
      * @param mixed $offset The array offset.
      *
-     * @return  boolean  True if the offset exists, false otherwise.
+     * @return  bool  True if the offset exists, false otherwise.
      */
     public function offsetExists(mixed $offset): bool
     {

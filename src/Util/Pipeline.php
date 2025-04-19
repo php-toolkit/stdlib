@@ -36,7 +36,7 @@ class Pipeline implements PipelineInterface
      */
     public function add(Closure $stage): PipelineInterface
     {
-        if ($stage instanceof $this) {
+        if ($stage instanceof self) {
             $stage->add(fn ($payload) => $this->invokeStage($payload));
         }
 

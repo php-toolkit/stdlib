@@ -82,7 +82,7 @@ class NumHelper
      *
      * @return int
      */
-    public static function random(int $min, int $max, int $fallback = null): int
+    public static function random(int $min, int $max, ?int $fallback = null): int
     {
         try {
             return random_int($min, $max);

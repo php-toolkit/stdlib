@@ -84,11 +84,11 @@ class JsonHelper
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @return string
      */
-    public static function pretty($data): string
+    public static function pretty(mixed $data): string
     {
         return self::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
@@ -107,21 +107,21 @@ class JsonHelper
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @return string
      */
-    public static function unescaped($data): string
+    public static function unescaped(mixed $data): string
     {
         return self::encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @return string
      */
-    public static function unescapedSlashes($data): string
+    public static function unescapedSlashes(mixed $data): string
     {
         return self::encode($data, JSON_UNESCAPED_SLASHES);
     }

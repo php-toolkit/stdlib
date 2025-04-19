@@ -514,7 +514,7 @@ trait StringCheckHelperTrait
      *
      * @param string $value 要验证的数据
      * @param string $rule 验证规则 require email url currency number integer english
-     * @return boolean
+     * @return bool
      */
     public static function match(string $value, string $rule): bool
     {

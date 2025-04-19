@@ -105,7 +105,7 @@ class PhpHelper
      *
      * @return Generator
      */
-    public static function getReflectMethods(ReflectionClass $reflectClass, int $flags = 0, Closure $nameFilter = null): ?Generator
+    public static function getReflectMethods(ReflectionClass $reflectClass, int $flags = 0, ?Closure $nameFilter = null): ?Generator
     {
         foreach ($reflectClass->getMethods($flags) as $m) {
             $mName = $m->getName();
@@ -119,11 +119,11 @@ class PhpHelper
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return mixed
      */
-    public static function value($value): mixed
+    public static function value(mixed $value): mixed
     {
         if (is_callable($value)) {
             return $value();
@@ -376,7 +376,7 @@ class PhpHelper
      *
      * @return string
      */
-    public static function exception2string(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    public static function exception2string(Throwable $e, bool $getTrace = true, ?string $catcher = null): string
     {
         return PhpException::toString($e, $getTrace, $catcher);
     }
@@ -388,17 +388,17 @@ class PhpHelper
      *
      * @return string
      */
-    public static function exception2html(Throwable $e, bool $getTrace = true, string $catcher = null): string
+    public static function exception2html(Throwable $e, bool $getTrace = true, ?string $catcher = null): string
     {
         return PhpException::toHtml($e, $getTrace, $catcher);
     }
 
     /**
-     * @param $anyData
+     * @param mixed $anyData
      *
      * @return string
      */
-    public static function toString($anyData): string
+    public static function toString(mixed $anyData): string
     {
         return DataHelper::toString($anyData);
     }

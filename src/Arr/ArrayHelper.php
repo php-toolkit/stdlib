@@ -75,7 +75,7 @@ class ArrayHelper
     public static function getKeyMaxWidth(array $data, bool $excludeInt = true): int
     {
         $maxWidth = 0;
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $_) {
             // key is not a integer
             if (!$excludeInt || !is_numeric($key)) {
                 $width    = mb_strlen((string)$key, 'UTF-8');

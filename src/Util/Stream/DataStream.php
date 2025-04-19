@@ -249,7 +249,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      *
      * @return MapStream
      */
-    public function mapToMap(callable $mapper, MapStream $new = null): MapStream
+    public function mapToMap(callable $mapper, ?MapStream $new = null): MapStream
     {
         $new = $new ?: new MapStream();
         foreach ($this as $item) {
@@ -268,7 +268,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      *
      * @return IntStream
      */
-    public function mapToInt(callable $mapper, IntStream $new = null): IntStream
+    public function mapToInt(callable $mapper, ?IntStream $new = null): IntStream
     {
         $new = $new ?: new IntStream;
         foreach ($this as $val) {
@@ -286,7 +286,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      *
      * @return StringStream
      */
-    public function mapToString(callable $mapper, StringStream $new = null): StringStream
+    public function mapToString(callable $mapper, ?StringStream $new = null): StringStream
     {
         $new = $new ?: new StringStream;
         foreach ($this as $val) {
@@ -327,7 +327,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      *
      * @return static
      */
-    public function sorted(callable $comparer = null): static
+    public function sorted(?callable $comparer = null): static
     {
         $new = self::of($this->getArrayCopy());
 
@@ -343,7 +343,7 @@ class DataStream extends ArrayIterator implements JsonSerializable
      *
      * @return static
      */
-    public function keySorted(callable $comparer = null): static
+    public function keySorted(?callable $comparer = null): static
     {
         $new = self::of($this->getArrayCopy());
 
