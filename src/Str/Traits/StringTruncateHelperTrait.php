@@ -128,7 +128,7 @@ trait StringTruncateHelperTrait
      *
      * @return bool|string
      */
-    public static function substr(string $str, int $start, int $length = null, string $encoding = 'utf-8'): bool|string
+    public static function substr(string $str, int $start, int|null $length = null, string $encoding = 'utf-8'): bool|string
     {
         if (function_exists('mb_substr')) {
             return mb_substr($str, $start, $length ?? self::strlen($str), $encoding);
@@ -147,7 +147,7 @@ trait StringTruncateHelperTrait
      *
      * @return string
      */
-    public static function utf8SubStr(string $str, int $start = 0, int $length = null): string
+    public static function utf8SubStr(string $str, int $start = 0, int|null $length = null): string
     {
         if (empty($str)) {
             return '';
@@ -241,7 +241,7 @@ trait StringTruncateHelperTrait
      *
      * @return string
      */
-    public static function truncate2(string $str, int $start, int $length = null): string
+    public static function truncate2(string $str, int $start, ?int $length = null): string
     {
         if (!$length) {
             $length = $start;
