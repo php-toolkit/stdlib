@@ -1,7 +1,7 @@
 # StdLib
 
 [![License](https://img.shields.io/github/license/php-toolkit/stdlib)](LICENSE)
-[![Php Version](https://img.shields.io/badge/php-%3E8.0-brightgreen.svg?maxAge=2592000)](https://packagist.org/packages/toolkit/stdlib)
+[![Php Version Support](https://img.shields.io/packagist/php-v/toolkit/stdlib)](https://packagist.org/packages/toolkit/stdlib)
 [![Latest Stable Version](http://img.shields.io/packagist/v/toolkit/stdlib.svg)](https://packagist.org/packages/toolkit/stdlib)
 [![Unit Tests](https://github.com/php-toolkit/stdlib/actions/workflows/php.yml/badge.svg)](https://github.com/php-toolkit/stdlib/actions)
 [![Docs on pages](https://img.shields.io/badge/DocsOn-Pages-brightgreen.svg?maxAge=2592000)](https://php-toolkit.github.io/stdlib/)
