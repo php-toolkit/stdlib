@@ -201,8 +201,19 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable, JsonSeria
         if ($data = $this->getArray($key)) {
             Php::initObject($obj, $data);
         }
-
         return $obj;
+    }
+
+    /**
+     * Get data as sub collection
+     *
+     * @param string $key
+     *
+     * @return static
+     */
+    public function getSub(string $key): static
+    {
+        return static::new($this->getArray($key));
     }
 
     /**
